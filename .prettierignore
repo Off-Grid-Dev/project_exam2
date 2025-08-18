@@ -1,0 +1,25 @@
+# Build output
+dist/
+out/
+
+# Dependency directories
+node_modules/
+
+# Vite and project configuration
+package.json
+package-lock.json
+tsconfig.json
+tsconfig.app.json
+tsconfig.node.json
+vite.config.ts
+
+# Environment files
+.env
+.env.*
+
+# Cache and temporary files
+.vite/
+coverage/
+
+# Tailwind-specific
+src/index.css
