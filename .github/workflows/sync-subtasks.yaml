@@ -10,8 +10,8 @@ on:
         required: false
       overwrite_dates:
         description: 'If true, overwrite existing Start/Target lines in sub-issues (true|false)'
-        required: false
-        default: 'false'
+        required: true
+        default: 'true'
 
 permissions:
   issues: write
