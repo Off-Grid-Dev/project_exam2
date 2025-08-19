@@ -31,7 +31,7 @@ jobs:
             const overwriteDatesInput = core.getInput('overwrite_dates') || 'false';
             const overwriteDates = overwriteDatesInput.toLowerCase() === 'true';
 
-            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+            const octokit = github;
 
             // Determine parent issue number:
             let parentIssueNumber = null;
