@@ -24,14 +24,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const github = require('@actions/github');
-
-            // Inputs
+            // Note: actions/github-script injects `core`, `github`, and `context` for you.
+            // Do NOT `require('@actions/core')` or `require('@actions/github')` here,
+            // otherwise you'll get "Identifier 'core' has already been declared".
             const inputParent = core.getInput('parent_issue_number') || null;
             const overwriteDatesInput = core.getInput('overwrite_dates') || 'false';
             const overwriteDates = overwriteDatesInput.toLowerCase() === 'true';
 
-            const context = github.context;
             const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
             // Determine parent issue number:
@@ -84,14 +83,11 @@ jobs:
             function extractReferencedNumbers(text) {
               if (!text) return [];
               const issueNumbers = new Set();
-
-              // Matches e.g. #123 or owner/repo#123
               const regex = /(?:[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+)?#([0-9]+)/g;
               let m;
               while ((m = regex.exec(text)) !== null) {
                 issueNumbers.add(parseInt(m[1], 10));
               }
-
               return Array.from(issueNumbers);
             }
 
@@ -105,9 +101,7 @@ jobs:
                 const dates = parseDatesFromBody(parent.body || '');
                 core.info(`Parsed parent dates: Start=${dates.start || 'none'} Target=${dates.target || 'none'}`);
 
-                // Find children from parent body. You can change this logic if you prefer parsing checklists only.
                 let children = extractReferencedNumbers(parent.body || '');
-                // Remove parent itself if present
                 children = children.filter(n => n !== parentIssueNumber);
 
                 if (children.length === 0) {
@@ -121,7 +115,6 @@ jobs:
                   core.info(`-- Processing child #${childNumber}`);
                   const child = await fetchIssue(childNumber);
 
-                  // Update milestone if parent has one and child doesn't match
                   if (parentMilestone && child.milestone && child.milestone.number === parentMilestone) {
                     core.info('   milestone already matches; skipping milestone update');
                   } else if (parentMilestone) {
@@ -131,13 +124,9 @@ jobs:
                     core.info('   parent has no milestone; skipping milestone update');
                   }
 
-                  // Update Start/Target in child body
                   if (dates.start || dates.target) {
                     let childBody = child.body || '';
-
                     const childDates = parseDatesFromBody(childBody);
-
-                    // Determine new lines, and whether to overwrite
                     const newLines = [];
                     if (dates.start) {
                       if (!childDates.start || overwriteDates) {
@@ -151,14 +140,11 @@ jobs:
                     }
 
                     if (newLines.length > 0) {
-                      // Prepend the date lines at the top of the body for visibility.
-                      // If there are existing Start/Target lines and overwriteDates=true, remove the old ones first.
                       if (overwriteDates) {
                         childBody = childBody.replace(/^\s*Start:\s*\d{4}-\d{2}-\d{2}\s*$/gim, '');
                         childBody = childBody.replace(/^\s*Target:\s*\d{4}-\d{2}-\d{2}\s*$/gim, '');
                         childBody = childBody.trimStart();
                       }
-
                       const newBody = `${newLines.join('\n')}\n\n${childBody}`;
                       core.info(`   updating body of #${childNumber} with lines:\n     ${newLines.join(' | ')}`);
                       await updateIssue(childNumber, { body: newBody });
