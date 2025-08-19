@@ -26,3 +26,7 @@ dist-ssr
 # Private files
 tasks.md
 milestones.md
+
+# Test Template files
+sumNumbers.js
+sumNumbers.test.js
