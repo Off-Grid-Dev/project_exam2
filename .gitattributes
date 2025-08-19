@@ -1,0 +1,19 @@
+# Enforce LF line endings for all text files
+* text=auto eol=lf
+
+# Treat specific file types as text
+*.js     text
+*.jsx    text
+*.ts     text
+*.tsx    text
+*.css    text
+*.html   text
+*.md     text
+
+# Binary files (don't touch line endings)
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.svg    binary
+*.ico    binary

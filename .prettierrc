@@ -1,6 +1,7 @@
 {
   "tabWidth": 2,
   "useTabs": false,
+  "endOfLine": "lf",
   "arrowParens": "always",
   "bracketSameLine": false,
   "bracketSpacing": true,

@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Button from './Button';
+import { vi } from 'vitest';
 
 test('Button renders and handles click', () => {
   const handleClick = vi.fn(); // Create a mock function for the click handler
