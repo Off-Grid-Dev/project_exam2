@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

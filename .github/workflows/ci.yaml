@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🧰 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Install dependencies
+        run: |
+          npm ci || { echo "❌ Dependency installation failed. Check your lockfile or registry access."; exit 10; }
+
+      - name: ✅ Dependencies installed!
+        if: success()
+        run: echo "📦 Dependencies installed successfully."
+
+      - name: 🔍 Lint and Type Check
+        run: |
+          npm run lint || { echo "❌ Linting failed. Code style issues detected."; exit 20; }
+          npm run typecheck || { echo "❌ Type check failed. TypeScript errors found."; exit 21; }
+
+      - name: ✅ Lint and Type Check passed!
+        if: success()
+        run: echo "🎯 Code is clean and type-safe."
+
+      - name: 🧪 Run tests
+        run: |
+          npm run test || { echo "❌ Tests failed. Review failing test cases and assertions."; exit 30; }
+
+      - name: ✅ Tests passed!
+        if: success()
+        run: echo "🧪 All tests passed!"
+
+      - name: 🚀 Build project
+        run: |
+          npm run build || { echo "❌ Build failed. Check your bundler config or missing assets."; exit 40; }
+
+      - name: ✅ Project build completed!
+        if: success()
+        run: echo "🚀 Build successful and ready to deploy!"
+
+      - name: 📊 Summary (on failure only)
+        if: failure()
+        run: |
+          echo "🧾 CI Summary:"
+          echo "❌ One or more steps failed. Here's what might have gone wrong:"
+          echo "- 🔍 Lint or Type Check: Code style or TypeScript errors"
+          echo "- 🧪 Tests: Failing assertions or broken mocks"
+          echo "- 🚀 Build: Bundler issues or missing assets"
+          echo ""
+          echo "💡 Check the logs above for exact error messages and exit codes."
