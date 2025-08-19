@@ -11,10 +11,10 @@
   "compilerOptions": {
     "types": [
       "@testing-library/jest-dom"
-    ]
-  },
-  "strict": true,
-  "noImplicitAny": true,
-  "strictNullChecks": true,
-  "forceConsistentCasingInFileNames": true
+    ],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true
+  }
 }
