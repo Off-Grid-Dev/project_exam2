@@ -3,11 +3,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
 
-const repository = '/project_exam2/';
-
 // https://vite.dev/config/
 export default defineConfig({
-  base: repository,
+  base: '/project_exam2/',
   plugins: [react(), tailwindcss()],
   test: {
         environment: 'jsdom',
