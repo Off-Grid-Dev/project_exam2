@@ -91,3 +91,8 @@ export type VenuesResponse = {
   data: Venue[];
   meta: Record<string, unknown>;
 };
+
+export type BookingsResponse = {
+  data: Booking[];
+  meta: Record<string, unknown>;
+};
