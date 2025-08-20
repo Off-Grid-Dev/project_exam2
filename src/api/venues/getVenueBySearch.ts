@@ -6,11 +6,11 @@ export const getVenueBySearch = async (
   sort = '',
   sortOrder = 'desc',
   limit = 20,
-  page = 0,
+  page = 1,
   query?: string,
 ): Promise<VenuesResponse> => {
   const response = await fetch(
-    `${API_VENUES}/search?${sort === '' ? 'sort=' + sort : ''}&sortOrder=${sortOrder}&limit=${limit}&page=${page}&q=${query}`,
+    `${API_VENUES}/search?${sort !== '' ? 'sort=' + sort + '&' : ''}sortOrder=${sortOrder}&limit=${limit}&page=${page}&q=${query}`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const getVenueBySearch = async (
     const message =
       errorBody.errors.map((e) => e.message).join(', ') || response.statusText;
     throw new Error(
-      `Could not get venue by ID: ${response.status} - ${message}`,
+      `Could not get venue by search: ${response.status} - ${message}`,
     );
   }
 

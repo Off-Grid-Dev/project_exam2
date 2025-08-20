@@ -3,13 +3,13 @@ import { API_VENUES } from '../api';
 import type { ApiError } from '../../types/api/responses';
 
 export const getVenues = async (
-  sort = '',
+  sort = 'created',
   sortOrder = 'desc',
   limit = 20,
-  page = 0,
+  page = 1,
 ): Promise<VenuesResponse> => {
   const response = await fetch(
-    `${API_VENUES}?${sort !== '' ? 'sort=' + sort : ''}&sortOrder=${sortOrder}&limit=${limit}&offset=${page}`,
+    `${API_VENUES}?${sort !== '' ? 'sort=' + sort + '&' : ''}sortOrder=${sortOrder}&limit=${limit}&offset=${page}`,
     {
       headers: {
         'Content-Type': 'application/json',

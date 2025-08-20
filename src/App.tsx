@@ -46,6 +46,12 @@ function App() {
         onChange={handleVenueSearch}
         className='border border-black p-2'
       />
+      <button
+        className='cursor-pointer rounded-2xl bg-blue-800 px-3 py-2 hover:bg-blue-700'
+        onClick={() => getData('venue by search', { q: venueQuery })}
+      >
+        Search for Venues
+      </button>
     </div>
   );
 }
