@@ -26,6 +26,7 @@ dist-ssr
 # Private files
 tasks.md
 api-ref.md
+temporary.json
 
 # Test Template files
 sumNumbers.js
