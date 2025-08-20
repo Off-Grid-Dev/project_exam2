@@ -1,69 +1,116 @@
-# React + TypeScript + Vite
+# Project Exam 2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Deploy to GitHub Pages](https://github.com/Off-Grid-Dev/project_exam2/actions/workflows/deploy.yml/badge.svg?branch=main)](https://off-grid-dev.github.io/project_exam2/)
 
-Currently, two official plugins are available:
+Single-page React application built with Vite and TypeScript, deployed to GitHub Pages.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Table of Contents
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Live Demo](#live-demo)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Development](#development)
+- [Building](#building)
+- [Deployment](#deployment)
+- [Environment Variables](#environment-variables)
+- [Contributing](#contributing)
+- [License](#license)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Live Demo
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+https://off-grid-dev.github.io/project_exam2/
+
+---
+
+## Prerequisites
+
+- Node.js ≥ 20.19.0
+- npm (bundled with Node.js)
+- pnpm (optional, for faster installs)
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/Off-Grid-Dev/project_exam2.git
+cd project_exam2
+npm ci
+# or
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+## Development
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm run dev
+# or
+pnpm dev
 ```
+
+Open http://localhost:5173 in your browser.
+
+---
+
+## Building
+
+```bash
+npm run build
+# or
+pnpm build
+```
+
+Production files are generated in the `dist/` folder.
+
+---
+
+## Deployment
+
+A GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on every push to `main` and:
+
+1. Installs dependencies
+2. Builds the app into `dist/`
+3. Deploys `dist/` to the `gh-pages` branch
+
+GitHub Pages is configured to serve from that branch and folder, so every successful push to `main` automatically updates the live site.
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the project root for any public-facing values:
+
+```env
+VITE_API_URL=https://api.example.com
+```
+
+Access in code via:
+
+```ts
+const apiUrl = import.meta.env.VITE_API_URL;
+```
+
+Ensure that `.env` is listed in `.gitignore`.
+
+---
+
+## Contributing
+
+Contributions are welcome. Open issues or pull requests, and CI will validate changes with:
+
+- linting
+- type checking
+- tests
+- build
+
+---
+
+## License
+
+MIT License © 2025 Kenneth Jahnsson
