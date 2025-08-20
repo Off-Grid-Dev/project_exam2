@@ -46,12 +46,15 @@ type Venue = {
   meta: VenueMeta;
   location: VenueLocation;
   owner: VenueOwner;
+  bookings: Booking[];
   _count: {
     bookings: number;
   };
 };
 
 type Customer = Pick<Profile, 'name' | 'email' | 'bio' | 'avatar' | 'banner'>;
+
+type BookingVenue = Omit<Venue, 'bookings'>;
 
 type Booking = {
   id: string;
@@ -60,7 +63,7 @@ type Booking = {
   guests: number;
   created: string;
   updated: string;
-  venue: Venue;
+  venue: BookingVenue;
   customer: Customer;
 };
 
@@ -81,5 +84,10 @@ export type Profile = {
 
 export type ProfileResponse = {
   data: Profile[];
-  meta: object;
+  meta: Record<string, unknown>;
+};
+
+export type VenuesResponse = {
+  data: Venue[];
+  meta: Record<string, unknown>;
 };
