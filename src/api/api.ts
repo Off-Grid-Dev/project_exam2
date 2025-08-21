@@ -7,8 +7,8 @@ import { createVenue } from './venues/createVenue';
 import { deleteVenue } from './venues/deleteVenue';
 const API_BASE = import.meta.env.VITE_API_BASE;
 export const API_VENUES = `${API_BASE}venues`;
-export const API_PROFILES = `${API_BASE}/profiles/`;
-// const API_BOOKINGS = `${API_BASE}/bookings/`;
+export const API_PROFILES = `${API_BASE}profiles`;
+// const API_BOOKINGS = `${API_BASE}bookings`;
 
 type FetchParams = {
   options?: RequestInit;
