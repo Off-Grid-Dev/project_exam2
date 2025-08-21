@@ -5,6 +5,8 @@ import { updateVenue } from './venues/updateVenue';
 import type { VenuePayload } from '../types/api/venue';
 import { createVenue } from './venues/createVenue';
 import { deleteVenue } from './venues/deleteVenue';
+import { registerUser } from './profiles/registerUser';
+import type { ProfilePayload } from '../types/api/profile';
 const API_BASE = import.meta.env.VITE_API_BASE;
 export const API_VENUES = `${API_BASE}venues`;
 export const API_PROFILES = `${API_BASE}profiles`;
@@ -18,9 +20,11 @@ type FetchParams = {
   page?: number;
   _owner?: boolean;
   _bookings?: boolean;
+  name?: string;
   id?: string;
   q?: string;
-  payload?: VenuePayload;
+  venuePayload?: VenuePayload;
+  profilePayload?: ProfilePayload;
   token?: string;
 };
 
@@ -45,12 +49,12 @@ const getData = (fn: string, params?: FetchParams) => {
       );
     }
     case 'create venue': {
-      const { payload, token, _owner, _bookings } = params || {};
-      return createVenue(payload, token, _owner, _bookings);
+      const { venuePayload, token, _owner, _bookings } = params || {};
+      return createVenue(venuePayload, token, _owner, _bookings);
     }
     case 'update venue': {
-      const { id, payload, token, _owner, _bookings } = params || {};
-      return updateVenue(id, payload, token, _owner, _bookings);
+      const { id, venuePayload, token, _owner, _bookings } = params || {};
+      return updateVenue(id, venuePayload, token, _owner, _bookings);
     }
     case 'delete venue': {
       const { id, token } = params || {};
@@ -58,6 +62,8 @@ const getData = (fn: string, params?: FetchParams) => {
     }
     // Profiles
     case 'register user': {
+      const { name, profilePayload } = params || {};
+      return registerUser(name, profilePayload);
     }
   }
 };
