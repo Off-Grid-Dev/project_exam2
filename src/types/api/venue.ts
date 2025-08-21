@@ -39,3 +39,8 @@ export type Venue = {
     bookings: number;
   };
 };
+
+export type VenuePayload = Omit<
+  Venue,
+  'id' | 'created' | 'updated' | 'owner' | 'bookings' | '_count'
+>;
