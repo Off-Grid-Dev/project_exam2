@@ -3,19 +3,30 @@ import { API_VENUES } from '../api';
 import type { ApiError } from '../../types/api/responses';
 
 export const getVenues = async (
-  sort = 'created',
-  sortOrder = 'desc',
   limit = 20,
   page = 1,
+  sort?: string,
+  sortOrder?: string,
+  _owner?: boolean,
+  _count?: boolean,
 ): Promise<VenuesResponse> => {
-  const response = await fetch(
-    `${API_VENUES}?${sort !== '' ? 'sort=' + sort + '&' : ''}sortOrder=${sortOrder}&limit=${limit}&offset=${page}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  const query = new URLSearchParams();
+  if (sort) query.append('sort', sort);
+  if (sortOrder) query.append('sortOrder', sortOrder);
+  if (limit) query.append('limit', limit.toString());
+  if (page) query.append('page', page.toString());
+  if (_owner) query.append('_owner', _owner.toString());
+  if (_count) query.append('_count', _count.toString());
+
+  const url = query.toString()
+    ? `${API_VENUES}?${query.toString()}`
+    : API_VENUES;
+
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+  });
 
   if (!response.ok) {
     const errorBody: ApiError = await response.json();
