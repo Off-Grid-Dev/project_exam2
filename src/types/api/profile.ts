@@ -2,11 +2,6 @@ import type { Media } from './media';
 import type { Venue } from './venue';
 import type { Booking } from './booking';
 
-export type Customer = Pick<
-  Profile,
-  'name' | 'email' | 'bio' | 'avatar' | 'banner'
->;
-
 export type Profile = {
   name: string;
   email: string;
@@ -21,3 +16,13 @@ export type Profile = {
     bookings: number;
   };
 };
+
+export type ProfilePayload = Pick<
+  Profile,
+  'avatar' | 'banner' | 'venueManager' | 'bio'
+>;
+
+export type Customer = Pick<
+  Profile,
+  'name' | 'email' | 'bio' | 'avatar' | 'banner'
+>;
