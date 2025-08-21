@@ -4,9 +4,9 @@ import type { ApiError } from '../../types/api/responses';
 import type { VenuePayload } from '../../types/api/venue';
 
 export const updateVenue = async (
-  id: string,
-  payload: VenuePayload,
-  token: string,
+  id?: string,
+  payload?: VenuePayload,
+  token?: string,
   _owner: boolean = false,
   _bookings: boolean = false,
 ): Promise<VenuesResponse> => {

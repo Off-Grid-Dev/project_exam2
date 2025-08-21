@@ -3,11 +3,11 @@ import { API_VENUES } from '../api';
 import type { ApiError } from '../../types/api/responses';
 
 export const getVenueBySearch = async (
-  limit = 20,
-  page = 1,
-  q: string,
+  q?: string,
   sort?: string,
   sortOrder?: string,
+  page = 1,
+  limit = 20,
   _owner?: boolean,
   _count?: boolean,
 ): Promise<VenuesResponse> => {

@@ -2,7 +2,7 @@ import type { VenuesResponse } from '../../types/api/responses';
 import { API_VENUES } from '../api';
 import type { ApiError } from '../../types/api/responses';
 
-export const getVenueByID = async (id: string): Promise<VenuesResponse> => {
+export const getVenueByID = async (id?: string): Promise<VenuesResponse> => {
   const response = await fetch(`${API_VENUES}/${id}`, {
     headers: {
       'Content-Type': 'application/json',
