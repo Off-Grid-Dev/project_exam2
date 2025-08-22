@@ -6,7 +6,10 @@ import type { VenuePayload } from '../types/api/venue';
 import { createVenue } from './venues/createVenue';
 import { deleteVenue } from './venues/deleteVenue';
 import { registerUser } from './profiles/registerUser';
-import type { ProfilePayload } from '../types/api/profile';
+import type {
+  ProfilePayload,
+  RegisterProfilePayload,
+} from '../types/api/profile';
 const API_BASE = import.meta.env.VITE_API_BASE;
 export const API_VENUES = `${API_BASE}venues`;
 export const API_PROFILES = `${API_BASE}profiles`;
@@ -25,6 +28,7 @@ type FetchParams = {
   q?: string;
   venuePayload?: VenuePayload;
   profilePayload?: ProfilePayload;
+  registerProfilePayload?: RegisterProfilePayload;
   token?: string;
 };
 
@@ -62,8 +66,8 @@ const getData = (fn: string, params?: FetchParams) => {
     }
     // Profiles
     case 'register user': {
-      const { name, profilePayload } = params || {};
-      return registerUser(name, profilePayload);
+      const { registerProfilePayload } = params || {};
+      return registerUser(registerProfilePayload);
     }
   }
 };

@@ -1,12 +1,14 @@
-import { type ApiError, type ProfileResponse } from '../../types/api/responses';
+import {
+  type ApiError,
+  type RegisterProfileResponse,
+} from '../../types/api/responses';
 import { API_PROFILES } from '../api';
-import { type ProfilePayload } from '../../types/api/profile';
+import { type RegisterProfilePayload } from '../../types/api/profile';
 
 export const registerUser = async (
-  name?: string,
-  payload?: ProfilePayload,
-): Promise<ProfileResponse> => {
-  const url = `${API_PROFILES}/${name}`;
+  payload?: RegisterProfilePayload,
+): Promise<RegisterProfileResponse> => {
+  const url = `${API_PROFILES}/register`;
 
   const response = await fetch(url, {
     method: 'PUT',

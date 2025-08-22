@@ -17,6 +17,16 @@ export type Profile = {
   };
 };
 
+export type RegisterProfilePayload = {
+  name: string;
+  email: string;
+  password: string;
+  bio?: string;
+  avatar?: Media;
+  banner?: Media;
+  venueManager?: boolean;
+};
+
 export type ProfilePayload = Pick<
   Profile,
   'avatar' | 'banner' | 'venueManager' | 'bio'
