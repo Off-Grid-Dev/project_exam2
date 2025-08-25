@@ -11,9 +11,11 @@ import type {
   RegisterProfilePayload,
 } from '../types/api/profile';
 const API_BASE = import.meta.env.VITE_API_BASE;
-export const API_VENUES = `${API_BASE}venues`;
-export const API_PROFILES = `${API_BASE}profiles`;
-// const API_BOOKINGS = `${API_BASE}bookings`;
+const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
+export const API_VENUES = `${API_HOLIDAZE}venues`;
+export const API_REGISTER = `${API_BASE}auth/register`;
+export const API_PROFILES = `${API_HOLIDAZE}profiles`;
+// const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
 
 type FetchParams = {
   options?: RequestInit;
@@ -67,7 +69,9 @@ const getData = (fn: string, params?: FetchParams) => {
     // Profiles
     case 'register user': {
       const { registerProfilePayload } = params || {};
-      return registerUser(registerProfilePayload);
+      return registerUser(registerProfilePayload).then((res) =>
+        console.log(res),
+      );
     }
   }
 };

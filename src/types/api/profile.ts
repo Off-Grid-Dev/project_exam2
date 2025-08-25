@@ -24,7 +24,7 @@ export type RegisterProfilePayload = {
   bio?: string;
   avatar?: Media;
   banner?: Media;
-  venueManager?: boolean;
+  venueManager: boolean;
 };
 
 export type ProfilePayload = Pick<

@@ -1,5 +1,5 @@
 import { getData } from '../api/api';
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { RegisterProfilePayload } from '../types/api/profile';
 
 export const RegisterForm = () => {
@@ -20,6 +20,7 @@ export const RegisterForm = () => {
   });
 
   function handleUserInfo(e: ChangeEvent<HTMLInputElement>) {
+    e.currentTarget.setCustomValidity('');
     if (
       e.target.name === 'avatar.url' ||
       e.target.name === 'avatar.alt' ||
@@ -49,20 +50,35 @@ export const RegisterForm = () => {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    getData('register user', {});
-  }
 
-  useEffect(() => {
-    console.log(
-      `\n\tname: ${userInfo.name}
-    email: ${userInfo.email}
-    password: ${userInfo.password}
-    bio: ${userInfo.bio}
-    avatar:\n\t\turl: ${userInfo.avatar?.url}\n\t\talt: ${userInfo.avatar?.alt}
-    banner:\n\t\turl: ${userInfo.banner?.url}\n\t\talt: ${userInfo.banner?.alt}
-    venue manager: ${userInfo.venueManager}`,
-    );
-  }, [userInfo]);
+    const payload: RegisterProfilePayload = {
+      name: userInfo.name,
+      email: userInfo.email,
+      password: userInfo.password,
+      venueManager: userInfo.venueManager,
+      ...(userInfo.bio?.trim() && { bio: userInfo.bio.trim() }),
+      ...(userInfo.avatar?.url?.trim() && {
+        avatar: {
+          url: userInfo.avatar.url.trim(),
+          ...(userInfo.avatar.alt?.trim() && {
+            alt: userInfo.avatar.alt.trim(),
+          }),
+        } as NonNullable<RegisterProfilePayload['avatar']>,
+      }),
+      ...(userInfo.banner?.url?.trim() && {
+        banner: {
+          url: userInfo.banner.url.trim(),
+          ...(userInfo.banner.alt?.trim() && {
+            alt: userInfo.banner.alt.trim(),
+          }),
+        } as NonNullable<RegisterProfilePayload['banner']>,
+      }),
+    };
+
+    console.log('Submitting registration payload:', payload);
+
+    getData('register user', { registerProfilePayload: payload });
+  }
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-2'>
@@ -74,26 +90,44 @@ export const RegisterForm = () => {
           value={userInfo.name}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
+          required
+          minLength={3}
+          onInvalid={(e) => {
+            e.preventDefault();
+            console.error('Name must be at least 3 characters in length');
+          }}
         />
       </label>
       <label htmlFor='email' className='text-right'>
         email:
         <input
           id='email'
-          type='text'
+          type='email'
           value={userInfo.email}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
+          required
+          pattern='.+@stud\.noroff\.no'
+          onInvalid={(e) => {
+            e.preventDefault();
+            console.error('Email must end with "@stud.noroff.no"');
+          }}
         />
       </label>
       <label htmlFor='password' className='text-right'>
         Password:
         <input
           id='password'
-          type='text'
+          type='password'
           value={userInfo.password}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
+          required
+          minLength={8}
+          onInvalid={(e) => {
+            e.preventDefault();
+            console.error('Password must be at least 8 characters long');
+          }}
         />
       </label>
       <label htmlFor='bio' className='text-right'>
@@ -112,7 +146,7 @@ export const RegisterForm = () => {
           id='avatar'
           name='avatar.url'
           type='text'
-          value={userInfo.avatar?.url}
+          value={userInfo.avatar?.url ?? ''}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
           placeholder='avatar url'
@@ -120,7 +154,7 @@ export const RegisterForm = () => {
         <input
           name='avatar.alt'
           type='text'
-          value={userInfo.avatar?.alt}
+          value={userInfo.avatar?.alt ?? ''}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
           placeholder='avatar alt text'
@@ -132,7 +166,7 @@ export const RegisterForm = () => {
           id='banner'
           name='banner.url'
           type='text'
-          value={userInfo.banner?.url}
+          value={userInfo.banner?.url ?? ''}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
           placeholder='banner url'
@@ -140,7 +174,7 @@ export const RegisterForm = () => {
         <input
           type='text'
           name='banner.alt'
-          value={userInfo.banner?.alt}
+          value={userInfo.banner?.alt ?? ''}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
           placeholder='banner alt text'

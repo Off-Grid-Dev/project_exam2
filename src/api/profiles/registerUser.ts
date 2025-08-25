@@ -2,16 +2,16 @@ import {
   type ApiError,
   type RegisterProfileResponse,
 } from '../../types/api/responses';
-import { API_PROFILES } from '../api';
+import { API_REGISTER } from '../api';
 import { type RegisterProfilePayload } from '../../types/api/profile';
 
 export const registerUser = async (
   payload?: RegisterProfilePayload,
 ): Promise<RegisterProfileResponse> => {
-  const url = `${API_PROFILES}/register`;
+  const url = `${API_REGISTER}`;
 
   const response = await fetch(url, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -26,6 +26,8 @@ export const registerUser = async (
       `Could not create newUser: ${response.status} - ${message}`,
     );
   }
+
+  console.log('Sending payload to API:', payload);
 
   return response.json();
 };
