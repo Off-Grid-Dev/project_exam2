@@ -19,7 +19,9 @@ export const RegisterForm = () => {
     venueManager: false,
   });
 
-  function handleUserInfo(e: ChangeEvent<HTMLInputElement>) {
+  function handleUserInfo(
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
     e.currentTarget.setCustomValidity('');
     if (
       e.target.name === 'avatar.url' ||
@@ -38,7 +40,7 @@ export const RegisterForm = () => {
       });
       return;
     }
-    if (e.target.type === 'checkbox') {
+    if (e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
       setUserInfo({
         ...userInfo,
         venueManager: e.target.checked ? true : false,
@@ -82,7 +84,7 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-2'>
-      <label htmlFor='name' className='text-right'>
+      <label htmlFor='name' className='text-right outline outline-amber-400'>
         User name:
         <input
           id='name'
@@ -132,9 +134,8 @@ export const RegisterForm = () => {
       </label>
       <label htmlFor='bio' className='text-right'>
         Bio:
-        <input
+        <textarea
           id='bio'
-          type='text'
           value={userInfo.bio}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
@@ -145,7 +146,7 @@ export const RegisterForm = () => {
         <input
           id='avatar'
           name='avatar.url'
-          type='text'
+          type='url'
           value={userInfo.avatar?.url ?? ''}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
@@ -165,7 +166,7 @@ export const RegisterForm = () => {
         <input
           id='banner'
           name='banner.url'
-          type='text'
+          type='url'
           value={userInfo.banner?.url ?? ''}
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
