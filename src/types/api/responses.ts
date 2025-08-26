@@ -21,6 +21,18 @@ export type RegisterProfileResponse = {
   meta: Record<string, unknown>;
 };
 
+export type LoginProfileResponse = {
+  data: {
+    name: string;
+    email: string;
+    avatar: Media;
+    banner: Media;
+    accessToken: string;
+    venueManager: boolean;
+  };
+  meta: Record<string, unknown>;
+};
+
 export type ProfileResponse = {
   data: Profile[];
   meta: Record<string, unknown>;
