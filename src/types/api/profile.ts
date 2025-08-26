@@ -27,6 +27,11 @@ export type RegisterProfilePayload = {
   venueManager: boolean;
 };
 
+export type LoginProfilePayload = {
+  email: string | undefined;
+  password: string | undefined;
+};
+
 export type ProfilePayload = Pick<
   Profile,
   'avatar' | 'banner' | 'venueManager' | 'bio'
