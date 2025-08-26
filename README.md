@@ -113,4 +113,4 @@ Contributions are welcome. Open issues or pull requests, and CI will validate ch
 
 ## License
 
-MIT License © 2025 Kenneth Jahnsson
+MIT License © 2025
