@@ -1,16 +1,65 @@
-import { useState } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+
+import type { LoginProfilePayload } from '../types/api/profile';
+
+type LoginInfo = LoginProfilePayload;
 
 export const LoginForm = () => {
-  const [userName, setUserName] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+    email: '',
+    password: '',
+  });
+
+  function handleFormUpdate(e: ChangeEvent<HTMLInputElement>) {
+    setLoginInfo({ ...loginInfo, [e.target.id]: e.target.value });
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+  }
+
+  useEffect(() => {
+    console.log(loginInfo);
+  }, [loginInfo]);
 
   return (
-    <form>
-      <label htmlFor='userName'>
-        <input type='text' value={userName} />
+    <form onSubmit={handleSubmit} className='grid gap-2'>
+      <label htmlFor='email' className='text-right outline outline-amber-400'>
+        Email:
+        <input
+          id='email'
+          name='email'
+          type='text'
+          onChange={handleFormUpdate}
+          className='ml-2 rounded-lg border-2 border-amber-300 p-1'
+          value={loginInfo.email}
+          pattern='.+@stud\.noroff\.no'
+          required
+          onInvalid={(e) => {
+            e.preventDefault();
+            console.error('please enter a valid email');
+          }}
+        />
       </label>
-      <label htmlFor='password'>
-        <input type='text' value={password} />
+      <label
+        htmlFor='password'
+        className='text-right outline outline-amber-400'
+      >
+        Password:
+        <input
+          id='password'
+          name='password'
+          type='password'
+          onChange={handleFormUpdate}
+          className='ml-2 rounded-lg border-2 border-amber-300 p-1'
+          value={loginInfo.password}
+          required
+          minLength={8}
+          onInvalid={(e) => {
+            e.preventDefault();
+            console.error('please enter a valid password');
+          }}
+        />
       </label>
       <button type='submit'>Submit</button>
     </form>
