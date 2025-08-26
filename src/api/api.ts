@@ -12,6 +12,7 @@ import type {
   RegisterProfilePayload,
 } from '../types/api/profile';
 import { loginUser } from './profiles/LoginUser';
+import type { LoginProfileResponse } from '../types/api/responses';
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;
@@ -37,6 +38,16 @@ type FetchParams = {
   loginProfilePayload?: LoginProfilePayload;
   token?: string;
 };
+
+function storeToken(response: LoginProfileResponse) {
+  console.log('setting accessToken to localStorage');
+  localStorage.setItem('accessToken', response.data.accessToken);
+}
+
+function clearToken() {
+  console.log('removing accessToken from localStaorage');
+  localStorage.removeItem('accessToken');
+}
 
 const getData = (fn: string, params?: FetchParams) => {
   console.log(`Function called: ${fn}`);
@@ -79,7 +90,10 @@ const getData = (fn: string, params?: FetchParams) => {
     }
     case 'login user': {
       const { loginProfilePayload } = params || {};
-      return loginUser(loginProfilePayload).then((res) => console.log(res));
+      return loginUser(loginProfilePayload).then((res) => storeToken(res));
+    }
+    case 'logout user': {
+      return clearToken();
     }
   }
 };
