@@ -1,6 +1,8 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 
 import type { LoginProfilePayload } from '../types/api/profile';
+import { getData } from '../api/api';
+import { useAuth } from '../api/AuthContext';
 
 type LoginInfo = LoginProfilePayload;
 
@@ -10,12 +12,24 @@ export const LoginForm = () => {
     password: '',
   });
 
+  const { login } = useAuth();
+
   function handleFormUpdate(e: ChangeEvent<HTMLInputElement>) {
     setLoginInfo({ ...loginInfo, [e.target.id]: e.target.value });
   }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    const payload: LoginProfilePayload = {
+      email: loginInfo.email,
+      password: loginInfo.password,
+    };
+
+    console.log('Submitting login payload:', payload);
+
+    getData('login user', { loginProfilePayload: payload });
+    login();
   }
 
   useEffect(() => {
