@@ -7,13 +7,16 @@ import { createVenue } from './venues/createVenue';
 import { deleteVenue } from './venues/deleteVenue';
 import { registerUser } from './profiles/registerUser';
 import type {
+  LoginProfilePayload,
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
+import { loginUser } from './profiles/LoginUser';
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;
 export const API_REGISTER = `${API_BASE}auth/register`;
+export const API_LOGIN = `${API_BASE}auth/login`;
 export const API_PROFILES = `${API_HOLIDAZE}profiles`;
 // const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
 
@@ -31,6 +34,7 @@ type FetchParams = {
   venuePayload?: VenuePayload;
   profilePayload?: ProfilePayload;
   registerProfilePayload?: RegisterProfilePayload;
+  loginProfilePayload?: LoginProfilePayload;
   token?: string;
 };
 
@@ -72,6 +76,10 @@ const getData = (fn: string, params?: FetchParams) => {
       return registerUser(registerProfilePayload).then((res) =>
         console.log(res),
       );
+    }
+    case 'login user': {
+      const { loginProfilePayload } = params || {};
+      return loginUser(loginProfilePayload).then((res) => console.log(res));
     }
   }
 };
