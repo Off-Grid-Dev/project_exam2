@@ -13,6 +13,7 @@ const AppRoutes = () => {
         path='/welcome'
         element={!isLoggedIn ? <LoginRegister /> : <Home />}
       />
+      {/* <Route path='/profile' element={!isLoggedIn ? <Profile /> : <Home />} /> */}
       <Route path='*' element={<Home />} />
     </Routes>
   );
