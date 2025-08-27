@@ -14,6 +14,11 @@ export const LoginForm = () => {
 
   const { login } = useAuth();
 
+  function handleInvalid(e: FormEvent<HTMLInputElement>, message: string) {
+    e.preventDefault();
+    console.error(message);
+  }
+
   function handleFormUpdate(e: ChangeEvent<HTMLInputElement>) {
     setLoginInfo({ ...loginInfo, [e.target.id]: e.target.value });
   }
@@ -29,11 +34,13 @@ export const LoginForm = () => {
     console.log('Submitting login payload:', payload);
 
     getData('login user', { loginProfilePayload: payload });
-    login();
+
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken && accessToken !== undefined) login();
   }
 
   useEffect(() => {
-    console.log(loginInfo);
+    console.log(` email: ${loginInfo.email}\n password: ${loginInfo.password}`);
   }, [loginInfo]);
 
   return (
@@ -49,10 +56,7 @@ export const LoginForm = () => {
           value={loginInfo.email}
           pattern='.+@stud\.noroff\.no'
           required
-          onInvalid={(e) => {
-            e.preventDefault();
-            console.error('please enter a valid email');
-          }}
+          onInvalid={(e) => handleInvalid(e, 'please enter a valid email')}
         />
       </label>
       <label
@@ -70,8 +74,7 @@ export const LoginForm = () => {
           required
           minLength={8}
           onInvalid={(e) => {
-            e.preventDefault();
-            console.error('please enter a valid password');
+            handleInvalid(e, 'please enter a valid password');
           }}
         />
       </label>
