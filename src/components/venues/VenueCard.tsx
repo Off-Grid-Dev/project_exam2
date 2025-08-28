@@ -65,24 +65,23 @@ export const VenuesCard: FC<Venue> = ({
           )}
         </div>
       )}
-      {bookings.length > 0 && (
+      {Array.isArray(bookings) && (
         <>
           <h2>Bookings:</h2>
           <ul>
-            {Array.isArray(bookings) &&
-              bookings.map((booking) => (
-                <li key={booking.id}>
-                  <p>Booking ID: {booking.id}</p>
-                  <p>From Date: {booking.dateFrom}</p>
-                  <p>To Date: {booking.dateTo}</p>
-                  <p>Guests: {booking.guests}</p>
-                  <p>Date Created: {booking.created}</p>
-                  <p>Last Updated: {booking.updated}</p>
-                  <p>Venue: {booking.venue.id}</p>
-                  <p>Customer: {booking.customer.name}</p>
-                  <p>Total Bookings: {_count.bookings}</p>
-                </li>
-              ))}
+            {bookings.map((booking) => (
+              <li key={booking.id}>
+                <p>Booking ID: {booking.id}</p>
+                <p>From Date: {booking.dateFrom}</p>
+                <p>To Date: {booking.dateTo}</p>
+                <p>Guests: {booking.guests}</p>
+                <p>Date Created: {booking.created}</p>
+                <p>Last Updated: {booking.updated}</p>
+                <p>Venue: {booking.venue.id}</p>
+                <p>Customer: {booking.customer.name}</p>
+                <p>Total Bookings: {_count.bookings}</p>
+              </li>
+            ))}
           </ul>
         </>
       )}
