@@ -25,6 +25,7 @@ dist-ssr
 
 # Private files
 tasks.md
+user-stories.md
 api-ref.md
 temporary.json
 temporary.js
