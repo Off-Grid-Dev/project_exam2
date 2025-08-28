@@ -55,19 +55,15 @@ const getData = (fn: string, params?: FetchParams) => {
     // Venues
     case 'get venues': {
       const { sort, sortOrder, limit, page } = params || {};
-      return getVenues(sort, sortOrder, limit, page).then((res) =>
-        console.log(res),
-      );
+      return getVenues(sort, sortOrder, limit, page);
     }
     case 'venue by id': {
       const { id } = params || {};
-      return getVenueByID(id).then((res) => console.log(res));
+      return getVenueByID(id);
     }
     case 'venue by search': {
       const { q, sort, sortOrder, limit, page } = params || {};
-      return getVenueBySearch(q, sort, sortOrder, limit, page).then((res) =>
-        console.log(res),
-      );
+      return getVenueBySearch(q, sort, sortOrder, limit, page);
     }
     case 'create venue': {
       const { venuePayload, token, _owner, _bookings } = params || {};
@@ -84,9 +80,7 @@ const getData = (fn: string, params?: FetchParams) => {
     // Profiles
     case 'register user': {
       const { registerProfilePayload } = params || {};
-      return registerUser(registerProfilePayload).then((res) =>
-        console.log(res),
-      );
+      return registerUser(registerProfilePayload);
     }
     case 'login user': {
       const { loginProfilePayload } = params || {};
