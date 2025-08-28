@@ -14,9 +14,19 @@ export const LoginForm = () => {
 
   const { login } = useAuth();
 
-  function handleInvalid(e: FormEvent<HTMLInputElement>, message: string) {
+  // TODO abstract to file and use in other forms
+  // TODO replace console.error with toast
+  function handleInvalid(
+    e: FormEvent<HTMLInputElement>,
+    message: string,
+    type: string,
+  ) {
     e.preventDefault();
-    console.error(message);
+    let typeMessage;
+    if (type === 'warning') {
+      typeMessage = 'Warning: ';
+    }
+    console.error(typeMessage, message);
   }
 
   function handleFormUpdate(e: ChangeEvent<HTMLInputElement>) {
@@ -56,7 +66,9 @@ export const LoginForm = () => {
           value={loginInfo.email}
           pattern='.+@stud\.noroff\.no'
           required
-          onInvalid={(e) => handleInvalid(e, 'please enter a valid email')}
+          onInvalid={(e) =>
+            handleInvalid(e, 'warning', 'please enter a valid email')
+          }
         />
       </label>
       <label
@@ -74,7 +86,7 @@ export const LoginForm = () => {
           required
           minLength={8}
           onInvalid={(e) => {
-            handleInvalid(e, 'please enter a valid password');
+            handleInvalid(e, 'warning', 'please enter a valid password');
           }}
         />
       </label>
