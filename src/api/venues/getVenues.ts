@@ -1,4 +1,7 @@
-import type { VenuesResponse } from '../../types/api/responses';
+import type {
+  VenuesResponse,
+  ApiResponseWrapper,
+} from '../../types/api/responses';
 import { API_VENUES } from '../api';
 import type { ApiError } from '../../types/api/responses';
 
@@ -9,7 +12,7 @@ export const getVenues = async (
   page = 1,
   _owner?: boolean,
   _count?: boolean,
-): Promise<VenuesResponse> => {
+): Promise<ApiResponseWrapper<VenuesResponse>> => {
   const query = new URLSearchParams();
   if (sort) query.append('sort', sort);
   if (sortOrder) query.append('sortOrder', sortOrder);
