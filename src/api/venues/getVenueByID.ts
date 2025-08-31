@@ -12,7 +12,7 @@ export const getVenueByID = async (
   if (_bookings) query.append('_bookings', _bookings.toString());
 
   const url = query.toString()
-    ? `${API_VENUES}/${id}?${query.toString()}`
+    ? `${API_VENUES}/${id}${query ? '?' + query.toString() : ''}`
     : API_VENUES;
 
   const response = await fetch(url, {
