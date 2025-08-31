@@ -40,7 +40,14 @@ export type Venue = {
   };
 };
 
-export type VenuePayload = Omit<
+export type VenuePayload = Pick<
   Venue,
-  'id' | 'created' | 'updated' | 'owner' | 'bookings' | '_count'
+  | 'name'
+  | 'description'
+  | 'media'
+  | 'price'
+  | 'maxGuests'
+  | 'rating'
+  | 'meta'
+  | 'location'
 >;
