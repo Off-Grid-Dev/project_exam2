@@ -1,6 +1,6 @@
 import { API_VENUES } from '../api';
 
-export const deleteVenue = async (id?: string, token?: string) => {
+export const deleteVenue = async (id: string, token: string) => {
   const response = await fetch(`${API_VENUES}/${id}`, {
     method: 'DELETE',
     headers: {

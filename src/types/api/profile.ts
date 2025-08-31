@@ -28,8 +28,8 @@ export type RegisterProfilePayload = {
 };
 
 export type LoginProfilePayload = {
-  email: string | undefined;
-  password: string | undefined;
+  email: string;
+  password: string;
 };
 
 export type ProfilePayload = Pick<

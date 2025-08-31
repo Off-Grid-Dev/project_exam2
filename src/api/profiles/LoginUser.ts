@@ -4,7 +4,7 @@ import type { LoginProfileResponse } from '../../types/api/responses';
 import type { LoginProfilePayload } from '../../types/api/profile';
 
 export const loginUser = async (
-  payload?: LoginProfilePayload,
+  payload: LoginProfilePayload,
 ): Promise<LoginProfileResponse> => {
   const url = `${API_LOGIN}?_holidaze=true`;
 

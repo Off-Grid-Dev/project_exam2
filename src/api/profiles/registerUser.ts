@@ -6,7 +6,7 @@ import { API_REGISTER } from '../api';
 import { type RegisterProfilePayload } from '../../types/api/profile';
 
 export const registerUser = async (
-  payload?: RegisterProfilePayload,
+  payload: RegisterProfilePayload,
 ): Promise<RegisterProfileResponse> => {
   const url = `${API_REGISTER}`;
 
