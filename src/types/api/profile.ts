@@ -34,7 +34,7 @@ export type LoginProfilePayload = {
 
 export type ProfilePayload = Pick<
   Profile,
-  'avatar' | 'banner' | 'venueManager' | 'bio'
+  'bio' | 'avatar' | 'banner' | 'venueManager'
 >;
 
 export type Customer = Pick<
