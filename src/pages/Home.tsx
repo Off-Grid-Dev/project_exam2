@@ -3,6 +3,7 @@ import { getData } from '../api/api.ts';
 import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
+import { ApiFunctions } from '../api/api.ts';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -18,7 +19,7 @@ export const Home = () => {
   }
 
   async function normalizeVenueReturn() {
-    const res = (await getData('get venues')) as VenuesResponse;
+    const res = (await getData(ApiFunctions.GetVenues)) as VenuesResponse;
     if (!res) {
       setVenues([]);
       return;
@@ -47,7 +48,7 @@ export const Home = () => {
         />
         <button
           className='cursor-pointer rounded-2xl bg-green-800 px-3 py-2 hover:bg-green-700'
-          onClick={() => getData('venue by id', { id: venueID })}
+          onClick={() => getData(ApiFunctions.GetVenuesById, { id: venueID })}
         >
           Fetch Venue By ID
         </button>
@@ -61,7 +62,9 @@ export const Home = () => {
         />
         <button
           className='cursor-pointer rounded-2xl bg-blue-800 px-3 py-2 hover:bg-blue-700'
-          onClick={() => getData('venue by search', { q: venueQuery })}
+          onClick={() =>
+            getData(ApiFunctions.GetVenuesBySearch, { q: venueQuery })
+          }
         >
           Search for Venues
         </button>

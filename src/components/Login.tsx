@@ -1,8 +1,8 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
-
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { LoginProfilePayload } from '../types/api/profile';
 import { getData } from '../api/api';
 import { useAuth } from '../api/AuthContext';
+import { ApiFunctions } from '../api/api';
 
 type LoginInfo = LoginProfilePayload;
 
@@ -15,7 +15,7 @@ export const LoginForm = () => {
   const { login } = useAuth();
 
   // TODO abstract to file and use in other forms
-  // TODO replace console.error with toast
+  // TODO add toast
   function handleInvalid(
     e: FormEvent<HTMLInputElement>,
     message: string,
@@ -43,15 +43,11 @@ export const LoginForm = () => {
 
     console.log('Submitting login payload:', payload);
 
-    getData('login user', { loginProfilePayload: payload });
+    getData(ApiFunctions.LoginUser, { loginProfilePayload: payload });
 
     const accessToken = localStorage.getItem('accessToken');
-    if (accessToken && accessToken !== undefined) login();
+    if (accessToken && accessToken !== undefined && accessToken !== '') login();
   }
-
-  useEffect(() => {
-    console.log(` email: ${loginInfo.email}\n password: ${loginInfo.password}`);
-  }, [loginInfo]);
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-2'>

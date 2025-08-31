@@ -13,9 +13,9 @@ export const Wrapper: FC<WrapperProps> = ({ children }) => {
   const navigate = useNavigate();
 
   async function handleLogout() {
+    await getData('logout user');
     logout();
     console.log('user is logged out.');
-    await getData('logout user');
     navigate('/');
   }
   return (

@@ -1,6 +1,7 @@
 import { getData } from '../api/api';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { RegisterProfilePayload } from '../types/api/profile';
+import { ApiFunctions } from '../api/api';
 
 export const RegisterForm = () => {
   const [userInfo, setUserInfo] = useState<RegisterProfilePayload>({
@@ -79,7 +80,7 @@ export const RegisterForm = () => {
 
     console.log('Submitting registration payload:', payload);
 
-    getData('register user', { registerProfilePayload: payload });
+    getData(ApiFunctions.RegisterUser, { registerProfilePayload: payload });
   }
 
   return (
@@ -191,7 +192,7 @@ export const RegisterForm = () => {
           onChange={handleUserInfo}
         />
       </label>
-      <button>Submit</button>
+      <button type='submit'>Submit</button>
     </form>
   );
 };
