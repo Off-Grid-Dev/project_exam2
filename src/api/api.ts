@@ -13,6 +13,9 @@ import type {
 } from '../types/api/profile';
 import { loginUser } from './profiles/loginUser';
 import type { LoginProfileResponse } from '../types/api/responses';
+import { getAllProfiles } from './profiles/getAllProfiles';
+import { getProfileByName } from './profiles/getProfileByName';
+import { updateProfile } from './profiles/upDateProfile';
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;
@@ -127,7 +130,7 @@ export enum ApiFunctions {
    * @throws {Error} Throws an error if the API request fails.
    * @example
    * // Example usage:
-   * getData(ApiFunctions.CreateVenue, { payload, token });
+   * getData(ApiFunctions.CreateVenue, { payload: {payload}, token: {token} });
    * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
   CreateVenue = 'create venue',
@@ -163,7 +166,7 @@ export enum ApiFunctions {
    * @throws {Error} Throws an error if the API request fails.
    * @example
    * // Example usage:
-   * getData(ApiFunctions.UpdateVenue, { id, payload, token });
+   * getData(ApiFunctions.UpdateVenue, { id: {id}, payload: {payload}, token: {token} });
    * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
   UpdateVenue = 'update venue',
@@ -178,7 +181,7 @@ export enum ApiFunctions {
    * @throws {Error} Throws an error if the API request fails.
    * @example
    * // Example usage:
-   * getData(ApiFunctions.DeleteVenue, { id, token });
+   * getData(ApiFunctions.DeleteVenue, { id: {id}, token: {token} });
    * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
   DeleteVenue = 'delete venue',
@@ -203,7 +206,7 @@ export enum ApiFunctions {
    * @throws {Error} Throws an error if the API request fails.
    * @example
    * // Example usage:
-   * getData(ApiFunctions.RegisterUser, { payload });
+   * getData(ApiFunctions.RegisterUser, { payload: {payload} });
    * @see https://docs.noroff.dev/docs/v2/
    */
   RegisterUser = 'register user',
@@ -211,13 +214,13 @@ export enum ApiFunctions {
    * @description Login as existing user
    * @endpoint POST /auth/login
    * @param {Object} [payload] - Object containing login information
-   * @param {String} [payload.email]
-   * @param {String} [payload.pasword]
+   * @param {string} [payload.email]
+   * @param {string} [payload.pasword]
    * @returns {Promise<LoginProfileResponse>} A promise that resolves to a list of venues.
    * @throws {Error} Throws an error if the API request fails.
    * @example
    * // Example usage:
-   * getData(ApiFunctions.LoginUser, { payload });
+   * getData(ApiFunctions.LoginUser, { payload: {payload} });
    * @see https://docs.noroff.dev/docs/v2/
    */
   LoginUser = 'login user',
@@ -226,6 +229,58 @@ export enum ApiFunctions {
    *
    */
   LogoutUser = 'logout user',
+  /**
+   * @description retrieve all profiles - requires API KEY
+   * @endpoint GET /profiles
+   * @param {string} [token] - Auth token required
+   * @param {string} [sort] - Sort results based on any of the properties of the response
+   * @param {string} [sortOrder] - Sort results in ascending or descending order
+   * @param {string} [limit] - Limit number of users in response
+   * @param {string} [page] - Pagination of the response
+   * @param {boolean} [_bookings] - Return list of users' bookings
+   * @param {boolean} [_venues] - Return list of users' venues
+   * @returns {Promise<ProfileResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetAllProfiles, { token: {token}, sort: 'name', sortOrder: 'desc', limit: 20, page: 3, _bookings: true, _venues: false });
+   * @see https://docs.noroff.dev/docs/v2/
+   */
+  GetAllProfiles = 'get all profiles',
+  /**
+   * @description search for specific user profile by name - API KEY required
+   * @endpoint GET /profiles/{name}
+   * @param {string} [token] - Auth token required
+   * @param {string} [name] - Name of user
+   * @param {boolean} [_bookings] -Return a list of user's bookings
+   * @param {boolean} [_venues] - Return a list of user's venues
+   * @returns {Promise<ProfileResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetProfileByName, { token: {token}, name: 'Jerry', _bookings: false, _venues: false });
+   * @see https://docs.noroff.dev/docs/v2/
+   */
+  GetProfileByName = 'get profile by name',
+  /**
+   * @description Update your user profile
+   * @endpoint PUT /profiles/{name}
+   * @param {Object} [payload] - Object containing modified elements
+   * @param {string} [bio]
+   * @param {string[]} [avatar] - User avatar image
+   * @param {string} [avatar.url] - {url} of avatar image
+   * @param {string} [avatar.alt] - {alt} text of avatar image
+   * @param {string} [banner.url] - {url} of banner image
+   * @param {string} [banner.alt] - {alt} text of banner image
+   * @param {boolean} [venueManager]
+   * @returns {Promise<ProfileResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetProfileByName, { token: {token}, name: 'Jerry', payload: {payload} });
+   * @see https://docs.noroff.dev/docs/v2/
+   */
+  UpdateProfile = 'update profile',
 }
 
 function storeToken(response: LoginProfileResponse) {
@@ -321,6 +376,36 @@ const getData = (fn: string, params?: FetchParams) => {
       }
       case ApiFunctions.LogoutUser: {
         return clearToken();
+      }
+      case ApiFunctions.GetAllProfiles: {
+        const { token } = params || {};
+        if (!token) {
+          throw new Error('Request is missing token!');
+        }
+        return getAllProfiles(token);
+      }
+      case ApiFunctions.GetProfileByName: {
+        const { token, name } = params || {};
+        if (!token) {
+          throw new Error('Request is missing token!');
+        }
+        if (!name) {
+          return ApiFunctions.GetAllProfiles;
+        }
+        return getProfileByName(token, name);
+      }
+      case ApiFunctions.UpdateProfile: {
+        const { token, name, profilePayload } = params || {};
+        if (!token) {
+          throw new Error('Request is missing token!');
+        }
+        if (!name) {
+          throw new Error('Cannot update user without name');
+        }
+        if (!profilePayload) {
+          throw new Error('Must update at least one property');
+        }
+        return updateProfile(token, name, profilePayload);
       }
       default:
         throw new Error(`Unknown function: ${fn}`);
