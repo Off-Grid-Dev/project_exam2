@@ -40,12 +40,103 @@ type FetchParams = {
 };
 
 export enum ApiFunctions {
+  /**
+   * Fetches all venues.
+   *
+   * @endpoint GET /holidaze/venues
+   * @description Returns a list of all venues. Supports sorting, pagination, and filtering by owner/bookings.
+   * @param {string} [sort] - Field to sort by (e.g., 'created', 'name', 'price').
+   * @param {string} [sortOrder] - Sorting order, either 'asc' or 'desc'.
+   * @param {number} [limit=20] - Number of venues per page (default: 20).
+   * @param {number} [page=1] - Page number to retrieve (default: 1).
+   * @param {boolean} [_owner] - (Optional) If true, includes owner details in the response.
+   * @param {boolean} [_bookings] - (Optional) If true, includes bookings for each venue in the response.
+   * @returns {Promise<VenuesResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetVenues, { sort: 'name', sortOrder: 'asc', limit: 10, page: 2, _owner: true, _bookings: false });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/venues
+   */
   GetVenues = 'get venues',
+  /**
+   * Fetches venue by id
+   *
+   * @endpoint GET /holidaze/venues/{id}
+   * @description Retrieve a single venue based on its id.
+   * @param {boolean} [_owner] - (Optional) If true, includes owner details in the response.
+   * @param {boolean} [_bookings] - (Optional) If true, includes bookings for each venue in the response.
+   * @returns {Promise<VenuesResponse>} A promise that resolves to a single venue.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetVenueById, { id: <id>, _owner: true, _bookings: false });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/venues
+   */
   GetVenuesById = 'venue by id',
+  /**
+   * Fetches venues that match search query
+   *
+   * @endpoint GET /holidaze/venues/search?q={query}
+   * @param {string} [q] - Search query
+   * @param {string} [sort] - Field to sort by (e.g., 'created', 'name', 'price').
+   * @param {string} [sortOrder] - Sorting order, either 'asc' or 'desc'.
+   * @param {number} [limit=20] - Number of venues per page (default: 20).
+   * @param {number} [page=1] - Page number to retrieve (default: 1).
+   * @param {boolean} [_owner] - (Optional) If true, includes owner details in the response.
+   * @param {boolean} [_bookings] - (Optional) If true, includes bookings for each venue in the response.
+   * @returns {Promise<VenuesResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetVenueBySearch, { q: 'paris', sort: 'name', sortOrder: 'asc', limit: 10, page: 2, _owner: true, _bookings: false  });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/venues
+   */
   GetVenuesBySearch = 'venue by search',
+  /**
+   * Creates a venue
+   * @endpoint PUT /holidaze/venues/
+   * @param {Object} [payload] - Payload object that contains all information about the venue
+   * @param {string} [payload.name] - Name of venue
+   * @param {string} [payload.description] - Short description of venue
+   * @param {string[]} [payload.media] - (Optional) An array that includes url and alt text of image
+   * @param {string} [payload.media.url] - (Optional) Url of venue image
+   * @param {string} [payload.media.alt] - (Optional) Alt text for venue image
+   * @param {number} [payload.price] - Price of stay at venue
+   * @param {number} [payload.maxGuests] - Maximum guests allowed at venue
+   * @param {number} [payload.rating = 0] - (Optional) Rating of venue
+   * @param {Object} [payload.meta] - (Optional) A collection of specific information about the venue
+   * @param {boolean} [payload.meta.wifi = false] - (Optional) Does the location have wifi
+   * @param {boolean} [payload.meta.parking = false] - (Optional) Does the location have parking
+   * @param {boolean} [payload.meta.breakfast = false] - (Optional) Does the location serve breakfast
+   * @param {boolean} [payload.meta.pets = false] - (Optional) Does the location allow pets
+   * @param {Object} [payload.location] - (Optional) Information regarding the location of the venue
+   * @param {string} [payload.location.address] - (Optional)
+   * @param {string} [payload.location.city] - (Optional)
+   * @param {string} [payload.location.zip] - (Optional)
+   * @param {string} [payload.location.country] - (Optional)
+   * @param {string} [payload.location.continent] - (Optional)
+   * @param {number} [payload.location.lat] - (Optional)
+   * @param {number} [payload.location.lng] - (Optional)
+   * @returns {Promise<VenuesResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.CreateVenue, { payload, token });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/venues
+   */
   CreateVenue = 'create venue',
+  /**
+   * Upadtes a specific venue
+   */
   UpdateVenue = 'update venue',
+  /**
+   * Deletes a venue based on id
+   */
   DeleteVenue = 'delete venue',
+  /**
+   * Registers a user
+   */
   RegisterUser = 'register user',
   LoginUser = 'login user',
   LogoutUser = 'logout user',
@@ -63,44 +154,64 @@ function clearToken() {
 
 const getData = (fn: string, params?: FetchParams) => {
   console.log(`Function called: ${fn}`);
-  switch (fn) {
-    // Venues
-    case ApiFunctions.GetVenues: {
-      const { sort, sortOrder, limit, page } = params || {};
-      return getVenues(sort, sortOrder, limit, page);
+  try {
+    switch (fn) {
+      // Venues
+      case ApiFunctions.GetVenues: {
+        const { sort, sortOrder, limit, page } = params || {};
+        return getVenues(sort, sortOrder, limit, page);
+      }
+      case ApiFunctions.GetVenuesById: {
+        const { id } = params || {};
+        if (typeof id !== 'string') {
+          throw new Error('Id must be a string value');
+        }
+        return getVenueByID(id);
+      }
+      case ApiFunctions.GetVenuesBySearch: {
+        const { q, sort, sortOrder, limit, page } = params || {};
+        if (!q || q === '') {
+          return getVenues(sort, sortOrder, limit, page);
+        }
+        if (typeof q !== 'string') {
+          throw new Error('You must enter a valid search query');
+        }
+        return getVenueBySearch(q, sort, sortOrder, limit, page);
+      }
+      case ApiFunctions.CreateVenue: {
+        const { venuePayload, token } = params || {};
+        if (!venuePayload) {
+          throw new Error('No payload submitted');
+        }
+        if (!token || token !== '') {
+          throw new Error('Creating a new venue requires authentication token');
+        }
+        return createVenue(venuePayload, token);
+      }
+      case ApiFunctions.UpdateVenue: {
+        const { id, venuePayload, token, _owner, _bookings } = params || {};
+        return updateVenue(id, venuePayload, token, _owner, _bookings);
+      }
+      case ApiFunctions.DeleteVenue: {
+        const { id, token } = params || {};
+        return deleteVenue(id, token);
+      }
+      // Profiles
+      case ApiFunctions.RegisterUser: {
+        const { registerProfilePayload } = params || {};
+        return registerUser(registerProfilePayload);
+      }
+      case ApiFunctions.LoginUser: {
+        const { loginProfilePayload } = params || {};
+        return loginUser(loginProfilePayload).then((res) => storeToken(res));
+      }
+      case ApiFunctions.LogoutUser: {
+        return clearToken();
+      }
     }
-    case ApiFunctions.GetVenuesById: {
-      const { id } = params || {};
-      return getVenueByID(id);
-    }
-    case ApiFunctions.GetVenuesBySearch: {
-      const { q, sort, sortOrder, limit, page } = params || {};
-      return getVenueBySearch(q, sort, sortOrder, limit, page);
-    }
-    case ApiFunctions.CreateVenue: {
-      const { venuePayload, token, _owner, _bookings } = params || {};
-      return createVenue(venuePayload, token, _owner, _bookings);
-    }
-    case ApiFunctions.UpdateVenue: {
-      const { id, venuePayload, token, _owner, _bookings } = params || {};
-      return updateVenue(id, venuePayload, token, _owner, _bookings);
-    }
-    case ApiFunctions.DeleteVenue: {
-      const { id, token } = params || {};
-      return deleteVenue(id, token);
-    }
-    // Profiles
-    case ApiFunctions.RegisterUser: {
-      const { registerProfilePayload } = params || {};
-      return registerUser(registerProfilePayload);
-    }
-    case ApiFunctions.LoginUser: {
-      const { loginProfilePayload } = params || {};
-      return loginUser(loginProfilePayload).then((res) => storeToken(res));
-    }
-    case ApiFunctions.LogoutUser: {
-      return clearToken();
-    }
+  } catch (err) {
+    console.error(`Error in ${fn}: `, err);
+    throw err;
   }
 };
 
