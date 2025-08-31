@@ -2,11 +2,12 @@ import type { ProfilePayload } from '../../types/api/profile';
 import type { ApiError, ProfileResponse } from '../../types/api/responses';
 import { API_PROFILES, API_KEY } from '../api';
 
-export const getAllProfiles = async (
+export const updateProfile = async (
   token: string,
+  name: string,
   payload: ProfilePayload,
 ): Promise<ProfileResponse> => {
-  const response = await fetch(`${API_PROFILES}`, {
+  const response = await fetch(`${API_PROFILES}/${name}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

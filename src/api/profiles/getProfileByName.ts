@@ -1,7 +1,7 @@
 import type { ApiError, ProfileResponse } from '../../types/api/responses';
 import { API_KEY, API_PROFILES } from '../api';
 
-export const getProfileById = async (
+export const getProfileByName = async (
   name: string,
   token: string,
 ): Promise<ProfileResponse> => {
