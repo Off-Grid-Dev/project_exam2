@@ -20,6 +20,7 @@ export const API_REGISTER = `${API_BASE}auth/register`;
 export const API_LOGIN = `${API_BASE}auth/login`;
 export const API_PROFILES = `${API_HOLIDAZE}profiles`;
 // const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
+// TO DO implement github action injection of this key
 export const API_KEY = import.meta.env.VITE_API_KEY;
 
 type FetchParams = {
