@@ -94,6 +94,7 @@ export const RegisterForm = () => {
           className='ml-2 rounded-lg border-2 border-amber-300 p-1'
           onChange={handleUserInfo}
           required
+          pattern='^[a-zA-Z0-9_]+$'
           minLength={3}
           onInvalid={(e) => {
             e.preventDefault();
