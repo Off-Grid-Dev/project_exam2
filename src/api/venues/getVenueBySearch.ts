@@ -3,7 +3,7 @@ import { API_VENUES } from '../api';
 import type { ApiError } from '../../types/api/responses';
 
 export const getVenueBySearch = async (
-  q?: string,
+  q: string,
   sort?: string,
   sortOrder?: string,
   page = 1,
