@@ -39,6 +39,18 @@ type FetchParams = {
   token?: string;
 };
 
+export enum ApiFunctions {
+  GetVenues = 'get venues',
+  GetVenuesById = 'venue by id',
+  GetVenuesBySearch = 'venue by search',
+  CreateVenue = 'create venue',
+  UpdateVenue = 'update venue',
+  DeleteVenue = 'delete venue',
+  RegisterUser = 'register user',
+  LoginUser = 'login user',
+  LogoutUser = 'logout user',
+}
+
 function storeToken(response: LoginProfileResponse) {
   console.log('setting accessToken to localStorage');
   localStorage.setItem('accessToken', response.data.accessToken);
@@ -53,40 +65,40 @@ const getData = (fn: string, params?: FetchParams) => {
   console.log(`Function called: ${fn}`);
   switch (fn) {
     // Venues
-    case 'get venues': {
+    case ApiFunctions.GetVenues: {
       const { sort, sortOrder, limit, page } = params || {};
       return getVenues(sort, sortOrder, limit, page);
     }
-    case 'venue by id': {
+    case ApiFunctions.GetVenuesById: {
       const { id } = params || {};
       return getVenueByID(id);
     }
-    case 'venue by search': {
+    case ApiFunctions.GetVenuesBySearch: {
       const { q, sort, sortOrder, limit, page } = params || {};
       return getVenueBySearch(q, sort, sortOrder, limit, page);
     }
-    case 'create venue': {
+    case ApiFunctions.CreateVenue: {
       const { venuePayload, token, _owner, _bookings } = params || {};
       return createVenue(venuePayload, token, _owner, _bookings);
     }
-    case 'update venue': {
+    case ApiFunctions.UpdateVenue: {
       const { id, venuePayload, token, _owner, _bookings } = params || {};
       return updateVenue(id, venuePayload, token, _owner, _bookings);
     }
-    case 'delete venue': {
+    case ApiFunctions.DeleteVenue: {
       const { id, token } = params || {};
       return deleteVenue(id, token);
     }
     // Profiles
-    case 'register user': {
+    case ApiFunctions.RegisterUser: {
       const { registerProfilePayload } = params || {};
       return registerUser(registerProfilePayload);
     }
-    case 'login user': {
+    case ApiFunctions.LoginUser: {
       const { loginProfilePayload } = params || {};
       return loginUser(loginProfilePayload).then((res) => storeToken(res));
     }
-    case 'logout user': {
+    case ApiFunctions.LogoutUser: {
       return clearToken();
     }
   }
