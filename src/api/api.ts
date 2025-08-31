@@ -11,7 +11,7 @@ import type {
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
-import { loginUser } from './profiles/loginUser';
+import { loginUser } from './profiles/LoginUser';
 import type { LoginProfileResponse } from '../types/api/responses';
 import { getAllProfiles } from './profiles/getAllProfiles';
 import { getProfileByName } from './profiles/getProfileByName';
@@ -372,7 +372,9 @@ const getData = (fn: string, params?: FetchParams) => {
             'Submitted payload information is incorrect or missing.',
           );
         }
-        return loginUser(loginProfilePayload).then((res) => storeToken(res));
+        return loginUser(loginProfilePayload).then(
+          (res: LoginProfileResponse) => storeToken(res),
+        );
       }
       case ApiFunctions.LogoutUser: {
         return clearToken();
