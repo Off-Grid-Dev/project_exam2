@@ -11,7 +11,7 @@ import type {
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
-import { loginUser } from './profiles/LoginUser';
+import { loginUser } from './profiles/loginUser';
 import type { LoginProfileResponse } from '../types/api/responses';
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
@@ -20,6 +20,7 @@ export const API_REGISTER = `${API_BASE}auth/register`;
 export const API_LOGIN = `${API_BASE}auth/login`;
 export const API_PROFILES = `${API_HOLIDAZE}profiles`;
 // const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
+export const API_KEY = import.meta.env.VITE_API_KEY;
 
 type FetchParams = {
   options?: RequestInit;
