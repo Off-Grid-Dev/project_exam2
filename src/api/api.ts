@@ -78,6 +78,7 @@ export enum ApiFunctions {
    * Fetches venues that match search query
    *
    * @endpoint GET /holidaze/venues/search?q={query}
+   * @description Retrieve a list of venues by search query
    * @param {string} [q] - Search query
    * @param {string} [sort] - Field to sort by (e.g., 'created', 'name', 'price').
    * @param {string} [sortOrder] - Sorting order, either 'asc' or 'desc'.
@@ -95,7 +96,8 @@ export enum ApiFunctions {
   GetVenuesBySearch = 'venue by search',
   /**
    * Creates a venue
-   * @endpoint PUT /holidaze/venues/
+   * @endpoint POST /holidaze/venues/
+   * @description Creates a venue based on delivered payload
    * @param {Object} [payload] - Payload object that contains all information about the venue
    * @param {string} [payload.name] - Name of venue
    * @param {string} [payload.description] - Short description of venue
@@ -118,6 +120,7 @@ export enum ApiFunctions {
    * @param {string} [payload.location.continent] - (Optional)
    * @param {number} [payload.location.lat] - (Optional)
    * @param {number} [payload.location.lng] - (Optional)
+   * @param {string} [token] - Authorization token required for venue creation
    * @returns {Promise<VenuesResponse>} A promise that resolves to a list of venues.
    * @throws {Error} Throws an error if the API request fails.
    * @example
@@ -127,18 +130,99 @@ export enum ApiFunctions {
    */
   CreateVenue = 'create venue',
   /**
-   * Upadtes a specific venue
+   * Updates a specific venue
+   * @endpoint PUT /holidaze/venues/{id}
+   * @description Updates or modifies a venue based on delivered payload
+   * @param {string} [id] - Id of venue to be modified
+   * @param {Object} [payload] - Payload object that contains all information about the venue
+   * @param {string} [payload.name] - Name of venue
+   * @param {string} [payload.description] - Short description of venue
+   * @param {string[]} [payload.media] - (Optional) An array that includes url and alt text of image
+   * @param {string} [payload.media.url] - (Optional) Url of venue image
+   * @param {string} [payload.media.alt] - (Optional) Alt text for venue image
+   * @param {number} [payload.price] - Price of stay at venue
+   * @param {number} [payload.maxGuests] - Maximum guests allowed at venue
+   * @param {number} [payload.rating = 0] - (Optional) Rating of venue
+   * @param {Object} [payload.meta] - (Optional) A collection of specific information about the venue
+   * @param {boolean} [payload.meta.wifi = false] - (Optional) Does the location have wifi
+   * @param {boolean} [payload.meta.parking = false] - (Optional) Does the location have parking
+   * @param {boolean} [payload.meta.breakfast = false] - (Optional) Does the location serve breakfast
+   * @param {boolean} [payload.meta.pets = false] - (Optional) Does the location allow pets
+   * @param {Object} [payload.location] - (Optional) Information regarding the location of the venue
+   * @param {string} [payload.location.address] - (Optional)
+   * @param {string} [payload.location.city] - (Optional)
+   * @param {string} [payload.location.zip] - (Optional)
+   * @param {string} [payload.location.country] - (Optional)
+   * @param {string} [payload.location.continent] - (Optional)
+   * @param {number} [payload.location.lat] - (Optional)
+   * @param {number} [payload.location.lng] - (Optional)
+   * @param {string} [token] - Authorization token required for venue modification
+   * @returns {Promise<VenuesResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.UpdateVenue, { id, payload, token });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
   UpdateVenue = 'update venue',
   /**
    * Deletes a venue based on id
+   *
+   * @endpoint DELETE /holidaze/venues/{id}
+   * @description Deletes a specific venue by id
+   * @param {string} [id] - Id of venue to be modified
+   * @param {string} [token] - Authorization token required for venue modification
+   * @returns {Promise<VenuesResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.DeleteVenue, { id, token });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
   DeleteVenue = 'delete venue',
   /**
    * Registers a user
+   *
+   * @endpoint POST /auth/register
+   * @description Creates a new user
+   * @param {Object} [payload] - Object containing user information
+   * @param {string} [payload.name] - Name of new user
+   * @param {string} [payload.email] - New user's email address
+   * @param {string} [payload.password] - New user's desired password
+   * @param {string} [payload.bio] - (Optional) Descriptive biography of new user
+   * @param {string[]} [payload.avatar] - (Optional) Array containing {url} and {alt} for user avatar
+   * @param {string} [payload.avatar.url] - (Optional) {url} for user avatar
+   * @param {string} [payload.avatar.alt] - (Optional) {alt} for user avatar
+   * @param {string[]} [payload.banner] - (Optional) Array containing {url} and {alt} for user banner
+   * @param {string} [payload.banner.url] - (Optional) {url} for user banner
+   * @param {string} [payload.banner.alt] - (Optional) {alt} for user banner
+   * @param {boolean} [venueManager = true] - (Optional) Boolean to denote if user can create new venues or modify/delete their own venues
+   * @returns {Promise<LoginProfileResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.RegisterUser, { payload });
+   * @see https://docs.noroff.dev/docs/v2/
    */
   RegisterUser = 'register user',
+  /**
+   * @description Login as existing user
+   * @endpoint POST /auth/login
+   * @param {Object} [payload] - Object containing login information
+   * @param {String} [payload.email]
+   * @param {String} [payload.pasword]
+   * @returns {Promise<LoginProfileResponse>} A promise that resolves to a list of venues.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.LoginUser, { payload });
+   * @see https://docs.noroff.dev/docs/v2/
+   */
   LoginUser = 'login user',
+  /**
+   * @description Function that logs out user
+   *
+   */
   LogoutUser = 'logout user',
 }
 
@@ -184,30 +268,60 @@ const getData = (fn: string, params?: FetchParams) => {
           throw new Error('No payload submitted');
         }
         if (!token || token !== '') {
-          throw new Error('Creating a new venue requires authentication token');
+          throw new Error('Creating a new venue requires authorization token');
         }
         return createVenue(venuePayload, token);
       }
       case ApiFunctions.UpdateVenue: {
-        const { id, venuePayload, token, _owner, _bookings } = params || {};
-        return updateVenue(id, venuePayload, token, _owner, _bookings);
+        const { id, venuePayload, token } = params || {};
+        if (!id || typeof id !== 'string') {
+          throw new Error('Modifiying a venue requires a valid {id}');
+        }
+        if (!venuePayload) {
+          throw new Error('There is no modification payload');
+        }
+        if (!token || typeof token !== 'string') {
+          throw new Error('Modification requires authorization token');
+        }
+        return updateVenue(id, venuePayload, token);
       }
       case ApiFunctions.DeleteVenue: {
         const { id, token } = params || {};
+        if (!id || typeof id !== 'string') {
+          throw new Error('Deleting a venue requires a valid {id}');
+        }
+        if (!token || typeof token !== 'string') {
+          throw new Error('Modification requires authorization token');
+        }
         return deleteVenue(id, token);
       }
       // Profiles
       case ApiFunctions.RegisterUser: {
         const { registerProfilePayload } = params || {};
+        if (
+          !registerProfilePayload ||
+          typeof registerProfilePayload !== 'object'
+        ) {
+          throw new Error(
+            'Submitted payload information is incorrect or missing.',
+          );
+        }
         return registerUser(registerProfilePayload);
       }
       case ApiFunctions.LoginUser: {
         const { loginProfilePayload } = params || {};
+        if (!loginProfilePayload || typeof loginProfilePayload !== 'object') {
+          throw new Error(
+            'Submitted payload information is incorrect or missing.',
+          );
+        }
         return loginUser(loginProfilePayload).then((res) => storeToken(res));
       }
       case ApiFunctions.LogoutUser: {
         return clearToken();
       }
+      default:
+        throw new Error(`Unknown function: ${fn}`);
     }
   } catch (err) {
     console.error(`Error in ${fn}: `, err);
