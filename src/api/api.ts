@@ -15,7 +15,7 @@ import { loginUser } from './profiles/loginUser';
 import type { LoginProfileResponse } from '../types/api/responses';
 import { getAllProfiles } from './profiles/getAllProfiles';
 import { getProfileByName } from './profiles/getProfileByName';
-import { updateProfile } from './profiles/upDateProfile';
+import { updateProfile } from './profiles/updateProfile';
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;
