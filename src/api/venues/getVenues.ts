@@ -11,7 +11,7 @@ export const getVenues = async (
   limit = 20,
   page = 1,
   _owner?: boolean,
-  _count?: boolean,
+  _bookings?: boolean,
 ): Promise<ApiResponseWrapper<VenuesResponse>> => {
   const query = new URLSearchParams();
   if (sort) query.append('sort', sort);
@@ -19,7 +19,7 @@ export const getVenues = async (
   if (limit) query.append('limit', limit.toString());
   if (page) query.append('page', page.toString());
   if (_owner) query.append('_owner', _owner.toString());
-  if (_count) query.append('_count', _count.toString());
+  if (_bookings) query.append('_count', _bookings.toString());
 
   const url = query.toString()
     ? `${API_VENUES}?${query.toString()}`
