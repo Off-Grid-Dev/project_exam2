@@ -4,20 +4,10 @@ import type { ApiError } from '../../types/api/responses';
 import type { VenuePayload } from '../../types/api/venue';
 
 export const createVenue = async (
-  payload?: VenuePayload,
-  token?: string,
-  _owner: boolean = false,
-  _bookings: boolean = false,
+  payload: VenuePayload,
+  token: string,
 ): Promise<VenuesResponse> => {
-  const query = new URLSearchParams();
-  if (_owner) query.append('_owner', 'true');
-  if (_bookings) query.append('_bookings', 'true');
-
-  const url = query.toString()
-    ? `${API_VENUES}?${query.toString()}`
-    : API_VENUES;
-
-  const response = await fetch(url, {
+  const response = await fetch(`${API_VENUES}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
