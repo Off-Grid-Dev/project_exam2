@@ -11,18 +11,29 @@ import type {
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
-import { loginUser } from './profiles/loginUser';
+import { loginUser } from './profiles/loginUserTemporary';
 import type { LoginProfileResponse } from '../types/api/responses';
 import { getAllProfiles } from './profiles/getAllProfiles';
 import { getProfileByName } from './profiles/getProfileByName';
 import { updateProfile } from './profiles/updateProfile';
+// Bookings API
+import { createBooking } from './bookings/createBooking';
+import { getBookingByID } from './bookings/getBookingByID';
+import { getAllBookings } from './bookings/getAllBookings';
+import { getBookingsByProfile } from './bookings/getBookingsByProfile';
+import { updateBooking } from './bookings/updateBooking';
+import { deleteBooking } from './bookings/deleteBooking';
+import type {
+  BookingCreatePayload,
+  BookingUpdatePayload,
+} from '../types/api/booking';
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;
 export const API_REGISTER = `${API_BASE}auth/register`;
 export const API_LOGIN = `${API_BASE}auth/login`;
 export const API_PROFILES = `${API_HOLIDAZE}profiles`;
-// const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
+export const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
 // TO DO implement github action injection of this key
 export const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -34,11 +45,15 @@ type FetchParams = {
   page?: number;
   _owner?: boolean;
   _bookings?: boolean;
+  _customer?: boolean;
+  _venue?: boolean;
   name?: string;
   id?: string;
   q?: string;
   venuePayload?: VenuePayload;
   profilePayload?: ProfilePayload;
+  bookingCreatePayload?: BookingCreatePayload;
+  bookingUpdatePayload?: BookingUpdatePayload;
   registerProfilePayload?: RegisterProfilePayload;
   loginProfilePayload?: LoginProfilePayload;
   token?: string;
@@ -281,6 +296,117 @@ export enum ApiFunctions {
    * @see https://docs.noroff.dev/docs/v2/
    */
   UpdateProfile = 'update profile',
+  /**
+   * Fetches all bookings.
+   *
+   * @endpoint GET /holidaze/bookings
+   * @description Returns a list of bookings. Supports sorting, pagination, and including related customer/venue details.
+   * @param {string} [sort] - Field to sort by (e.g., 'created', 'dateFrom').
+   * @param {string} [sortOrder] - Sorting order, either 'asc' or 'desc'.
+   * @param {number} [limit=20] - Number of bookings per page (default: 20).
+   * @param {number} [page=1] - Page number to retrieve (default: 1).
+   * @param {boolean} [_customer] - (Optional) If true, includes customer details in the response.
+   * @param {boolean} [_venue] - (Optional) If true, includes venue details in the response.
+   * @param {string} token - Authorization token (required).
+   * @returns {Promise<BookingsResponse>} A promise that resolves to a list of bookings.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetAllBookings, { token, sort: 'dateFrom', sortOrder: 'desc', limit: 10, page: 1, _customer: true, _venue: false });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/bookings
+   */
+  GetAllBookings = 'get all bookings',
+  /**
+   * Fetches booking by id.
+   *
+   * @endpoint GET /holidaze/bookings/{id}
+   * @description Retrieve a single booking based on its id.
+   * @param {string} id - Booking id to retrieve.
+   * @param {boolean} [_customer] - (Optional) If true, includes customer details in the response.
+   * @param {boolean} [_venue] - (Optional) If true, includes venue details in the response.
+   * @param {string} token - Authorization token (required).
+   * @returns {Promise<BookingsResponse>} A promise that resolves to a single booking.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetBookingById, { id: 'booking-id', token, _customer: true, _venue: true });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/bookings
+   */
+  GetBookingById = 'get booking by id',
+  /**
+   * Fetches bookings by profile.
+   *
+   * @endpoint GET /holidaze/profiles/{name}/bookings
+   * @description Retrieve all bookings made by a profile. Supports sorting, pagination, and related flags.
+   * @param {string} name - Profile name.
+   * @param {string} [sort] - Field to sort by (e.g., 'created', 'dateFrom').
+   * @param {string} [sortOrder] - Sorting order, either 'asc' or 'desc'.
+   * @param {number} [limit=20] - Number of bookings per page (default: 20).
+   * @param {number} [page=1] - Page number to retrieve (default: 1).
+   * @param {boolean} [_customer] - (Optional) If true, includes customer details in the response.
+   * @param {boolean} [_venue] - (Optional) If true, includes venue details in the response.
+   * @param {string} token - Authorization token (required).
+   * @returns {Promise<BookingsResponse>} A promise that resolves to a list of bookings for the profile.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.GetBookingsByProfile, { name: 'jane_doe', token, sort: 'created', sortOrder: 'asc', limit: 20, page: 1, _customer: false, _venue: true });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/profiles#all-bookings-by-profile
+   */
+  GetBookingsByProfile = 'get bookings by profile',
+  /**
+   * Creates a booking.
+   *
+   * @endpoint POST /holidaze/bookings
+   * @description Create a new booking with required details.
+   * @param {Object} bookingCreatePayload - Payload with booking details.
+   * @param {string} bookingCreatePayload.dateFrom - ISO date string for start date.
+   * @param {string} bookingCreatePayload.dateTo - ISO date string for end date.
+   * @param {number} bookingCreatePayload.guests - Number of guests.
+   * @param {string} bookingCreatePayload.venueId - The id of the venue to book.
+   * @param {string} token - Authorization token (required).
+   * @returns {Promise<BookingsResponse>} A promise that resolves to the created booking.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.CreateBooking, { bookingCreatePayload: { dateFrom, dateTo, guests, venueId }, token });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/bookings#create-booking
+   */
+  CreateBooking = 'create booking',
+  /**
+   * Updates a booking.
+   *
+   * @endpoint PUT /holidaze/bookings/{id}
+   * @description Update an existing booking's details.
+   * @param {string} id - Booking id to update.
+   * @param {Object} bookingUpdatePayload - Partial update payload.
+   * @param {string} [bookingUpdatePayload.dateFrom] - ISO date string for start date.
+   * @param {string} [bookingUpdatePayload.dateTo] - ISO date string for end date.
+   * @param {number} [bookingUpdatePayload.guests] - Number of guests.
+   * @param {string} token - Authorization token (required).
+   * @returns {Promise<BookingsResponse>} A promise that resolves to the updated booking.
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.UpdateBooking, { id: 'booking-id', bookingUpdatePayload: { guests: 3 }, token });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/bookings#update-booking
+   */
+  UpdateBooking = 'update booking',
+  /**
+   * Deletes a booking.
+   *
+   * @endpoint DELETE /holidaze/bookings/{id}
+   * @description Delete a booking based on its id.
+   * @param {string} id - Booking id to delete.
+   * @param {string} token - Authorization token (required).
+   * @returns {Promise<boolean>} A promise that resolves to true if the booking was deleted (204).
+   * @throws {Error} Throws an error if the API request fails.
+   * @example
+   * // Example usage:
+   * getData(ApiFunctions.DeleteBooking, { id: 'booking-id', token });
+   * @see https://docs.noroff.dev/docs/v2/holidaze/bookings#delete-booking
+   */
+  DeleteBooking = 'delete booking',
 }
 
 function storeToken(response: LoginProfileResponse) {
@@ -406,6 +532,90 @@ const getData = (fn: string, params?: FetchParams) => {
           throw new Error('Must update at least one property');
         }
         return updateProfile(token, name, profilePayload);
+      }
+      // Bookings
+      case ApiFunctions.GetAllBookings: {
+        const { sort, sortOrder, limit, page, _customer, _venue, token } =
+          params || {};
+        if (!token) {
+          throw new Error('Fetching bookings requires authorization token');
+        }
+        return getAllBookings(
+          sort,
+          sortOrder,
+          limit,
+          page,
+          _customer,
+          _venue,
+          token,
+        );
+      }
+      case ApiFunctions.GetBookingById: {
+        const { id, _customer, _venue, token } = params || {};
+        if (!id || typeof id !== 'string') {
+          throw new Error('Retrieving a booking requires a valid {id}');
+        }
+        if (!token) {
+          throw new Error('Fetching a booking requires authorization token');
+        }
+        return getBookingByID(id, _customer, _venue, token);
+      }
+      case ApiFunctions.GetBookingsByProfile: {
+        const { name, sort, sortOrder, limit, page, _customer, _venue, token } =
+          params || {};
+        if (!name || typeof name !== 'string') {
+          throw new Error(
+            'Retrieving bookings by profile requires a valid {name}',
+          );
+        }
+        if (!token) {
+          throw new Error(
+            'Fetching bookings by profile requires authorization token',
+          );
+        }
+        return getBookingsByProfile(
+          name,
+          sort,
+          sortOrder,
+          limit,
+          page,
+          _customer,
+          _venue,
+          token,
+        );
+      }
+      case ApiFunctions.CreateBooking: {
+        const { bookingCreatePayload, token } = params || {};
+        if (!bookingCreatePayload) {
+          throw new Error('No booking payload submitted');
+        }
+        if (!token || typeof token !== 'string') {
+          throw new Error('Creating a booking requires authorization token');
+        }
+        return createBooking(bookingCreatePayload, token);
+      }
+      case ApiFunctions.UpdateBooking: {
+        const { id, bookingUpdatePayload, token } = params || {};
+        if (!id || typeof id !== 'string') {
+          throw new Error('Updating a booking requires a valid {id}');
+        }
+        if (!bookingUpdatePayload) {
+          throw new Error('There is no booking modification payload');
+        }
+        if (!token || typeof token !== 'string') {
+          throw new Error('Updating a booking requires authorization token');
+        }
+        return updateBooking(id, bookingUpdatePayload, token);
+      }
+      case ApiFunctions.DeleteBooking: {
+        const { id, token } = params || {};
+        if (!id || typeof id !== 'string') {
+          throw new Error('Deleting a booking requires a valid {id}');
+        }
+        if (!token || typeof token !== 'string') {
+          throw new Error('Deleting a booking requires authorization token');
+        }
+        return deleteBooking(id, token);
       }
       default:
         throw new Error(`Unknown function: ${fn}`);
