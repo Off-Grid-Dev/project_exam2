@@ -9,7 +9,7 @@ export const getVenueBySearch = async (
   page = 1,
   limit = 20,
   _owner?: boolean,
-  _count?: boolean,
+  _bookings?: boolean,
 ): Promise<VenuesResponse> => {
   const query = new URLSearchParams();
   if (sort) query.append('sort', sort);
@@ -18,7 +18,7 @@ export const getVenueBySearch = async (
   if (page) query.append('page', page.toString());
   if (q) query.append('q', q);
   if (_owner) query.append('_owner', _owner.toString());
-  if (_count) query.append('_count', _count.toString());
+  if (_bookings) query.append('_bookings', _bookings.toString());
 
   const url = `${API_VENUES}/search?${query.toString()}`;
 
