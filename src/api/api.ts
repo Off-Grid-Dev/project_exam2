@@ -93,7 +93,7 @@ export enum ApiFunctions {
    * getData(ApiFunctions.GetVenueById, { id: <id>, _owner: true, _bookings: false });
    * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
-  GetVenuesById = 'venue by id',
+  GetVenueById = 'venue by id',
   /**
    * Fetches venues that match search query
    *
@@ -113,7 +113,7 @@ export enum ApiFunctions {
    * getData(ApiFunctions.GetVenueBySearch, { q: 'paris', sort: 'name', sortOrder: 'asc', limit: 10, page: 2, _owner: true, _bookings: false  });
    * @see https://docs.noroff.dev/docs/v2/holidaze/venues
    */
-  GetVenuesBySearch = 'venue by search',
+  GetVenueBySearch = 'venue by search',
   /**
    * Creates a venue
    * @endpoint POST /holidaze/venues/
@@ -429,14 +429,14 @@ const getData = (fn: string, params?: FetchParams) => {
           params || {};
         return getVenues(sort, sortOrder, limit, page, _owner, _bookings);
       }
-      case ApiFunctions.GetVenuesById: {
+      case ApiFunctions.GetVenueById: {
         const { id, _owner, _bookings } = params || {};
         if (typeof id !== 'string') {
           throw new Error('Id must be a string value');
         }
         return getVenueByID(id, _owner, _bookings);
       }
-      case ApiFunctions.GetVenuesBySearch: {
+      case ApiFunctions.GetVenueBySearch: {
         const { q, sort, sortOrder, limit, page, _owner, _bookings } =
           params || {};
         if (!q || q === '') {
