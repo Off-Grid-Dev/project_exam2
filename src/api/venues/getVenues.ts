@@ -19,7 +19,7 @@ export const getVenues = async (
   if (limit) query.append('limit', limit.toString());
   if (page) query.append('page', page.toString());
   if (_owner) query.append('_owner', _owner.toString());
-  if (_bookings) query.append('_count', _bookings.toString());
+  if (_bookings) query.append('_bookings', _bookings.toString());
 
   const url = query.toString()
     ? `${API_VENUES}?${query.toString()}`
