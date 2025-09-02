@@ -11,7 +11,7 @@ import type {
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
-import { loginUser } from './profiles/loginUserTemporary';
+import { loginUser } from './profiles/loginUser';
 import type { LoginProfileResponse } from '../types/api/responses';
 import { getAllProfiles } from './profiles/getAllProfiles';
 import { getProfileByName } from './profiles/getProfileByName';
