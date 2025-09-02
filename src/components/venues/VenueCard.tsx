@@ -22,9 +22,14 @@ export const VenuesCard: FC<Venue> = ({
   const { address, city, zip, country, continent, lat, lng } = location;
 
   return (
-    <div id={id}>
+    <div id={id} className='grid rounded-md border-2 border-amber-500'>
       <h3>{name}</h3>
-      {url && <img src={url} alt={alt ?? 'venue image'} />}
+      <div className='w-24 rounded-md border-2 border-amber-950 bg-slate-300'>
+        {url && (
+          <img className='max-w-full' src={url} alt={alt ?? 'venue image'} />
+        )}
+      </div>
+      <button className='bg-primary-100 cursor-pointer text-white'>BOOK</button>
       <p>Description: {description}</p>
       <p>Price: {price}</p>
       <p>Maximum Guests: {maxGuests}</p>
