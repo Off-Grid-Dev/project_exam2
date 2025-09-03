@@ -1,32 +1,39 @@
-import { getVenues } from './venues/getVenues';
-import { getVenueByID } from './venues/getVenueByID';
-import { getVenueBySearch } from './venues/getVenueBySearch';
-import { updateVenue } from './venues/updateVenue';
+import type {
+  BookingCreatePayload,
+  BookingUpdatePayload,
+} from '../types/api/booking';
 import type { VenuePayload } from '../types/api/venue';
-import { createVenue } from './venues/createVenue';
-import { deleteVenue } from './venues/deleteVenue';
-import { registerUser } from './profiles/registerUser';
 import type {
   LoginProfilePayload,
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
-import { loginUser } from './profiles/loginUser';
 import type { LoginProfileResponse } from '../types/api/responses';
-import { getAllProfiles } from './profiles/getAllProfiles';
-import { getProfileByName } from './profiles/getProfileByName';
-import { updateProfile } from './profiles/updateProfile';
-// Bookings API
-import { createBooking } from './bookings/createBooking';
-import { getBookingByID } from './bookings/getBookingByID';
-import { getAllBookings } from './bookings/getAllBookings';
-import { getBookingsByProfile } from './bookings/getBookingsByProfile';
-import { updateBooking } from './bookings/updateBooking';
-import { deleteBooking } from './bookings/deleteBooking';
-import type {
-  BookingCreatePayload,
-  BookingUpdatePayload,
-} from '../types/api/booking';
+import {
+  getVenues,
+  getVenueByID,
+  getVenueBySearch,
+  updateVenue,
+  createVenue,
+  deleteVenue,
+} from './venues';
+import {
+  registerUser,
+  loginUser,
+  getAllProfiles,
+  getProfileByName,
+  updateProfile,
+} from './profiles';
+import {
+  createBooking,
+  deleteBooking,
+  getAllBookings,
+  getBookingByID,
+  getBookingsByProfile,
+  updateBooking,
+} from './bookings';
+import { ApiFunctions } from '../types/api/apiFunctionsEnum';
+
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;
@@ -36,7 +43,6 @@ export const API_PROFILES = `${API_HOLIDAZE}profiles`;
 export const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
 // TO DO implement github action injection of this key
 export const API_KEY = import.meta.env.VITE_API_KEY;
-import { ApiFunctions } from '../types/api/apiFunctionsEnum';
 
 type FetchParams = {
   options?: RequestInit;
