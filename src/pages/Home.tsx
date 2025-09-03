@@ -48,7 +48,7 @@ export const Home = () => {
         />
         <button
           className='cursor-pointer rounded-2xl bg-green-800 px-3 py-2 hover:bg-green-700'
-          onClick={() => getData(ApiFunctions.GetVenuesById, { id: venueID })}
+          onClick={() => getData(ApiFunctions.GetVenueById, { id: venueID })}
         >
           Fetch Venue By ID
         </button>
@@ -63,7 +63,7 @@ export const Home = () => {
         <button
           className='cursor-pointer rounded-2xl bg-blue-800 px-3 py-2 hover:bg-blue-700'
           onClick={() =>
-            getData(ApiFunctions.GetVenuesBySearch, { q: venueQuery })
+            getData(ApiFunctions.GetVenueBySearch, { q: venueQuery })
           }
         >
           Search for Venues

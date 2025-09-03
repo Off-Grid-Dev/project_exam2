@@ -1,6 +1,6 @@
 # Project Exam 2
 
-[![Deploy to GitHub Pages](https://github.com/Off-Grid-Dev/project_exam2/actions/workflows/deploy.yml/badge.svg?branch=main)](https://off-grid-dev.github.io/project_exam2/)
+[![Deployed to GitHub Pages](https://github.com/Off-Grid-Dev/project_exam2/actions/workflows/deploy.yml/badge.svg?branch=main)](https://off-grid-dev.github.io/project_exam2/)
 
 Single-page React application built with Vite and TypeScript, deployed to GitHub Pages.
 
