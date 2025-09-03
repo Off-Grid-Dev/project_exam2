@@ -70,11 +70,17 @@ function clearToken() {
   localStorage.removeItem('accessToken');
 }
 
-const isTokenValid = (token: any): token is string => {
-  return typeof token === 'string' && token.trim() === '';
+const isTokenValid = (token: any): boolean => {
+  return typeof token === 'string' && token.trim() !== '';
 };
 
-const getData = (fn: string, params?: FetchParams) => {
+async function storeAndReturn(payload: LoginProfilePayload) {
+  const res = await loginUser(payload);
+  storeToken(res);
+  return res;
+}
+
+const getData = async (fn: string, params?: FetchParams) => {
   console.log(`Function called: ${fn}`);
   try {
     switch (fn) {
@@ -155,11 +161,7 @@ const getData = (fn: string, params?: FetchParams) => {
             'Submitted payload information is incorrect or missing.',
           );
         }
-        async function storeAndReturn(payload: LoginProfilePayload) {
-          const res = await loginUser(payload);
-          storeToken(res);
-          return res;
-        }
+
         return storeAndReturn(loginProfilePayload);
       }
       case ApiFunctions.LogoutUser: {
