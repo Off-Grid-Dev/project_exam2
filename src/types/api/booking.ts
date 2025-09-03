@@ -16,10 +16,10 @@ export type Booking = {
 
 // Payloads
 export type BookingCreatePayload = {
-  dateFrom: string; // ISO 8601
-  dateTo: string; // ISO 8601
+  dateFrom: string;
+  dateTo: string;
   guests: number;
-  venueId: string; // target venue id
+  venueId: string;
 };
 
 export type BookingUpdatePayload = Partial<BookingCreatePayload>;
