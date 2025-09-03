@@ -1,7 +1,7 @@
 import { getData } from '../api/api';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { RegisterProfilePayload } from '../types/api/profile';
-import { ApiFunctions } from '../api/api';
+import { ApiFunctions } from '../types/api/apiFunctionsEnum';
 
 export const RegisterForm = () => {
   const [userInfo, setUserInfo] = useState<RegisterProfilePayload>({

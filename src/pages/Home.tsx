@@ -3,7 +3,7 @@ import { getData } from '../api/api.ts';
 import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
-import { ApiFunctions } from '../api/api.ts';
+import { ApiFunctions } from '../types/api/apiFunctionsEnum.ts';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
