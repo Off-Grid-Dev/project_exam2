@@ -35,26 +35,45 @@ import {
 } from './bookings';
 import { ApiFunctions } from './apiFunctionsEnum';
 
-type FetchParams = {
-  options?: RequestInit;
+type VenueParams = {
   sort?: string;
   sortOrder?: string;
   limit?: number;
   page?: number;
   _owner?: boolean;
   _bookings?: boolean;
-  _customer?: boolean;
-  _venue?: boolean;
-  name?: string;
   id?: string;
   q?: string;
   venuePayload?: VenuePayload;
+  token?: string;
+};
+
+type ProfileParams = {
   profilePayload?: ProfilePayload;
-  bookingCreatePayload?: BookingCreatePayload;
-  bookingUpdatePayload?: BookingUpdatePayload;
   registerProfilePayload?: RegisterProfilePayload;
   loginProfilePayload?: LoginProfilePayload;
   token?: string;
+  name?: string;
+  sort?: string;
+  sortOrder?: string;
+  limit?: number;
+  page?: number;
+  _bookings?: boolean;
+  _venues?: boolean;
+};
+
+type BookingParams = {
+  sort?: string;
+  sortOrder?: string;
+  limit?: number;
+  page?: number;
+  _customer?: boolean;
+  _venue?: boolean;
+  token?: string;
+  id?: string;
+  name?: string;
+  bookingCreatePayload: BookingCreatePayload;
+  bookingUpdatePayload: BookingUpdatePayload;
 };
 
 function storeToken(response: LoginProfileResponse) {
@@ -77,11 +96,9 @@ async function storeTokenAndReturn(payload: LoginProfilePayload) {
   return res;
 }
 
-const getData = async (fn: string, params?: FetchParams) => {
-  console.log(`Function called: ${fn}`);
+const fetchVenues = async (fn: string, params?: VenueParams) => {
   try {
     switch (fn) {
-      // Venues
       case ApiFunctions.GetVenues: {
         const { sort, sortOrder, limit, page, _owner, _bookings } =
           params || {};
@@ -138,7 +155,19 @@ const getData = async (fn: string, params?: FetchParams) => {
         }
         return deleteVenue(id, token);
       }
-      // Profiles
+      default: {
+        throw new Error(`Unknown function: ${fn}`);
+      }
+    }
+  } catch (err) {
+    console.error(`Error in ${fn}: `, err);
+    throw err;
+  }
+};
+
+const fetchProfiles = async (fn: string, params?: ProfileParams) => {
+  try {
+    switch (fn) {
       case ApiFunctions.RegisterUser: {
         const { registerProfilePayload } = params || {};
         if (
@@ -165,11 +194,20 @@ const getData = async (fn: string, params?: FetchParams) => {
         return clearToken();
       }
       case ApiFunctions.GetAllProfiles: {
-        const { token } = params || {};
+        const { token, sort, sortOrder, limit, page, _bookings, _venues } =
+          params || {};
         if (!token || !isTokenValid(token)) {
           throw new Error('Request is missing token!');
         }
-        return getAllProfiles(token);
+        return getAllProfiles(
+          token,
+          sort,
+          sortOrder,
+          limit,
+          page,
+          _bookings,
+          _venues,
+        );
       }
       case ApiFunctions.GetProfileByName: {
         const { token, name } = params || {};
@@ -194,7 +232,16 @@ const getData = async (fn: string, params?: FetchParams) => {
         }
         return updateProfile(token, name, profilePayload);
       }
-      // Bookings
+    }
+  } catch (err) {
+    console.error(`Error in ${fn}: `, err);
+    throw err;
+  }
+};
+
+const fetchBookings = async (fn: string, params?: BookingParams) => {
+  try {
+    switch (fn) {
       case ApiFunctions.GetAllBookings: {
         const { sort, sortOrder, limit, page, _customer, _venue, token } =
           params || {};
@@ -278,8 +325,9 @@ const getData = async (fn: string, params?: FetchParams) => {
         }
         return deleteBooking(id, token);
       }
-      default:
+      default: {
         throw new Error(`Unknown function: ${fn}`);
+      }
     }
   } catch (err) {
     console.error(`Error in ${fn}: `, err);
@@ -287,4 +335,4 @@ const getData = async (fn: string, params?: FetchParams) => {
   }
 };
 
-export { getData };
+export { fetchVenues, fetchProfiles, fetchBookings };
