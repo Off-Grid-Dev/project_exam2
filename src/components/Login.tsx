@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { LoginProfilePayload } from '../types/api/profile';
 import { getData } from '../api/api';
 import { useAuth } from '../api/auth/UseAuth';
-import { ApiFunctions } from '../types/api/apiFunctionsEnum';
+import { ApiFunctions } from '../api/apiFunctionsEnum';
 
 type LoginInfo = LoginProfilePayload;
 

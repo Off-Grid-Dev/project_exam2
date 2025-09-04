@@ -33,7 +33,7 @@ import {
   getBookingsByProfile,
   updateBooking,
 } from './bookings';
-import { ApiFunctions } from '../types/api/apiFunctionsEnum';
+import { ApiFunctions } from './apiFunctionsEnum';
 
 type FetchParams = {
   options?: RequestInit;
@@ -71,7 +71,7 @@ const isTokenValid = (token: any): boolean => {
   return typeof token === 'string' && token.trim() !== '';
 };
 
-async function storeAndReturn(payload: LoginProfilePayload) {
+async function storeTokenAndReturn(payload: LoginProfilePayload) {
   const res = await loginUser(payload);
   storeToken(res);
   return res;
@@ -159,7 +159,7 @@ const getData = async (fn: string, params?: FetchParams) => {
           );
         }
 
-        return storeAndReturn(loginProfilePayload);
+        return storeTokenAndReturn(loginProfilePayload);
       }
       case ApiFunctions.LogoutUser: {
         return clearToken();
