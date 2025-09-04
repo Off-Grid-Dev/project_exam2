@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState, type ChangeEvent } from 'react';
-import { getData } from '../api/api.ts';
+import { fetchVenues } from '../api/api.ts';
 import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
@@ -19,7 +19,7 @@ export const Home = () => {
   }
 
   async function normalizeVenueReturn() {
-    const res = (await getData(ApiFunctions.GetVenues)) as VenuesResponse;
+    const res = (await fetchVenues(ApiFunctions.GetVenues)) as VenuesResponse;
     if (!res) {
       setVenues([]);
       return;
@@ -48,7 +48,9 @@ export const Home = () => {
         />
         <button
           className='cursor-pointer rounded-2xl bg-green-800 px-3 py-2 hover:bg-green-700'
-          onClick={() => getData(ApiFunctions.GetVenueById, { id: venueID })}
+          onClick={() =>
+            fetchVenues(ApiFunctions.GetVenueById, { id: venueID })
+          }
         >
           Fetch Venue By ID
         </button>
@@ -63,7 +65,7 @@ export const Home = () => {
         <button
           className='cursor-pointer rounded-2xl bg-blue-800 px-3 py-2 hover:bg-blue-700'
           onClick={() =>
-            getData(ApiFunctions.GetVenueBySearch, { q: venueQuery })
+            fetchVenues(ApiFunctions.GetVenueBySearch, { q: venueQuery })
           }
         >
           Search for Venues

@@ -1,4 +1,4 @@
-import { getData } from '../api/api';
+import { fetchProfiles } from '../api/api';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { RegisterProfilePayload } from '../types/api/profile';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
@@ -80,7 +80,9 @@ export const RegisterForm = () => {
 
     console.log('Submitting registration payload:', payload);
 
-    getData(ApiFunctions.RegisterUser, { registerProfilePayload: payload });
+    fetchProfiles(ApiFunctions.RegisterUser, {
+      registerProfilePayload: payload,
+    });
   }
 
   return (

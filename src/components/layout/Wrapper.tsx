@@ -1,7 +1,7 @@
 import type { ReactNode, FC } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../api/auth/UseAuth';
-import { getData } from '../../api/api';
+import { useAuth } from '../../api/auth/useAuth';
+import { fetchProfiles } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 
 type WrapperProps = {
@@ -13,7 +13,7 @@ export const Wrapper: FC<WrapperProps> = ({ children }) => {
   const navigate = useNavigate();
 
   async function handleLogout() {
-    await getData('logout user');
+    await fetchProfiles('logout user');
     logout();
     console.log('user is logged out.');
     navigate('/');

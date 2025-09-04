@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { LoginProfilePayload } from '../types/api/profile';
-import { getData } from '../api/api';
-import { useAuth } from '../api/auth/UseAuth';
+import { fetchProfiles } from '../api/api';
+import { useAuth } from '../api/auth/useAuth';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 
 type LoginInfo = LoginProfilePayload;
@@ -43,7 +43,7 @@ export const LoginForm = () => {
 
     console.log('Submitting login payload:', payload);
 
-    getData(ApiFunctions.LoginUser, { loginProfilePayload: payload });
+    fetchProfiles(ApiFunctions.LoginUser, { loginProfilePayload: payload });
 
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken && accessToken !== undefined && accessToken !== '') login();
