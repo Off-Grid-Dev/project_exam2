@@ -35,6 +35,8 @@ import {
 } from './bookings';
 import { ApiFunctions } from './apiFunctionsEnum';
 
+import { storeToken, clearToken, isTokenValid } from './authToken';
+
 type VenueParams = {
   sort?: string;
   sortOrder?: string;
@@ -76,21 +78,7 @@ type BookingParams = {
   bookingUpdatePayload: BookingUpdatePayload;
 };
 
-function storeToken(response: LoginProfileResponse) {
-  console.log('setting accessToken to localStorage');
-  localStorage.setItem('accessToken', response.data.accessToken);
-}
-
-function clearToken() {
-  console.log('removing accessToken from localStaorage');
-  localStorage.removeItem('accessToken');
-}
-
-const isTokenValid = (token: any): boolean => {
-  return typeof token === 'string' && token.trim() !== '';
-};
-
-async function storeTokenAndReturn(payload: LoginProfilePayload) {
+async function storeTokenAndReturnResponse(payload: LoginProfilePayload) {
   const res = await loginUser(payload);
   storeToken(res);
   return res;
@@ -188,7 +176,7 @@ const fetchProfiles = async (fn: string, params?: ProfileParams) => {
           );
         }
 
-        return storeTokenAndReturn(loginProfilePayload);
+        return storeTokenAndReturnResponse(loginProfilePayload);
       }
       case ApiFunctions.LogoutUser: {
         return clearToken();

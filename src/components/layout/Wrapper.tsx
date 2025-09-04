@@ -1,16 +1,22 @@
-import type { ReactNode, FC } from 'react';
+import { type ReactNode, type FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../api/auth/useAuth';
 import { fetchProfiles } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
+import { getToken, isTokenValid } from '../../api/authToken';
 
 type WrapperProps = {
   children: ReactNode;
 };
 
 export const Wrapper: FC<WrapperProps> = ({ children }) => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, login, logout } = useAuth();
   const navigate = useNavigate();
+
+  function isUserLoggedIn() {
+    const token = getToken();
+    return isTokenValid(token);
+  }
 
   async function handleLogout() {
     await fetchProfiles('logout user');
@@ -18,6 +24,11 @@ export const Wrapper: FC<WrapperProps> = ({ children }) => {
     console.log('user is logged out.');
     navigate('/');
   }
+
+  useEffect(() => {
+    if (isUserLoggedIn()) login();
+  }, []);
+
   return (
     <>
       <header className='flex justify-between bg-amber-950 px-8 py-6 align-middle text-white'>
