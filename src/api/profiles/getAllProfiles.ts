@@ -1,5 +1,5 @@
 import type { ApiError, ProfileResponse } from '../../types/api/responses';
-import { API_KEY, API_PROFILES } from '../api';
+import { API_KEY, API_PROFILES } from '../constants';
 
 export const getAllProfiles = async (
   token: string,

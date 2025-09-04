@@ -2,7 +2,7 @@ import {
   type ApiError,
   type RegisterProfileResponse,
 } from '../../types/api/responses';
-import { API_REGISTER } from '../api';
+import { API_REGISTER } from '../constants';
 import { type RegisterProfilePayload } from '../../types/api/profile';
 
 export const registerUser = async (

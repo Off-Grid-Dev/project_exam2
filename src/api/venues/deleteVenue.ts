@@ -1,5 +1,5 @@
 import type { ApiError } from '../../types/api/responses';
-import { API_VENUES } from '../api';
+import { API_VENUES } from '../constants';
 
 export const deleteVenue = async (id: string, token: string) => {
   const response = await fetch(`${API_VENUES}/${id}`, {

@@ -1,6 +1,6 @@
 import type { ProfilePayload } from '../../types/api/profile';
 import type { ApiError, ProfileResponse } from '../../types/api/responses';
-import { API_PROFILES, API_KEY } from '../api';
+import { API_PROFILES, API_KEY } from '../constants';
 
 export const updateProfile = async (
   token: string,

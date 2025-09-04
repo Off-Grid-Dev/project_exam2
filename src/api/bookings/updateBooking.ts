@@ -1,8 +1,6 @@
 import type { BookingsResponse, ApiError } from '../../types/api/responses';
 import type { BookingUpdatePayload } from '../../types/api/booking';
-
-const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
-const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
+import { API_BOOKINGS } from '../constants';
 
 export const updateBooking = async (
   id: string,

@@ -1,7 +1,5 @@
 import type { ApiError } from '../../types/api/responses';
-
-const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
-const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
+import { API_BOOKINGS } from '../constants';
 
 export const deleteBooking = async (id: string, token: string) => {
   const response = await fetch(`${API_BOOKINGS}/${id}`, {

@@ -1,5 +1,5 @@
 import type { VenuesResponse } from '../../types/api/responses';
-import { API_VENUES } from '../api';
+import { API_VENUES } from '../constants';
 import type { ApiError } from '../../types/api/responses';
 
 export const getVenueBySearch = async (

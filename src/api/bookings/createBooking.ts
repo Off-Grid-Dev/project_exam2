@@ -1,9 +1,6 @@
 import type { BookingsResponse, ApiError } from '../../types/api/responses';
 import type { BookingCreatePayload } from '../../types/api/booking';
-
-// Local endpoint to avoid coupling to api.ts while stubbing
-const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
-const API_BOOKINGS = `${API_HOLIDAZE}bookings`;
+import { API_BOOKINGS } from '../constants';
 
 export const createBooking = async (
   payload: BookingCreatePayload,

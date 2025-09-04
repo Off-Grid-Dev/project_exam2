@@ -1,7 +1,5 @@
 import type { BookingsResponse, ApiError } from '../../types/api/responses';
-
-const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
-const API_PROFILES = `${API_HOLIDAZE}profiles`;
+import { API_PROFILES } from '../constants';
 
 export const getBookingsByProfile = async (
   name: string,
