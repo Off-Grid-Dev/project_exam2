@@ -1,3 +1,4 @@
+import type { ApiError } from '../../types/api/responses';
 import { API_VENUES } from '../api';
 
 export const deleteVenue = async (id: string, token: string) => {
@@ -12,8 +13,12 @@ export const deleteVenue = async (id: string, token: string) => {
   if (response.status === 204) {
     // TODO add toast
     console.log(`Deleted venue ${id} successfully.`);
-  } else {
-    console.error(`Could not delete venue. ${response.status}`);
+  }
+  if (!response.ok) {
+    const errorBody: ApiError = await response.json();
+    const message =
+      errorBody.errors.map((e) => e.message).join(', ') || response.statusText;
+    throw new Error(`Could not delete venue: ${response.status} - ${message}`);
   }
 
   return response.status === 204;

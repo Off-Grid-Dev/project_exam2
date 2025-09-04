@@ -1,6 +1,6 @@
 import type { ReactNode, FC } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../api/AuthContext';
+import { useAuth } from '../../api/auth/UseAuth';
 import { getData } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 

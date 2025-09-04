@@ -9,11 +9,6 @@ export type ApiError = {
   statusCode: number;
 };
 
-export type ApiResponseWrapper<T> = {
-  data: T;
-  meta?: unknown;
-};
-
 export type RegisterProfileResponse = {
   data: {
     name: string;

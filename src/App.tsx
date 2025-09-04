@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { LoginRegister } from './pages/LoginRegister';
 import { Wrapper } from './components/layout/Wrapper';
-import { AuthProvider, useAuth } from './api/AuthContext';
+import { AuthProvider } from './api/auth/AuthProvider';
+import { useAuth } from './api/auth/UseAuth';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();

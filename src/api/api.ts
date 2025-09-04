@@ -120,7 +120,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!venuePayload) {
           throw new Error('No payload submitted');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Creating a new venue requires authorization token');
         }
         return createVenue(venuePayload, token);
@@ -133,7 +133,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!venuePayload) {
           throw new Error('There is no modification payload');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Modification requires authorization token');
         }
         return updateVenue(id, venuePayload, token);
@@ -143,7 +143,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!id || typeof id !== 'string') {
           throw new Error('Deleting a venue requires a valid {id}');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Modification requires authorization token');
         }
         return deleteVenue(id, token);
@@ -176,14 +176,14 @@ const getData = async (fn: string, params?: FetchParams) => {
       }
       case ApiFunctions.GetAllProfiles: {
         const { token } = params || {};
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Request is missing token!');
         }
         return getAllProfiles(token);
       }
       case ApiFunctions.GetProfileByName: {
         const { token, name } = params || {};
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Request is missing token!');
         }
         if (!name || name.trim() === '') {
@@ -193,7 +193,7 @@ const getData = async (fn: string, params?: FetchParams) => {
       }
       case ApiFunctions.UpdateProfile: {
         const { token, name, profilePayload } = params || {};
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Request is missing token!');
         }
         if (!name) {
@@ -208,7 +208,7 @@ const getData = async (fn: string, params?: FetchParams) => {
       case ApiFunctions.GetAllBookings: {
         const { sort, sortOrder, limit, page, _customer, _venue, token } =
           params || {};
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Fetching bookings requires authorization token');
         }
         return getAllBookings(
@@ -226,7 +226,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!id || typeof id !== 'string') {
           throw new Error('Retrieving a booking requires a valid {id}');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Fetching a booking requires authorization token');
         }
         return getBookingByID(id, _customer, _venue, token);
@@ -239,7 +239,7 @@ const getData = async (fn: string, params?: FetchParams) => {
             'Retrieving bookings by profile requires a valid {name}',
           );
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error(
             'Fetching bookings by profile requires authorization token',
           );
@@ -260,7 +260,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!bookingCreatePayload) {
           throw new Error('No booking payload submitted');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Creating a booking requires authorization token');
         }
         return createBooking(bookingCreatePayload, token);
@@ -273,7 +273,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!bookingUpdatePayload) {
           throw new Error('There is no booking modification payload');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Updating a booking requires authorization token');
         }
         return updateBooking(id, bookingUpdatePayload, token);
@@ -283,7 +283,7 @@ const getData = async (fn: string, params?: FetchParams) => {
         if (!id || typeof id !== 'string') {
           throw new Error('Deleting a booking requires a valid {id}');
         }
-        if (!token || isTokenValid(token)) {
+        if (!token || !isTokenValid(token)) {
           throw new Error('Deleting a booking requires authorization token');
         }
         return deleteBooking(id, token);
