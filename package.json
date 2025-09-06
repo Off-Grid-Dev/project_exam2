@@ -14,6 +14,9 @@
     "format": "npx prettier --write .",
     "prepare": "husky",
     "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:api": "vitest src/api/__tests__",
     "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
