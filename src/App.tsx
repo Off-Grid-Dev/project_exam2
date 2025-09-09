@@ -3,7 +3,7 @@ import { Home } from './pages/Home';
 import { LoginRegister } from './pages/LoginRegister';
 import { Wrapper } from './components/layout/Wrapper';
 import { AuthProvider } from './api/auth/AuthProvider';
-import { useAuth } from './api/auth/UseAuth';
+import { useAuth } from './api/auth/useAuth';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
