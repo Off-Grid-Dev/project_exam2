@@ -8,7 +8,6 @@ import type {
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
-import type { LoginProfileResponse } from '../types/api/responses';
 
 import {
   getVenues,
