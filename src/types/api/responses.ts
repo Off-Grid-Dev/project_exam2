@@ -33,7 +33,14 @@ export type LoginProfileResponse = {
   meta: Record<string, unknown>;
 };
 
+// Single profile response (used by GET /profiles/:name and profile updates)
 export type ProfileResponse = {
+  data: Profile;
+  meta: Record<string, unknown>;
+};
+
+// Multiple profiles response (used by GET /profiles)
+export type ProfilesResponse = {
   data: Profile[];
   meta: Record<string, unknown>;
 };

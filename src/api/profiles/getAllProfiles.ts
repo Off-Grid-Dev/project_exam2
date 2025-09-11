@@ -1,4 +1,4 @@
-import type { ApiError, ProfileResponse } from '../../types/api/responses';
+import type { ApiError, ProfilesResponse } from '../../types/api/responses';
 import { API_KEY, API_PROFILES } from '../constants';
 
 export const getAllProfiles = async (
@@ -9,7 +9,7 @@ export const getAllProfiles = async (
   page?: number,
   _bookings?: boolean,
   _venues?: boolean,
-): Promise<ProfileResponse> => {
+): Promise<ProfilesResponse> => {
   const query = new URLSearchParams();
   if (sort) query.append('sort', String(sort));
   if (sortOrder) query.append('sortOrder', String(sortOrder));

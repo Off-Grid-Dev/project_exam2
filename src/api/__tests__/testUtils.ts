@@ -90,6 +90,8 @@ export const mockProfileResponse = {
       alt: 'Banner',
     },
     venueManager: false,
+    venues: [],
+    bookings: [],
     _count: {
       venues: 0,
       bookings: 1,
