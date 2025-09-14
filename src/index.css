@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -61,4 +62,45 @@
   --color-warning-700: #ffb300;
   --color-warning-800: #ffa000;
   --color-warning-900: #ff8f00;
+
+  /* Background colors */
+  --color-bg-dark: var(--color-primary-900);
+  --color-bg-med: var(--color-primary-400);
+  --color-bg-light: var(--color-base-100);
+
+  /* Border colors */
+  --color-border-dark: var(--color-primary-900);
+  --color-border-focus: var(--color-secondary-700);
+  --color-border-warning: var(--color-warning-900);
+  --color-border-success: var(--color-success-700);
+
+  /* Text colors */
+  --color-text-base: var(--color-base-100);
+  --color-text-dark: var(--color-text-800);
+  --color-text-deactivated: var(--color-text-500);
+  --color-text-logo: var(--color-secondary-400);
+  --color-text-warning: var(--color-warning-900);
+  --color-text-success: var(--color-success-700);
+
+  /* Button colors */
+  --color-button-primary: var(--color-bg-dark);
+  --color-button-primary-hover: var(--color-bg-med);
+  --color-button-secondary: var(--color-secondary-800);
+  --color-button-secondary-hover: var(--color-secondary-200);
+
+  /* Typography */
+  --font-base: "Quicksand", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-secondary: "Rubik", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --default-font-family: var(--font-base);
+  --text-sm: 12px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-heading: 36px;
+  --text-display: 48px;
+
+  /* Spacing & Breakpoints */
+  --max-w-desktop: 1224px;
+  --max-w-tablet: 700px;
+  --max-w-mobile: 380px;
 }
