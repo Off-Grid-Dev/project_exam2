@@ -7,8 +7,8 @@ import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
-  const [venueID, setVenueID] = useState<string | undefined>(undefined);
-  const [venueQuery, setVenueQuery] = useState<string | undefined>(undefined);
+  const [venueID, setVenueID] = useState<string>('');
+  const [venueQuery, setVenueQuery] = useState<string>('');
 
   function handleIDUpdate(e: ChangeEvent<HTMLInputElement>) {
     setVenueID(e.target.value.trim());
@@ -34,8 +34,8 @@ export const Home = () => {
 
   return (
     <>
-      <div className='grid min-h-screen place-content-center gap-4'>
-        <h1 className='mt-8 text-center text-3xl font-semibold text-green-900'>
+      <div className='mt-8 mb-8 grid justify-center gap-2'>
+        <h1 className='mt-1 text-center text-3xl font-semibold text-green-900'>
           Project exam 2
         </h1>
         <input

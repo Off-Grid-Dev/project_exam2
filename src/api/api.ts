@@ -107,7 +107,16 @@ const fetchVenues = async (fn: string, params?: VenueParams) => {
         if (typeof q !== 'string') {
           throw new Error('You must enter a valid search query');
         }
-        return getVenueBySearch(q, sort, sortOrder, limit, page);
+        // getVenueBySearch signature: (q, sort?, sortOrder?, page = 1, limit = 20, _owner?, _bookings?)
+        return getVenueBySearch(
+          q,
+          sort,
+          sortOrder,
+          page,
+          limit,
+          _owner,
+          _bookings,
+        );
       }
       case ApiFunctions.CreateVenue: {
         const { venuePayload, token } = params || {};
