@@ -12,7 +12,7 @@ export const VenuesList: FC<VenuesListType> = ({ venues }) => {
   }
 
   return (
-    <div className='grid outline-2 outline-amber-800'>
+    <div className='grid grid-cols-2 outline-2 outline-amber-800'>
       {venues.map((venue) => (
         <VenuesCard key={venue.id} {...venue} />
       ))}

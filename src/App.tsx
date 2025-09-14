@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { LoginRegister } from './pages/LoginRegister';
-import { Wrapper } from './components/layout/Wrapper';
+import { Header } from './components/layout/Header';
 import { AuthProvider } from './api/auth/AuthProvider';
 import { useAuth } from './api/auth/useAuth';
 
@@ -24,9 +24,8 @@ function App() {
   return (
     <BrowserRouter basename='/project_exam2'>
       <AuthProvider>
-        <Wrapper>
-          <AppRoutes />
-        </Wrapper>
+        <Header />
+        <AppRoutes />
       </AuthProvider>
     </BrowserRouter>
   );

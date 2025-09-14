@@ -1,80 +1,46 @@
-import { type ReactNode, type FC, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../api/auth/useAuth';
-import { fetchProfiles } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
-import { getToken, isTokenValid } from '../../api/authToken';
+import type { FC, ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 
 type WrapperProps = {
   children: ReactNode;
 };
 
 export const Wrapper: FC<WrapperProps> = ({ children }) => {
-  const { isLoggedIn, login, logout } = useAuth();
-  const navigate = useNavigate();
-
-  function isUserLoggedIn() {
-    const token = getToken();
-    return isTokenValid(token);
-  }
-
-  async function handleLogout() {
-    await fetchProfiles('logout user');
-    logout();
-    console.log('user is logged out.');
-    navigate('/');
-  }
+  const [breakpoint, setBreakpoint] = useState<'desktop' | 'tablet' | 'mobile'>(
+    () => {
+      const w = typeof window !== 'undefined' ? window.innerWidth : 0;
+      if (w >= 1250) return 'desktop';
+      if (w >= 750) return 'tablet';
+      return 'mobile';
+    },
+  );
 
   useEffect(() => {
-    if (isUserLoggedIn()) login();
+    if (typeof window === 'undefined') return;
+
+    const compute = (w: number) => {
+      const next = w >= 1250 ? 'desktop' : w >= 750 ? 'tablet' : 'mobile';
+      setBreakpoint((prev) => {
+        if (prev === next) return prev;
+        console.log('[Wrapper] breakpoint change', { from: prev, to: next });
+        return next;
+      });
+    };
+
+    compute(window.innerWidth);
+
+    const onResize = () => compute(window.innerWidth);
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
   return (
-    <>
-      <header className='flex justify-between bg-amber-950 px-8 py-6 align-middle text-white'>
-        <Link to={'/'}>HOLIDAZE</Link>
-        <ul className='flex gap-3 align-middle' role='navigation'>
-          <li>
-            <Link
-              className='inline-block rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
-              to={'/'}
-            >
-              home
-            </Link>
-          </li>
-          {!isLoggedIn && (
-            <li>
-              <Link
-                className='inline-block rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
-                to={'/welcome'}
-              >
-                welcome
-              </Link>
-            </li>
-          )}
-          {isLoggedIn && (
-            <>
-              <li>
-                <Link
-                  className='inline-block rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
-                  to={'/profile'}
-                >
-                  profile
-                </Link>
-              </li>
-              <li>
-                <button
-                  className='rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
-                  onClick={handleLogout}
-                >
-                  logout
-                </button>
-              </li>
-            </>
-          )}
-        </ul>
-      </header>
+    <div className={`max-w-${breakpoint} mx-auto flex justify-between`}>
       {children}
-    </>
+    </div>
   );
 };
