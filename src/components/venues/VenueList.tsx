@@ -7,18 +7,22 @@ type VenuesListType = {
   isLoading?: boolean;
 };
 
+const classOptions = {
+  desktop: 'grid grid-cols-2 gap-2 ',
+  tablet: '',
+};
+
 export const VenuesList: FC<VenuesListType> = ({ venues, isLoading }) => {
   if ((!venues || venues.length === 0) && !isLoading) {
     return <p className='text-center'>No venues to show</p>;
   }
 
   if ((!venues || venues.length === 0) && isLoading) {
-    // while loading, render nothing (the parent can show a loading indicator)
     return null;
   }
 
   return (
-    <div className='grid grid-cols-2 outline-2 outline-amber-800'>
+    <div className={classOptions.desktop}>
       {venues.map((venue) => (
         <VenuesCard key={venue.id} {...venue} />
       ))}
