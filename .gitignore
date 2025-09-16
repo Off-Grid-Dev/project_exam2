@@ -24,6 +24,8 @@ dist-ssr
 *.sw?
 
 # Private files
+.env
+.example.env
 tasks.md
 user-stories.md
 api-ref.md
