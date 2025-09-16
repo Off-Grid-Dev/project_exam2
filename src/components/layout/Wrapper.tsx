@@ -1,46 +1,26 @@
 import type { FC, ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { BreakpointProvider } from '../../context/ui/BreakpointContext';
 
 type WrapperProps = {
   children: ReactNode;
 };
 
+const classOptions = {
+  desktop: 'max-w-desktop mx-auto flex justify-between',
+  tablet: '',
+  mobile: '',
+};
+
 export const Wrapper: FC<WrapperProps> = ({ children }) => {
-  const [breakpoint, setBreakpoint] = useState<'desktop' | 'tablet' | 'mobile'>(
-    () => {
-      const w = typeof window !== 'undefined' ? window.innerWidth : 0;
-      if (w >= 1250) return 'desktop';
-      if (w >= 750) return 'tablet';
-      return 'mobile';
-    },
-  );
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const compute = (w: number) => {
-      const next = w >= 1250 ? 'desktop' : w >= 750 ? 'tablet' : 'mobile';
-      setBreakpoint((prev) => {
-        if (prev === next) return prev;
-        console.log('[Wrapper] breakpoint change', { from: prev, to: next });
-        return next;
-      });
-    };
-
-    compute(window.innerWidth);
-
-    const onResize = () => compute(window.innerWidth);
-
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, []);
-
   return (
-    <div className={`max-w-${breakpoint} mx-auto flex justify-between`}>
-      {children}
-    </div>
+    <BreakpointProvider>
+      {(value) => (
+        <div
+          className={value.breakpoint === 'desktop' ? classOptions.desktop : ''}
+        >
+          {children}
+        </div>
+      )}
+    </BreakpointProvider>
   );
 };

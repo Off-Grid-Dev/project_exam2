@@ -94,9 +94,7 @@ export const Home = () => {
   return (
     <>
       <div className='mt-8 mb-8 grid justify-center gap-2'>
-        <h1 className='mt-1 text-center text-3xl font-semibold text-green-900'>
-          Venues
-        </h1>
+        <h1 className='text-heading mt-4 font-semibold'>Venues</h1>
         <form
           className='flex gap-4'
           onSubmit={(e) => {

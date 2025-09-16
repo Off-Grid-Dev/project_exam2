@@ -1,14 +1,10 @@
 import { type FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../api/auth/useAuth';
+import { useAuth } from '../../context/auth/useAuth';
 import { fetchProfiles } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { getToken, isTokenValid } from '../../api/authToken';
 import { Wrapper } from './Wrapper';
-
-// type HeaderProps = {
-//   children: ReactNode;
-// };
 
 export const Header: FC = () => {
   const { isLoggedIn, login, logout } = useAuth();
@@ -32,7 +28,7 @@ export const Header: FC = () => {
 
   return (
     <>
-      <header className='bg-amber-950 py-6 text-white'>
+      <header className='bg-bg-dark py-6 text-white'>
         <Wrapper>
           <Link to={'/'}>HOLIDAZE</Link>
           <ul className='flex gap-3 align-middle' role='navigation'>

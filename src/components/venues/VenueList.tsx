@@ -10,6 +10,7 @@ type VenuesListType = {
 const classOptions = {
   desktop: 'grid grid-cols-2 gap-2 ',
   tablet: '',
+  mobile: '',
 };
 
 export const VenuesList: FC<VenuesListType> = ({ venues, isLoading }) => {

@@ -100,7 +100,7 @@
   --text-display: 48px;
 
   /* Spacing & Breakpoints */
-  --max-w-desktop: 1224px;
-  --max-w-tablet: 700px;
-  --max-w-mobile: 380px;
+  --spacing-desktop: 1224px;
+  --spacing-tablet: 700px;
+  --spacing-mobile: 380px;
 }
