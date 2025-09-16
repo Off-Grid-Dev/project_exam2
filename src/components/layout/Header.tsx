@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../api/auth/useAuth';
 import { fetchProfiles } from '../../api/api';

@@ -134,7 +134,7 @@ export const Home = () => {
           </select>
         </form>
       </div>
-      <VenuesList venues={venues} />
+      <VenuesList venues={venues} isLoading={isLoading} />
       {isLoading && <p className='text-center'>Loading venues...</p>}
       {error && <p className='text-center text-red-600'>Error: {error}</p>}
     </>

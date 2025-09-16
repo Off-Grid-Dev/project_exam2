@@ -4,11 +4,17 @@ import type { FC } from 'react';
 
 type VenuesListType = {
   venues: Venue[];
+  isLoading?: boolean;
 };
 
-export const VenuesList: FC<VenuesListType> = ({ venues }) => {
-  if (!venues || venues.length === 0) {
+export const VenuesList: FC<VenuesListType> = ({ venues, isLoading }) => {
+  if ((!venues || venues.length === 0) && !isLoading) {
     return <p className='text-center'>No venues to show</p>;
+  }
+
+  if ((!venues || venues.length === 0) && isLoading) {
+    // while loading, render nothing (the parent can show a loading indicator)
+    return null;
   }
 
   return (
