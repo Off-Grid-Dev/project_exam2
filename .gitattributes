@@ -1,3 +1,6 @@
+# Stop .gitignore from being affect by merging
+.gitignore merge=ours
+
 # Enforce LF line endings for all text files
 * text=auto eol=lf
 
