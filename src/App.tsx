@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { LoginRegister } from './pages/LoginRegister';
 import { Header } from './components/layout/Header';
-import { AuthProvider } from './context/auth/AuthProvider';
 import { useAuth } from './context/auth/useAuth';
+import ContextProvider from './context/ContextProvider';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
@@ -23,10 +23,10 @@ const AppRoutes = () => {
 function App() {
   return (
     <BrowserRouter basename='/project_exam2'>
-      <AuthProvider>
+      <ContextProvider>
         <Header />
         <AppRoutes />
-      </AuthProvider>
+      </ContextProvider>
     </BrowserRouter>
   );
 }

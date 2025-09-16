@@ -28,13 +28,13 @@ export const Header: FC = () => {
 
   return (
     <>
-      <header className='bg-bg-dark py-6 text-white'>
+      <header className='bg-dark text-on-dark py-6'>
         <Wrapper>
           <Link to={'/'}>HOLIDAZE</Link>
           <ul className='flex gap-3 align-middle' role='navigation'>
             <li>
               <Link
-                className='inline-block rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
+                className='header-link inline-block rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
                 to={'/'}
               >
                 home
@@ -43,7 +43,7 @@ export const Header: FC = () => {
             {!isLoggedIn && (
               <li>
                 <Link
-                  className='inline-block rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
+                  className='header-link inline-block rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
                   to={'/welcome'}
                 >
                   welcome
@@ -54,7 +54,7 @@ export const Header: FC = () => {
               <>
                 <li>
                   <Link
-                    className='inline-block rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
+                    className='header-link inline-block rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
                     to={'/profile'}
                   >
                     profile
@@ -62,7 +62,7 @@ export const Header: FC = () => {
                 </li>
                 <li>
                   <button
-                    className='rounded-lg bg-white px-3 py-2 font-semibold text-amber-950 transition-colors duration-200 hover:bg-amber-800 hover:text-white'
+                    className='header-link rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
                     onClick={handleLogout}
                   >
                     logout

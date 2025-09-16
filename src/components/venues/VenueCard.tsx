@@ -1,5 +1,11 @@
 import { type FC } from 'react';
 import type { Venue } from '../../types/api/venue';
+import {
+  createClassOptions,
+  getClassFor,
+  composeClasses,
+} from '../../context/ui/classOptionsTemplate';
+import { useBreakpoint } from '../../context/ui/useBreakpoint';
 
 export const VenuesCard: FC<Venue> = ({
   id,
@@ -21,15 +27,32 @@ export const VenuesCard: FC<Venue> = ({
   const { wifi, parking, breakfast, pets } = meta;
   const { address, city, zip, country, continent, lat, lng } = location;
 
+  const rootOpts = createClassOptions({
+    desktopStyles: 'grid rounded-md border-2 p-4 gap-3',
+    tabletStyles: 'grid rounded-md border-2 p-3 gap-3',
+    mobileStyles: 'grid rounded-md border-2 p-2 gap-2',
+  });
+
+  const imgWrapper =
+    'w-28 rounded-md border-2 overflow-hidden bg-[var(--color-base-100)]';
+
+  const { breakpoint } = useBreakpoint();
+  const rootClass = composeClasses(
+    getClassFor(breakpoint, rootOpts),
+    'border-[var(--color-border-dark)] bg-[var(--color-base-100)]',
+  );
+
   return (
-    <div id={id} className='grid rounded-md border-2 border-amber-500'>
-      <h3>{name}</h3>
-      <div className='w-24 rounded-md border-2 border-amber-950 bg-slate-300'>
+    <div id={id} className={rootClass}>
+      <h3 className='font-semibold text-[var(--color-text-dark)]'>{name}</h3>
+      <div className={imgWrapper}>
         {url && (
           <img className='max-w-full' src={url} alt={alt ?? 'venue image'} />
         )}
       </div>
-      <button className='bg-primary-100 cursor-pointer text-white'>BOOK</button>
+      <button className='cursor-pointer rounded bg-[var(--color-bg-dark)] px-3 py-1 text-[var(--color-text-base)] hover:bg-[var(--color-bg-med)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:outline-none'>
+        BOOK
+      </button>
       <p>Description: {description}</p>
       <p>Price: {price}</p>
       <p>Maximum Guests: {maxGuests}</p>
