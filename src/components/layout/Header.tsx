@@ -28,7 +28,7 @@ export const Header: FC = () => {
 
   useEffect(() => {
     if (isUserLoggedIn()) login();
-  }, []);
+  }, [login]);
 
   return (
     <>

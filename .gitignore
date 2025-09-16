@@ -25,7 +25,11 @@ dist-ssr
 
 # Private files
 .env
+<<<<<<< HEAD
 !.example.env
+=======
+.example.env
+>>>>>>> main
 tasks.md
 user-stories.md
 api-ref.md

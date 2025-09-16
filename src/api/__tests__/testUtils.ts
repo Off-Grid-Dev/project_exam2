@@ -144,26 +144,32 @@ export const mockApiError = {
 };
 
 // Helper to create a successful fetch response
-export const createMockResponse = (data: any, status = 200) => {
+export const createMockResponse = <T = unknown>(
+  data: T,
+  status = 200,
+): Promise<Response> => {
   return Promise.resolve({
     ok: status >= 200 && status < 300,
     status,
     statusText: status === 200 ? 'OK' : 'Error',
     json: () => Promise.resolve(data),
-  } as Response);
+  } as unknown as Response);
 };
 
 // Helper to create an error fetch response
-export const createMockErrorResponse = (status = 400, error = mockApiError) => {
+export const createMockErrorResponse = (
+  status = 400,
+  error = mockApiError,
+): Promise<Response> => {
   return Promise.resolve({
     ok: false,
     status,
     statusText: 'Error',
     json: () => Promise.resolve(error),
-  } as Response);
+  } as unknown as Response);
 };
 
 // Mock fetch function setup
-export const setupFetchMock = () => {
-  return vi.fn();
+export const setupFetchMock = <T extends (...args: unknown[]) => unknown>() => {
+  return vi.fn() as unknown as T;
 };

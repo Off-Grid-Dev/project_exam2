@@ -76,17 +76,19 @@ describe('API Dispatcher Functions', () => {
     });
 
     it('should handle unknown function gracefully', async () => {
-      await expect(fetchVenues('UnknownFunction' as any)).rejects.toThrow(
-        'Unknown function: UnknownFunction',
-      );
+      await expect(
+        fetchVenues('UnknownFunction' as unknown as never),
+      ).rejects.toThrow('Unknown function: UnknownFunction');
     });
   });
 
   describe('fetchProfiles', () => {
     it('should validate login payload', async () => {
       await expect(
+        // pass undefined explicitly to test validation branch
         fetchProfiles(ApiFunctions.LoginUser, {
-          loginProfilePayload: undefined,
+          // loginProfilePayload intentionally undefined for test
+          loginProfilePayload: undefined as unknown as never,
         }),
       ).rejects.toThrow(
         'Submitted payload information is incorrect or missing.',
@@ -146,8 +148,9 @@ describe('API Dispatcher Functions', () => {
 
     it('should validate booking payload for CreateBooking', async () => {
       await expect(
+        // explicitly signal missing payload using unknown->never cast for type safety
         fetchBookings(ApiFunctions.CreateBooking, {
-          bookingCreatePayload: undefined as any,
+          bookingCreatePayload: undefined as unknown as never,
           bookingUpdatePayload: mockBookingUpdatePayload,
           token: 'valid-token',
         }),
@@ -156,7 +159,7 @@ describe('API Dispatcher Functions', () => {
 
     it('should handle unknown function gracefully', async () => {
       await expect(
-        fetchBookings('UnknownFunction' as any, {
+        fetchBookings('UnknownFunction' as unknown as never, {
           bookingCreatePayload: mockBookingCreatePayload,
           bookingUpdatePayload: mockBookingUpdatePayload,
         }),
