@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useState, type ChangeEvent } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useCallback,
+  type ChangeEvent,
+} from 'react';
 import { fetchVenues } from '../api/api.ts';
 import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
@@ -56,7 +62,7 @@ export const Home = () => {
     setSortOrder(sortOrderValue);
   }
 
-  async function normalizeVenueReturn() {
+  const normalizeVenueReturn = useCallback(async () => {
     setIsLoading(true);
     let res;
     if (sortValue === '') {
@@ -75,15 +81,15 @@ export const Home = () => {
     const data = res.data;
     setVenues(Array.isArray(data) ? data : [data]);
     setIsLoading(false);
-  }
+  }, [GetVenues, sortValue, sortOrder]);
 
   useEffect(() => {
     void normalizeVenueReturn();
-  }, [sortValue, sortOrder]);
+  }, [normalizeVenueReturn]);
 
   useLayoutEffect(() => {
     void normalizeVenueReturn();
-  }, []);
+  }, [normalizeVenueReturn]);
 
   return (
     <>

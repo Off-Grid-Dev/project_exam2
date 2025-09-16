@@ -15,6 +15,6 @@ export function getToken() {
   return token;
 }
 
-export const isTokenValid = (token: any): boolean => {
+export const isTokenValid = (token: unknown): boolean => {
   return typeof token === 'string' && token.trim() !== '';
 };
