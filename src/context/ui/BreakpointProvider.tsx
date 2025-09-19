@@ -14,8 +14,8 @@ type BreakpointProviderProps = {
 };
 
 function getBreakpointFromWidth(w: number): Breakpoint {
-  if (w >= 1250) return 'desktop';
-  if (w >= 750) return 'tablet';
+  if (w >= 1024) return 'desktop';
+  if (w >= 550) return 'tablet';
   return 'mobile';
 }
 

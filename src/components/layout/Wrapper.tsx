@@ -1,15 +1,12 @@
 import type { FC, ReactNode } from 'react';
-// import { useBreakpoint } from '../../context/ui/useBreakpoint';
+import { useBreakpoint } from '../../context/ui/useBreakpoint';
 
 type WrapperProps = {
   children: ReactNode;
 };
 
 export const Wrapper: FC<WrapperProps> = ({ children }) => {
-  // const { breakpoint } = useBreakpoint();
-  return (
-    <>
-      <div>{children}</div>
-    </>
-  );
+  const { breakpoint } = useBreakpoint();
+
+  return <div className={`max-w-${breakpoint} mx-auto px-2`}>{children}</div>;
 };
