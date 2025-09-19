@@ -70,9 +70,13 @@
 
   /* Border colors */
   --color-border-dark: var(--color-primary-900);
+  --color-border-dark-hover: var(--color-primary-400);
   --color-border-focus: var(--color-secondary-700);
+  --color-border-focus-hover: var(--color-secondary-400);
   --color-border-warning: var(--color-warning-900);
+  --color-border-warning-hover: var(--color-warning-600);
   --color-border-success: var(--color-success-700);
+  --color-border-success-hover: var(--color-success-300);
 
   /* Text colors */
   --color-text-base: var(--color-base-100);

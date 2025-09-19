@@ -4,6 +4,7 @@ import { LoginRegister } from './pages/LoginRegister';
 import { Header } from './components/layout/Header';
 import { useAuth } from './context/auth/useAuth';
 import ContextProvider from './context/ContextProvider';
+import Venue from './pages/Venue';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
@@ -15,6 +16,7 @@ const AppRoutes = () => {
         element={!isLoggedIn ? <LoginRegister /> : <Home />}
       />
       {/* <Route path='/profile' element={!isLoggedIn ? <Profile /> : <Home />} /> */}
+      <Route path='/venues/:id' element={<Venue />} />
       <Route path='*' element={<Home />} />
     </Routes>
   );

@@ -10,7 +10,8 @@ import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
-// import { useBreakpoint } from '../context/ui/useBreakpoint';
+import { Wrapper } from '../components/layout/Wrapper.tsx';
+import Button from '../components/Button.tsx';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -18,7 +19,6 @@ export const Home = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sortValue, setSortValue] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<string>('asc');
-  const [error, setError] = useState<string | null>(null);
 
   const { GetVenues, GetVenueBySearch } = ApiFunctions;
 
@@ -27,13 +27,7 @@ export const Home = () => {
   }
 
   async function handleVenueSearch() {
-    setError(null);
     const query = venueQuery.trim();
-    if (!query) {
-      setError('Please enter a search term');
-      return;
-    }
-
     setIsLoading(true);
     try {
       const res = (await fetchVenues(GetVenueBySearch, {
@@ -47,7 +41,14 @@ export const Home = () => {
       const data = res.data;
       setVenues(Array.isArray(data) ? data : [data]);
     } catch (err) {
-      setError(String(err));
+      if (
+        err &&
+        typeof err === 'object' &&
+        'message' in err &&
+        typeof (err as { message: unknown }).message === 'string'
+      ) {
+        throw new Error((err as { message: string }).message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -92,51 +93,53 @@ export const Home = () => {
     void normalizeVenueReturn();
   }, [normalizeVenueReturn]);
 
-  // const { breakpoint } = useBreakpoint();
-
   return (
-    <>
-      <div>
-        <h1>Venues</h1>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void handleVenueSearch();
-          }}
+    <Wrapper>
+      <h1 className='text-heading text-text-dark font-bold'>Venues</h1>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void handleVenueSearch();
+        }}
+        className='mx-auto flex w-fit gap-3'
+      >
+        <input
+          aria-label='Enter a search query to refine the list of venues.'
+          type='text'
+          name='venueQuery'
+          id='venueQuery'
+          value={venueQuery}
+          onChange={handleVenueQueryUpdate}
+          className='border-border-dark focus:outline-border-focus w-96 rounded-sm border-2 px-2 py-2'
+          placeholder='Enter search...'
+        />
+        <Button label='Search for Venues' type='submit' additionalClasses='' />
+        <select
+          aria-label='Sort venues by attributes'
+          value={sortValue}
+          onChange={(e) => handleSortUpdate(e)}
+          name='sortByVenues'
+          className='cursor-pointer'
         >
-          <input
-            aria-label='Enter a search query to refine the list of venues.'
-            type='text'
-            name='venueQuery'
-            id='venueQuery'
-            value={venueQuery}
-            onChange={handleVenueQueryUpdate}
-          />
-          <button type='submit'>Search for Venues</button>
-          <select
-            aria-label='Sort venues by attributes'
-            value={sortValue}
-            onChange={(e) => handleSortUpdate(e)}
-          >
-            <option value=''>Sort by</option>
-            <option value='name'>Venue name</option>
-            <option value='price'>Venue price</option>
-            <option value='maxGuests'>Maximum guests</option>
-            <option value='rating'>Ratings</option>
-          </select>
-          <select
-            aria-label='Define sort order'
-            value={sortOrder}
-            onChange={(e) => handleSortOrderUpdate(e)}
-          >
-            <option value='asc'>Ascending</option>
-            <option value='desc'>Descending</option>
-          </select>
-        </form>
-      </div>
+          <option value=''>Sort by</option>
+          <option value='name'>Venue name</option>
+          <option value='price'>Venue price</option>
+          <option value='maxGuests'>Maximum guests</option>
+          <option value='rating'>Ratings</option>
+        </select>
+        <select
+          aria-label='Define sort order'
+          value={sortOrder}
+          onChange={(e) => handleSortOrderUpdate(e)}
+          name='sortOrderVenues'
+          className='cursor-pointer'
+        >
+          <option value='asc'>Ascending</option>
+          <option value='desc'>Descending</option>
+        </select>
+      </form>
       <VenuesList venues={venues} isLoading={isLoading} />
       {isLoading && <p className='text-center'>Loading venues...</p>}
-      {error && <p className='text-center text-red-600'>Error: {error}</p>}
-    </>
+    </Wrapper>
   );
 };

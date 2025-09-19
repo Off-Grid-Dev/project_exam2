@@ -1,6 +1,7 @@
 import { VenuesCard } from './VenueCard';
 import { type Venue } from '../../types/api/venue';
 import type { FC } from 'react';
+import Button from '../Button';
 // import { useBreakpoint } from '../../context/ui/useBreakpoint';
 
 type VenuesListType = {
@@ -17,11 +18,24 @@ export const VenuesList: FC<VenuesListType> = ({ venues, isLoading }) => {
     return null;
   }
 
+  function handlePreviousPage() {}
+  function handleNextPage() {}
+
   return (
-    <div>
-      {venues.map((venue) => (
-        <VenuesCard key={venue.id} {...venue} />
-      ))}
-    </div>
+    <>
+      <div className='mx-auto mt-3 flex gap-3'>
+        <Button
+          label='previous page'
+          type='button'
+          onclick={handlePreviousPage}
+        />
+        <Button label='next page' type='button' onclick={handleNextPage} />
+      </div>
+      <div className='my-4 grid grid-cols-2 gap-3'>
+        {venues.map((venue) => (
+          <VenuesCard key={venue.id} {...venue} />
+        ))}
+      </div>
+    </>
   );
 };

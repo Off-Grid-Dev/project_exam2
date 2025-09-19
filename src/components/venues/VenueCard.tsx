@@ -1,98 +1,55 @@
 import { type FC } from 'react';
 import type { Venue } from '../../types/api/venue';
+import Button from '../Button';
+import { useNavigate } from 'react-router-dom';
 // import { useBreakpoint } from '../../context/ui/useBreakpoint';
 
 export const VenuesCard: FC<Venue> = ({
   id,
   name,
-  description,
   media,
   price,
-  maxGuests,
   rating,
-  created,
-  updated,
   meta,
-  location,
-  owner,
-  bookings,
-  _count,
 }) => {
+  const navigate = useNavigate();
+
+  function handleBookVenue(id: string) {
+    navigate(`/venues/${id}`);
+  }
   const { url, alt } = media[0] || {};
   const { wifi, parking, breakfast, pets } = meta;
-  const { address, city, zip, country, continent, lat, lng } = location;
 
   return (
-    <div id={id}>
-      <h3 className='font-semibold text-[var(--color-text-dark)]'>{name}</h3>
-      <div>
+    <div id={id} className='border-border-dark rounded-sm border-2 p-2'>
+      <div className='h-72 w-full overflow-clip rounded-sm'>
         {url && (
-          <img className='max-w-full' src={url} alt={alt ?? 'venue image'} />
+          <img
+            className='h-full w-full object-cover object-center'
+            src={url}
+            alt={alt ? alt : `venue image ${id}`}
+          />
         )}
       </div>
-      <button className='cursor-pointer rounded bg-[var(--color-bg-dark)] px-3 py-1 text-[var(--color-text-base)] hover:bg-[var(--color-bg-med)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:outline-none'>
-        BOOK
-      </button>
-      <p>Description: {description}</p>
-      <p>Price: {price}</p>
-      <p>Maximum Guests: {maxGuests}</p>
-      <p>Rating: {rating}</p>
-      <p>Date Created: {created}</p>
-      <p>Last Updated: {updated}</p>
-      <ul>
-        <li>Wifi: {wifi ? 'yes' : 'no'}</li>
-        <li>Parking: {parking ? 'yes' : 'no'}</li>
-        <li>Breakfast: {breakfast ? 'yes' : 'no'}</li>
-        <li>Pets: {pets ? 'yes' : 'no'}</li>
-      </ul>
-      <ul>
-        <li>Address: {address}</li>
-        <li>City: {city}</li>
-        <li>Zip code: {zip}</li>
-        <li>Country: {country}</li>
-        <li>Continent: {continent}</li>
-        <li>Latitude: {lat}</li>
-        <li>Longitude: {lng}</li>
-      </ul>
-      {owner && (
+      <h2 className='font-semibold text-[var(--color-text-dark)]'>{name}</h2>
+      <div className='flex justify-between'>
         <div>
-          <p>Owner: {owner.name}</p>
-          <p>Owner: {owner.email}</p>
-          <p>Owner: {owner.bio}</p>
-          {owner.avatar.url && (
-            <img
-              src={owner.avatar.url}
-              alt={owner.avatar.alt ?? 'owner image'}
-            />
-          )}
-          {owner.banner.url && (
-            <img
-              src={owner.banner.url ?? ''}
-              alt={owner.banner.alt ?? 'owner banner'}
-            />
-          )}
+          <p>Price: {price}</p>
+          <p>Rating: {rating}</p>
         </div>
-      )}
-      {Array.isArray(bookings) && (
-        <>
-          <h2>Bookings:</h2>
-          <ul>
-            {bookings.map((booking) => (
-              <li key={booking.id}>
-                <p>Booking ID: {booking.id}</p>
-                <p>From Date: {booking.dateFrom}</p>
-                <p>To Date: {booking.dateTo}</p>
-                <p>Guests: {booking.guests}</p>
-                <p>Date Created: {booking.created}</p>
-                <p>Last Updated: {booking.updated}</p>
-                <p>Venue: {booking.venue.id}</p>
-                <p>Customer: {booking.customer.name}</p>
-                <p>Total Bookings: {_count.bookings}</p>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+        <ul>
+          <li>Wifi: {wifi ? 'yes' : 'no'}</li>
+          <li>Parking: {parking ? 'yes' : 'no'}</li>
+          <li>Breakfast: {breakfast ? 'yes' : 'no'}</li>
+          <li>Pets: {pets ? 'yes' : 'no'}</li>
+        </ul>
+      </div>
+      <Button
+        label='Book now'
+        type='button'
+        onclick={() => handleBookVenue(id)}
+        additionalClasses='ml-auto'
+      />
     </div>
   );
 };

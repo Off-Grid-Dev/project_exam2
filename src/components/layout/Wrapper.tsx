@@ -8,5 +8,9 @@ type WrapperProps = {
 export const Wrapper: FC<WrapperProps> = ({ children }) => {
   const { breakpoint } = useBreakpoint();
 
-  return <div className={`max-w-${breakpoint} mx-auto px-2`}>{children}</div>;
+  return (
+    <div className={`max-w-${breakpoint} mx-auto flex flex-col px-2`}>
+      {children}
+    </div>
+  );
 };
