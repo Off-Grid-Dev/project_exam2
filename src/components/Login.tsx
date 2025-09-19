@@ -3,7 +3,7 @@ import type { LoginProfilePayload } from '../types/api/profile';
 import { fetchProfiles } from '../api/api';
 import { useAuth } from '../context/auth/useAuth';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
-import { useBreakpoint } from '../context/ui/useBreakpoint';
+// import { useBreakpoint } from '../context/ui/useBreakpoint';
 
 type LoginInfo = LoginProfilePayload;
 

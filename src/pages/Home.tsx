@@ -10,8 +10,7 @@ import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
-import { useBreakpoint } from '../context/ui/useBreakpoint';
-import type { Breakpoint } from '../context/ui/BreakpointContext';
+// import { useBreakpoint } from '../context/ui/useBreakpoint';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
