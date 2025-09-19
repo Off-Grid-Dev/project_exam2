@@ -1,11 +1,6 @@
 import { type FC } from 'react';
 import type { Venue } from '../../types/api/venue';
-import {
-  createClassOptions,
-  getClassFor,
-  composeClasses,
-} from '../../context/ui/classOptionsTemplate';
-import { useBreakpoint } from '../../context/ui/useBreakpoint';
+// import { useBreakpoint } from '../../context/ui/useBreakpoint';
 
 export const VenuesCard: FC<Venue> = ({
   id,
@@ -27,25 +22,10 @@ export const VenuesCard: FC<Venue> = ({
   const { wifi, parking, breakfast, pets } = meta;
   const { address, city, zip, country, continent, lat, lng } = location;
 
-  const rootOpts = createClassOptions({
-    desktopStyles: 'grid rounded-md border-2 p-4 gap-3',
-    tabletStyles: 'grid rounded-md border-2 p-3 gap-3',
-    mobileStyles: 'grid rounded-md border-2 p-2 gap-2',
-  });
-
-  const imgWrapper =
-    'w-28 rounded-md border-2 overflow-hidden bg-[var(--color-base-100)]';
-
-  const { breakpoint } = useBreakpoint();
-  const rootClass = composeClasses(
-    getClassFor(breakpoint, rootOpts),
-    'border-[var(--color-border-dark)] bg-[var(--color-base-100)]',
-  );
-
   return (
-    <div id={id} className={rootClass}>
+    <div id={id}>
       <h3 className='font-semibold text-[var(--color-text-dark)]'>{name}</h3>
-      <div className={imgWrapper}>
+      <div>
         {url && (
           <img className='max-w-full' src={url} alt={alt ?? 'venue image'} />
         )}

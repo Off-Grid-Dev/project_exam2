@@ -12,12 +12,6 @@ import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { useBreakpoint } from '../context/ui/useBreakpoint';
 import type { Breakpoint } from '../context/ui/BreakpointContext';
-import {
-  createClassOptions,
-  composeClasses,
-  type SlotMap,
-  getClassForSlot,
-} from '../context/ui/classOptionsTemplate';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -99,61 +93,13 @@ export const Home = () => {
     void normalizeVenueReturn();
   }, [normalizeVenueReturn]);
 
-  // --- Example slot-based ClassOptions for the top-level page container
-  type HomeSlots = 'root' | 'title' | 'form' | 'input' | 'button';
-
-  const slotMap: SlotMap<HomeSlots> = {
-    root: createClassOptions({
-      desktopStyles: 'mt-12 mb-12 grid justify-center gap-6',
-      tabletStyles: 'mt-10 mb-10 gap-4 px-6',
-      mobileStyles: 'mt-6 mb-6 gap-3 px-4',
-    }),
-    title: createClassOptions({
-      desktopStyles: 'text-heading mt-4 font-semibold text-text-dark',
-      tabletStyles: 'text-xl font-semibold text-text-dark',
-      mobileStyles: 'text-lg font-semibold text-text-dark',
-    }),
-    form: createClassOptions({
-      desktopStyles: 'flex gap-4 items-center',
-      tabletStyles: 'flex gap-3 flex-wrap justify-center items-center',
-      mobileStyles: 'grid gap-3 w-full',
-    }),
-    input: createClassOptions({
-      desktopStyles: 'border border-border-dark p-2 rounded-md w-96',
-      tabletStyles: 'border border-border-dark p-2 rounded-md w-64',
-      mobileStyles: 'border border-border-dark p-2 rounded-md w-full',
-    }),
-    button: createClassOptions({
-      desktopStyles:
-        'cursor-pointer rounded-2xl bg-[var(--color-bg-dark)] text-[var(--color-text-base)] px-4 py-2 hover:bg-[var(--color-bg-med)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]',
-      tabletStyles:
-        'cursor-pointer rounded-2xl bg-[var(--color-bg-dark)] text-[var(--color-text-base)] px-3 py-2 hover:bg-[var(--color-bg-med)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]',
-      mobileStyles:
-        'w-full cursor-pointer rounded-2xl bg-[var(--color-bg-dark)] text-[var(--color-text-base)] px-3 py-2 hover:bg-[var(--color-bg-med)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]',
-    }),
-  };
-
-  const { breakpoint } = useBreakpoint();
-  const bp = breakpoint as Breakpoint;
-
-  const rootClass = composeClasses(
-    getClassForSlot(bp, slotMap, 'root'),
-    'bg-[var(--color-base-100)]',
-  );
-  const titleClass = composeClasses(getClassForSlot(bp, slotMap, 'title'));
-  const formClass = composeClasses(getClassForSlot(bp, slotMap, 'form'));
-  const inputClass = composeClasses(
-    getClassForSlot(bp, slotMap, 'input'),
-    'text-[var(--color-text-dark)] placeholder:text-[var(--color-text-deactivated)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]',
-  );
-  const buttonClass = composeClasses(getClassForSlot(bp, slotMap, 'button'));
+  // const { breakpoint } = useBreakpoint();
 
   return (
     <>
-      <div className={rootClass}>
-        <h1 className={titleClass}>Venues</h1>
+      <div>
+        <h1>Venues</h1>
         <form
-          className={formClass}
           onSubmit={(e) => {
             e.preventDefault();
             void handleVenueSearch();
@@ -166,16 +112,12 @@ export const Home = () => {
             id='venueQuery'
             value={venueQuery}
             onChange={handleVenueQueryUpdate}
-            className={inputClass}
           />
-          <button type='submit' className={buttonClass}>
-            Search for Venues
-          </button>
+          <button type='submit'>Search for Venues</button>
           <select
             aria-label='Sort venues by attributes'
             value={sortValue}
             onChange={(e) => handleSortUpdate(e)}
-            className={composeClasses(inputClass, 'bg-base-100')}
           >
             <option value=''>Sort by</option>
             <option value='name'>Venue name</option>
@@ -187,7 +129,6 @@ export const Home = () => {
             aria-label='Define sort order'
             value={sortOrder}
             onChange={(e) => handleSortOrderUpdate(e)}
-            className={composeClasses(inputClass, 'bg-base-100')}
           >
             <option value='asc'>Ascending</option>
             <option value='desc'>Descending</option>

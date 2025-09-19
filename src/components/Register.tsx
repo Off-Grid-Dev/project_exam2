@@ -2,12 +2,7 @@ import { fetchProfiles } from '../api/api';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { RegisterProfilePayload } from '../types/api/profile';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
-import {
-  createClassOptions,
-  composeClasses,
-  getClassFor,
-} from '../context/ui/classOptionsTemplate';
-import { useBreakpoint } from '../context/ui/useBreakpoint';
+// import { useBreakpoint } from '../context/ui/useBreakpoint';
 
 export const RegisterForm = () => {
   const [userInfo, setUserInfo] = useState<RegisterProfilePayload>({
@@ -93,142 +88,110 @@ export const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className='grid gap-2'>
-      {(() => {
-        const opts = createClassOptions({
-          desktopStyles: 'ml-2 rounded-lg border-2 border-border-dark p-2',
-          tabletStyles: 'ml-2 rounded-lg border-2 border-border-dark p-2',
-          mobileStyles:
-            'ml-2 rounded-lg border-2 border-border-dark p-2 w-full',
-        });
-
-        const { breakpoint } = useBreakpoint();
-        const inputClass = composeClasses(
-          getClassFor(breakpoint, opts),
-          'text-text-dark focus:outline-none focus-ring-focus',
-        );
-
-        return (
-          <>
-            <label
-              htmlFor='name'
-              className='text-right outline outline-amber-400'
-            >
-              User name:
-              <input
-                id='name'
-                type='text'
-                value={userInfo.name}
-                className={inputClass}
-                onChange={handleUserInfo}
-                required
-                pattern='^[a-zA-Z0-9_]+'
-                minLength={3}
-                onInvalid={(e) => {
-                  e.preventDefault();
-                  console.error('Name must be at least 3 characters in length');
-                }}
-              />
-            </label>
-            <label htmlFor='email' className='text-right'>
-              email:
-              <input
-                id='email'
-                type='email'
-                value={userInfo.email}
-                className={inputClass}
-                onChange={handleUserInfo}
-                required
-                pattern='.+@stud\\.noroff\\.no'
-                onInvalid={(e) => {
-                  e.preventDefault();
-                  console.error('Email must end with "@stud.noroff.no"');
-                }}
-              />
-            </label>
-            <label htmlFor='password' className='text-right'>
-              Password:
-              <input
-                id='password'
-                type='password'
-                value={userInfo.password}
-                className={inputClass}
-                onChange={handleUserInfo}
-                required
-                minLength={8}
-                onInvalid={(e) => {
-                  e.preventDefault();
-                  console.error('Password must be at least 8 characters long');
-                }}
-              />
-            </label>
-            <label htmlFor='bio' className='text-right'>
-              Bio:
-              <textarea
-                id='bio'
-                value={userInfo.bio}
-                className={inputClass}
-                onChange={handleUserInfo}
-              />
-            </label>
-            <label htmlFor='avatar' className='text-right'>
-              Avatar:
-              <input
-                id='avatar'
-                name='avatar.url'
-                type='url'
-                value={userInfo.avatar?.url ?? ''}
-                className={inputClass}
-                onChange={handleUserInfo}
-                placeholder='avatar url'
-              />
-              <input
-                name='avatar.alt'
-                type='text'
-                value={userInfo.avatar?.alt ?? ''}
-                className={inputClass}
-                onChange={handleUserInfo}
-                placeholder='avatar alt text'
-              />
-            </label>
-            <label htmlFor='banner' className='text-right'>
-              Banner:
-              <input
-                id='banner'
-                name='banner.url'
-                type='url'
-                value={userInfo.banner?.url ?? ''}
-                className={inputClass}
-                onChange={handleUserInfo}
-                placeholder='banner url'
-              />
-              <input
-                type='text'
-                name='banner.alt'
-                value={userInfo.banner?.alt ?? ''}
-                className={inputClass}
-                onChange={handleUserInfo}
-                placeholder='banner alt text'
-              />
-            </label>
-            <label htmlFor='venueManager' className='text-right'>
-              venue manager:
-              <input
-                id='venueManager'
-                type='checkbox'
-                checked={userInfo.venueManager}
-                className='ml-2 p-1'
-                onChange={handleUserInfo}
-              />
-            </label>
-            <button
-              type='submit'
-              className='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1'
-            >
-              Submit
-            </button>
-          </>
-        );
-      })()}
+      <>
+        <label htmlFor='name' className='text-right outline outline-amber-400'>
+          User name:
+          <input
+            id='name'
+            type='text'
+            value={userInfo.name}
+            onChange={handleUserInfo}
+            required
+            pattern='^[a-zA-Z0-9_]+'
+            minLength={3}
+            onInvalid={(e) => {
+              e.preventDefault();
+              console.error('Name must be at least 3 characters in length');
+            }}
+          />
+        </label>
+        <label htmlFor='email' className='text-right'>
+          email:
+          <input
+            id='email'
+            type='email'
+            value={userInfo.email}
+            onChange={handleUserInfo}
+            required
+            pattern='.+@stud\\.noroff\\.no'
+            onInvalid={(e) => {
+              e.preventDefault();
+              console.error('Email must end with "@stud.noroff.no"');
+            }}
+          />
+        </label>
+        <label htmlFor='password' className='text-right'>
+          Password:
+          <input
+            id='password'
+            type='password'
+            value={userInfo.password}
+            onChange={handleUserInfo}
+            required
+            minLength={8}
+            onInvalid={(e) => {
+              e.preventDefault();
+              console.error('Password must be at least 8 characters long');
+            }}
+          />
+        </label>
+        <label htmlFor='bio' className='text-right'>
+          Bio:
+          <textarea id='bio' value={userInfo.bio} onChange={handleUserInfo} />
+        </label>
+        <label htmlFor='avatar' className='text-right'>
+          Avatar:
+          <input
+            id='avatar'
+            name='avatar.url'
+            type='url'
+            value={userInfo.avatar?.url ?? ''}
+            onChange={handleUserInfo}
+            placeholder='avatar url'
+          />
+          <input
+            name='avatar.alt'
+            type='text'
+            value={userInfo.avatar?.alt ?? ''}
+            onChange={handleUserInfo}
+            placeholder='avatar alt text'
+          />
+        </label>
+        <label htmlFor='banner' className='text-right'>
+          Banner:
+          <input
+            id='banner'
+            name='banner.url'
+            type='url'
+            value={userInfo.banner?.url ?? ''}
+            onChange={handleUserInfo}
+            placeholder='banner url'
+          />
+          <input
+            type='text'
+            name='banner.alt'
+            value={userInfo.banner?.alt ?? ''}
+            onChange={handleUserInfo}
+            placeholder='banner alt text'
+          />
+        </label>
+        <label htmlFor='venueManager' className='text-right'>
+          venue manager:
+          <input
+            id='venueManager'
+            type='checkbox'
+            checked={userInfo.venueManager}
+            className='ml-2 p-1'
+            onChange={handleUserInfo}
+          />
+        </label>
+        <button
+          type='submit'
+          className='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1'
+        >
+          Submit
+        </button>
+      </>
     </form>
   );
 };
