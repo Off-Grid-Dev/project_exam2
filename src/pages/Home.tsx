@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useLayoutEffect,
-  useState,
-  useCallback,
-  type ChangeEvent,
-} from 'react';
+import { useEffect, useState, useCallback, type ChangeEvent } from 'react';
 import { fetchVenues } from '../api/api.ts';
 import { VenuesList } from '../components/venues/VenueList.tsx';
 import { type Venue } from '../types/api/venue.ts';
@@ -17,8 +11,13 @@ export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [venueQuery, setVenueQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sortValue, setSortValue] = useState<string>('');
+  const [sortValue, setSortValue] = useState<string>('created');
   const [sortOrder, setSortOrder] = useState<string>('asc');
+  const [page, setPage] = useState<number>(1);
+  const [isFirstPage, setIsFirstPage] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [isLastPage, setIsLastPage] = useState<boolean | undefined>(undefined);
 
   const { GetVenues, GetVenueBySearch } = ApiFunctions;
 
@@ -26,36 +25,20 @@ export const Home = () => {
     setVenueQuery(e.target.value);
   }
 
-  async function handleVenueSearch() {
-    const query = venueQuery.trim();
-    setIsLoading(true);
-    try {
-      const res = (await fetchVenues(GetVenueBySearch, {
-        q: query,
-      })) as VenuesResponse | undefined;
-      if (!res) {
-        setVenues([]);
-        return;
-      }
+  function resetSearchParams() {
+    setPage(1);
+    setSortValue('');
+    setSortOrder('asc');
+  }
 
-      const data = res.data;
-      setVenues(Array.isArray(data) ? data : [data]);
-    } catch (err) {
-      if (
-        err &&
-        typeof err === 'object' &&
-        'message' in err &&
-        typeof (err as { message: unknown }).message === 'string'
-      ) {
-        throw new Error((err as { message: string }).message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+  function handleVenueSearch() {
+    const query = venueQuery.trim();
+    resetSearchParams();
+    setVenueQuery(query);
   }
 
   function handleSortUpdate(e: ChangeEvent<HTMLSelectElement>) {
-    const sortValue = e.currentTarget.value;
+    const sortValue = e.currentTarget.value.trim();
     setSortValue(sortValue);
   }
 
@@ -67,12 +50,18 @@ export const Home = () => {
   const normalizeVenueReturn = useCallback(async () => {
     setIsLoading(true);
     let res;
-    if (sortValue === '') {
-      res = (await fetchVenues(GetVenues)) as VenuesResponse;
-    } else {
+    if (venueQuery === '') {
       res = (await fetchVenues(GetVenues, {
         sort: sortValue,
         sortOrder,
+        page,
+      })) as VenuesResponse;
+    } else {
+      res = (await fetchVenues(GetVenueBySearch, {
+        q: venueQuery,
+        sort: sortValue,
+        sortOrder,
+        page,
       })) as VenuesResponse;
     }
     if (!res) {
@@ -81,15 +70,14 @@ export const Home = () => {
       return;
     }
     const data = res.data;
+    const meta = res.meta;
+    setIsFirstPage(Boolean(meta.isFirstPage));
+    setIsLastPage(Boolean(meta.isLastPage));
     setVenues(Array.isArray(data) ? data : [data]);
     setIsLoading(false);
-  }, [GetVenues, sortValue, sortOrder]);
+  }, [GetVenues, sortValue, sortOrder, page, venueQuery, GetVenueBySearch]);
 
   useEffect(() => {
-    void normalizeVenueReturn();
-  }, [normalizeVenueReturn]);
-
-  useLayoutEffect(() => {
     void normalizeVenueReturn();
   }, [normalizeVenueReturn]);
 
@@ -138,7 +126,13 @@ export const Home = () => {
           <option value='desc'>Descending</option>
         </select>
       </form>
-      <VenuesList venues={venues} isLoading={isLoading} />
+      <VenuesList
+        venues={venues}
+        isLoading={isLoading}
+        page={page}
+        setPage={setPage}
+        pagination={{ isFirstPage, isLastPage }}
+      />
       {isLoading && <p className='text-center'>Loading venues...</p>}
     </Wrapper>
   );
