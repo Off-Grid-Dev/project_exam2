@@ -19,11 +19,8 @@ const Venue: FC<VenueType> = () => {
           | VenuesResponse
           | undefined;
         return res;
-      } catch (error) {
-        // preserve original error for debugging
-        // eslint-disable-next-line no-console
-        console.error(error);
-        throw new Error('Could not fetch this venue');
+      } catch (err) {
+        throw new Error(`Could not fetch this venue: ${err}`);
       } finally {
         setIsLoading(false);
       }
