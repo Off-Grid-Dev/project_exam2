@@ -22,7 +22,7 @@ describe('getVenues', () => {
   it('should fetch all venues successfully with default parameters', async () => {
     mockFetch.mockReturnValueOnce(createMockResponse(mockVenuesResponse));
 
-    const result = await getVenues();
+    const result = await getVenues(undefined, undefined);
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringMatching(/\/holidaze\/venues\?.*limit=20.*page=1/),
@@ -55,7 +55,7 @@ describe('getVenues', () => {
   it('should handle API errors correctly', async () => {
     mockFetch.mockReturnValueOnce(createMockErrorResponse(400, mockApiError));
 
-    await expect(getVenues()).rejects.toThrow(
+    await expect(getVenues(undefined, undefined)).rejects.toThrow(
       'Could not get venues: 400 - Test error message',
     );
   });
@@ -63,7 +63,9 @@ describe('getVenues', () => {
   it('should handle network errors', async () => {
     mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
-    await expect(getVenues()).rejects.toThrow('Network error');
+    await expect(getVenues(undefined, undefined)).rejects.toThrow(
+      'Network error',
+    );
   });
 
   it('should build URL without query parameters when none provided', async () => {
