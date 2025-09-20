@@ -4,20 +4,29 @@ type ButtonProps = {
   label: string;
   type: 'submit' | 'reset' | 'button' | undefined;
   additionalClasses?: string;
-  onclick?: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 };
 
 const Button: FC<ButtonProps> = ({
   label,
   type,
   additionalClasses,
-  onclick,
+  disabled,
+  onClick,
 }) => {
+  const baseClasses = 'rounded-sm border-2 px-4 py-2';
+  const classes = disabled
+    ? `bg-button-disabled cursor-not-allowed text-text-disabled ${additionalClasses}`
+    : `bg-button-primary hover:bg-button-primary-hover text-text-base border-button-primary hover:text-text-dark cursor-pointer ${additionalClasses}`;
+
   return (
     <button
       type={type}
-      className={`bg-button-primary hover:bg-button-primary-hover text-text-base border-button-primary hover:text-text-dark cursor-pointer rounded-sm border-2 px-4 py-2 ${additionalClasses}`}
-      onClick={onclick}
+      disabled={disabled}
+      className={`${baseClasses} ${classes}`}
+      onClick={onClick}
+      aria-disabled={disabled}
     >
       {label}
     </button>
