@@ -3,10 +3,10 @@ import { API_VENUES } from '../constants';
 import type { ApiError } from '../../types/api/responses';
 
 export const getVenues = async (
-  sort?: string | undefined,
-  sortOrder?: string | undefined,
-  limit = 20,
-  page = 1,
+  sort: string | undefined,
+  sortOrder: string | undefined,
+  limit: number = 20,
+  page: number = 1,
   _owner?: boolean,
   _bookings?: boolean,
 ): Promise<VenuesResponse> => {
