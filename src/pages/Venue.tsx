@@ -1,12 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { Wrapper } from '../components/layout/Wrapper';
 import { fetchVenues } from '../api/api.ts';
-import type { Venue as VenueType } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
-import { useCallback, useLayoutEffect, useState, type FC } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 
-const Venue: FC<VenueType> = () => {
+const Venue = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const { GetVenueById } = ApiFunctions;
