@@ -6,8 +6,8 @@ export const getVenueBySearch = async (
   q: string,
   sort?: string,
   sortOrder?: string,
-  page = 1,
-  limit = 20,
+  page: number = 1,
+  limit: number = 20,
   _owner?: boolean,
   _bookings?: boolean,
 ): Promise<VenuesResponse> => {
