@@ -5,18 +5,27 @@ import { Header } from './components/layout/Header';
 import { useAuth } from './context/auth/useAuth';
 import ContextProvider from './context/ContextProvider';
 import Venue from './pages/Venue';
+import ProfilePage from './pages/Profiles';
+import ProfileSingle from './pages/Profile';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
   return (
     <Routes>
       <Route path='/' element={<Home />} />
+      <Route path='/venues/:id' element={<Venue />} />
       <Route
         path='/welcome'
         element={!isLoggedIn ? <LoginRegister /> : <Home />}
       />
-      {/* <Route path='/profile' element={!isLoggedIn ? <Profile /> : <Home />} /> */}
-      <Route path='/venues/:id' element={<Venue />} />
+      <Route
+        path='/profile'
+        element={!isLoggedIn ? <ProfilePage /> : <Home />}
+      />
+      <Route
+        path='/profile:id'
+        element={!isLoggedIn ? <ProfileSingle /> : <Home />}
+      />
       <Route path='*' element={<Home />} />
     </Routes>
   );

@@ -9,9 +9,9 @@ import Button from '../Button';
 import Select from './Select';
 
 type SearchFormProps = {
-  venueQuery: string;
-  setVenueQuery: Dispatch<SetStateAction<string>>;
-  handleVenueSearch: (query: string) => void;
+  query: string;
+  setQuery: Dispatch<SetStateAction<string>>;
+  handleSearch: (query: string) => void;
   handleSortUpdate: (e: ChangeEvent<HTMLSelectElement>) => void;
   handleSortOrderUpdate: (e: ChangeEvent<HTMLSelectElement>) => void;
   sortValue: string;
@@ -19,9 +19,9 @@ type SearchFormProps = {
 };
 
 const SearchForm: FC<SearchFormProps> = ({
-  venueQuery,
-  setVenueQuery,
-  handleVenueSearch,
+  query,
+  setQuery,
+  handleSearch,
   handleSortUpdate,
   handleSortOrderUpdate,
   sortValue,
@@ -29,7 +29,7 @@ const SearchForm: FC<SearchFormProps> = ({
 }) => {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    handleVenueSearch(venueQuery);
+    handleSearch(query);
   }
 
   return (
@@ -37,9 +37,9 @@ const SearchForm: FC<SearchFormProps> = ({
       <input
         aria-label='Enter a search query to refine the list of venues.'
         type='text'
-        name='venueQuery'
-        value={venueQuery}
-        onChange={(e) => setVenueQuery(e.currentTarget.value)}
+        name='query'
+        value={query}
+        onChange={(e) => setQuery(e.currentTarget.value)}
         className='border-border-dark focus:outline-border-focus w-96 rounded-sm border-2 px-2 py-2'
         placeholder='Enter search...'
       />
@@ -57,19 +57,6 @@ const SearchForm: FC<SearchFormProps> = ({
           { value: 'rating', label: 'Rating' },
         ]}
       />
-      {/* <select
-        aria-label='Sort venues by attributes'
-        value={sortValue}
-        onChange={(e) => handleSortUpdate(e)}
-        name='sortByVenues'
-        className='cursor-pointer'
-      >
-        <option value=''>Sort by</option>
-        <option value='name'>Venue name</option>
-        <option value='price'>Venue price</option>
-        <option value='maxGuests'>Maximum guests</option>
-        <option value='rating'>Ratings</option>
-      </select> */}
       <select
         aria-label='Define sort order'
         value={sortOrder}

@@ -81,9 +81,9 @@ export const Home = () => {
     <Wrapper>
       <h1 className='text-heading text-text-dark font-bold'>Venues</h1>
       <SearchForm
-        venueQuery={venueQuery}
-        setVenueQuery={setVenueQuery}
-        handleVenueSearch={handleVenueSearch}
+        query={venueQuery}
+        setQuery={setVenueQuery}
+        handleSearch={handleVenueSearch}
         handleSortUpdate={handleSortUpdate}
         handleSortOrderUpdate={handleSortOrderUpdate}
         sortValue={sortValue}
