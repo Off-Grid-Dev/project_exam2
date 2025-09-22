@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { Wrapper } from '../components/layout/Wrapper';
 import { fetchVenues } from '../api/api.ts';
-import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { useCallback, useLayoutEffect, useState } from 'react';
@@ -11,24 +10,26 @@ const Venue = () => {
   const { id } = useParams();
   const { GetVenueById } = ApiFunctions;
 
-  const fetchVenue = useCallback(async (id: string) => {
-    setIsLoading(true);
-    let res;
-    try {
-      res = (await fetchVenues(GetVenueById, { id })) as
-        | VenuesResponse
-        | undefined;
-    } catch (err) {
-      throw new Error('Could not fetch this venue');
-    } finally {
-      setIsLoading(false);
-      return res;
-    }
-  }, []);
+  const fetchVenue = useCallback(
+    async (id: string) => {
+      setIsLoading(true);
+      try {
+        const res = (await fetchVenues(GetVenueById, { id })) as
+          | VenuesResponse
+          | undefined;
+        return res;
+      } catch (err) {
+        throw new Error(`Could not fetch this venue: ${err}`);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [GetVenueById],
+  );
 
   useLayoutEffect(() => {
     if (typeof id === 'string') fetchVenue(id);
-  }, []);
+  }, [fetchVenue, id]);
 
   return (
     <Wrapper>

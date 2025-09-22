@@ -1,4 +1,5 @@
 # Stop .gitignore from being affect by merging
+.gitattributes merge=ours
 .gitignore merge=ours
 .example.env merge=ours
 .env merge=ours
