@@ -2,6 +2,10 @@
 .gitignore merge=ours
 .example.env merge=ours
 .env merge=ours
+API_TESTS_SUMMARY.md merge=ours
+api-ref.md merge=ours
+bookings_functions.md merge=ours
+tasks.md merge=ours
 
 # Enforce LF line endings for all text files
 * text=auto eol=lf
