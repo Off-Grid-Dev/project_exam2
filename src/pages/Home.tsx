@@ -5,7 +5,7 @@ import { type Venue } from '../types/api/venue.ts';
 import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { Wrapper } from '../components/layout/Wrapper.tsx';
-import Button from '../components/Button.tsx';
+import SearchForm from '../components/forms/SearchForm.tsx';
 
 export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -20,10 +20,6 @@ export const Home = () => {
   const [isLastPage, setIsLastPage] = useState<boolean | undefined>(undefined);
 
   const { GetVenues, GetVenueBySearch } = ApiFunctions;
-
-  function handleVenueQueryUpdate(e: ChangeEvent<HTMLInputElement>) {
-    setVenueQuery(e.target.value);
-  }
 
   function resetSearchParams() {
     setPage(1);
@@ -84,48 +80,15 @@ export const Home = () => {
   return (
     <Wrapper>
       <h1 className='text-heading text-text-dark font-bold'>Venues</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          void handleVenueSearch();
-        }}
-        className='mx-auto flex w-fit gap-3'
-      >
-        <input
-          aria-label='Enter a search query to refine the list of venues.'
-          type='text'
-          name='venueQuery'
-          id='venueQuery'
-          value={venueQuery}
-          onChange={handleVenueQueryUpdate}
-          className='border-border-dark focus:outline-border-focus w-96 rounded-sm border-2 px-2 py-2'
-          placeholder='Enter search...'
-        />
-        <Button label='Search for Venues' type='submit' additionalClasses='' />
-        <select
-          aria-label='Sort venues by attributes'
-          value={sortValue}
-          onChange={(e) => handleSortUpdate(e)}
-          name='sortByVenues'
-          className='cursor-pointer'
-        >
-          <option value=''>Sort by</option>
-          <option value='name'>Venue name</option>
-          <option value='price'>Venue price</option>
-          <option value='maxGuests'>Maximum guests</option>
-          <option value='rating'>Ratings</option>
-        </select>
-        <select
-          aria-label='Define sort order'
-          value={sortOrder}
-          onChange={(e) => handleSortOrderUpdate(e)}
-          name='sortOrderVenues'
-          className='cursor-pointer'
-        >
-          <option value='asc'>Ascending</option>
-          <option value='desc'>Descending</option>
-        </select>
-      </form>
+      <SearchForm
+        venueQuery={venueQuery}
+        setVenueQuery={setVenueQuery}
+        handleVenueSearch={handleVenueSearch}
+        handleSortUpdate={handleSortUpdate}
+        handleSortOrderUpdate={handleSortOrderUpdate}
+        sortValue={sortValue}
+        sortOrder={sortOrder}
+      />
       <VenuesList
         venues={venues}
         isLoading={isLoading}
