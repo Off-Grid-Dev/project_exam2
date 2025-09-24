@@ -1,9 +1,9 @@
 import { createContext } from 'react';
+import type { ToastProps } from './ToastProvider';
 
 type ToastContextProps = {
-  isToast: boolean;
-  showToast: () => void;
-  removeToast: () => void;
+  toastArray: ToastProps[];
+  addToast: (newToast: ToastProps) => void;
 };
 
 export const ToastContext = createContext<ToastContextProps | undefined>(

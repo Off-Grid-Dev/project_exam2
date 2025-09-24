@@ -5,14 +5,30 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-export const ToastProvider = ({ children }: AuthProviderProps) => {
-  const [isToast, setIsToast] = useState(false);
+export type ToastProps = {
+  id: string;
+  type: string;
+  text: string;
+};
 
-  const showToast = () => setIsToast(true);
-  const removeToast = () => setIsToast(false);
+export const ToastProvider = ({ children }: AuthProviderProps) => {
+  const [toastArray, setToastArray] = useState<ToastProps[]>([]);
+
+  function addToast(newToast: ToastProps) {
+    const toastWithId: ToastProps = { ...newToast, id: Date.now().toString() };
+    setToastArray((prev) => [...prev, toastWithId]);
+
+    setTimeout(() => {
+      removeToast(toastWithId.id);
+    }, 3500);
+  }
+
+  function removeToast(toastWithId: string) {
+    setToastArray((prev) => prev.filter((toast) => toast.id !== toastWithId));
+  }
 
   return (
-    <ToastContext.Provider value={{ isToast, showToast, removeToast }}>
+    <ToastContext.Provider value={{ toastArray, addToast }}>
       {children}
     </ToastContext.Provider>
   );

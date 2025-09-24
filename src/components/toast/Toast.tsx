@@ -1,33 +1,41 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
+import type { ToastProps } from '../../context/toast/ToastProvider';
 
-type ToastProps = {
-  type: string;
-  text: string;
+type ToastWrapperProps = {
+  children: ReactNode;
 };
 
-const Toast: FC<ToastProps> = ({ type, text }) => {
-  let className;
+export const Toast: FC<ToastProps> = ({ type, text }) => {
+  let additionalClasses;
 
   switch (type) {
     case 'success': {
-      className = '';
+      additionalClasses = 'bg-success-600 border-success-900';
       break;
     }
     case 'warning': {
-      className = '';
+      additionalClasses = 'bg-warning-600 border-warning-900';
       break;
     }
     case 'info': {
-      className = '';
+      additionalClasses = 'bg-bg-dark text-text-base border-primary-800';
       break;
     }
   }
 
   return (
-    <div className={className}>
+    <div
+      className={`mx-auto rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
+    >
       <span>{text}</span>
     </div>
   );
 };
 
-export default Toast;
+export const ToastWrapper: FC<ToastWrapperProps> = ({ children }) => {
+  return (
+    <div className='absolute inset-[4rem_1rem_auto_auto] flex flex-col gap-1'>
+      {children}
+    </div>
+  );
+};
