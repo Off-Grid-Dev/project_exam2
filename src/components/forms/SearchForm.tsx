@@ -33,7 +33,7 @@ const SearchForm: FC<SearchFormProps> = ({
   }
 
   return (
-    <form onSubmit={handleSubmit} className='mx-auto flex w-fit gap-3'>
+    <div onSubmit={() => handleSubmit} className='mx-auto flex w-fit gap-3'>
       <input
         aria-label='Enter a search query to refine the list of venues.'
         type='text'
@@ -67,7 +67,7 @@ const SearchForm: FC<SearchFormProps> = ({
         <option value='asc'>Ascending</option>
         <option value='desc'>Descending</option>
       </select>
-    </form>
+    </div>
   );
 };
 

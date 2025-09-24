@@ -5,7 +5,7 @@ type ToastWrapperProps = {
   children: ReactNode;
 };
 
-export const Toast: FC<ToastProps> = ({ type, text }) => {
+export const Toast: FC<Omit<ToastProps, 'id'>> = ({ type, text }) => {
   let additionalClasses;
 
   switch (type) {
@@ -24,11 +24,11 @@ export const Toast: FC<ToastProps> = ({ type, text }) => {
   }
 
   return (
-    <div
+    <button
       className={`mx-auto rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
     >
       <span>{text}</span>
-    </div>
+    </button>
   );
 };
 

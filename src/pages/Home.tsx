@@ -6,7 +6,6 @@ import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { Wrapper } from '../components/layout/Wrapper.tsx';
 import SearchForm from '../components/forms/SearchForm.tsx';
-import { Toast, ToastWrapper } from '../components/toast/Toast.tsx';
 import { useToast } from '../context/toast/useToast.ts';
 import type { ToastProps } from '../context/toast/ToastProvider.tsx';
 
@@ -21,14 +20,13 @@ export const Home = () => {
     undefined,
   );
   const [isLastPage, setIsLastPage] = useState<boolean | undefined>(undefined);
-  const [toastValues, setToastValues] = useState<ToastProps>({
-    id: '',
+  const [toastValues, setToastValues] = useState<Omit<ToastProps, 'id'>>({
     text: '',
     type: '',
   });
 
   const { GetVenues, GetVenueBySearch } = ApiFunctions;
-  const { toastArray, addToast } = useToast();
+  const { addToast } = useToast();
 
   function resetSearchParams() {
     setPage(1);
@@ -61,6 +59,7 @@ export const Home = () => {
         sortOrder,
         page,
       })) as VenuesResponse;
+      setToastValues({ type: 'success', text: 'All venues loaded' });
     } else {
       res = (await fetchVenues(GetVenueBySearch, {
         q: venueQuery,
@@ -68,11 +67,14 @@ export const Home = () => {
         sortOrder,
         page,
       })) as VenuesResponse;
+      setToastValues({
+        type: 'success',
+        text: `Venues that match ${venueQuery}`,
+      });
     }
     if (!res) {
       setVenues([]);
       setToastValues({
-        id: Date.now().toString(),
         type: 'warning',
         text: 'No venues to show.',
       });
@@ -85,25 +87,19 @@ export const Home = () => {
     setIsLastPage(Boolean(meta.isLastPage));
     setVenues(Array.isArray(data) ? data : [data]);
     setIsLoading(false);
-  }, [GetVenues, sortValue, sortOrder, page, venueQuery, GetVenueBySearch]);
+  }, [sortValue, sortOrder, page, venueQuery]);
 
   useEffect(() => {
     void normalizeVenueReturn();
   }, [normalizeVenueReturn]);
 
   useEffect(() => {
-    if (toastValues.id !== '') addToast(toastValues);
+    if (toastValues.type !== '') addToast(toastValues);
   }, [toastValues]);
 
   return (
     <Wrapper>
       <h1 className='text-heading text-text-dark font-bold'>Venues</h1>
-      <ToastWrapper>
-        {toastArray.length > 0 &&
-          toastArray.map(({ id, text, type }) => (
-            <Toast id={id} text={text} type={type} />
-          ))}
-      </ToastWrapper>
       <SearchForm
         query={venueQuery}
         setQuery={setVenueQuery}
