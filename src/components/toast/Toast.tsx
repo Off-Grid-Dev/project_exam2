@@ -25,7 +25,7 @@ export const Toast: FC<Omit<ToastProps, 'id'>> = ({ type, text }) => {
 
   return (
     <button
-      className={`mx-auto rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
+      className={`ml-auto rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
     >
       <span>{text}</span>
     </button>
