@@ -87,7 +87,7 @@ export const Home = () => {
     setIsLastPage(Boolean(meta.isLastPage));
     setVenues(Array.isArray(data) ? data : [data]);
     setIsLoading(false);
-  }, [sortValue, sortOrder, page, venueQuery]);
+  }, [sortValue, sortOrder, page, venueQuery, GetVenueBySearch, GetVenues]);
 
   useEffect(() => {
     void normalizeVenueReturn();
@@ -95,7 +95,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (toastValues.type !== '') addToast(toastValues);
-  }, [toastValues]);
+  }, [toastValues, addToast]);
 
   return (
     <Wrapper>

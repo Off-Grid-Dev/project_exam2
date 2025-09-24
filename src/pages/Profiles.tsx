@@ -65,7 +65,7 @@ const ProfilePage = () => {
     setIsLastPage(Boolean(meta.isLastPage));
     setProfiles(Array.isArray(data) ? data : [data]);
     setIsLoading(false);
-  }, [GetAllProfiles, sortValue, sortOrder, page]);
+  }, [GetAllProfiles, token]);
 
   useEffect(() => {
     void normalizeProfileReturn();
@@ -75,7 +75,7 @@ const ProfilePage = () => {
     // TODO add toast to show that they must enter a name
     if (profileQuery === '') return;
     navigate(`/profile:${profileQuery}`);
-  }, [profileQuery]);
+  }, [profileQuery, navigate]);
 
   return (
     <Wrapper>
