@@ -7,6 +7,7 @@ import type { Profile } from '../types/api/profile';
 import ProfileList from '../components/profiles/ProfileList';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 import SearchForm from '../components/forms/SearchForm';
+import { useBreakpoint } from '../context/ui/useBreakpoint';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
@@ -32,11 +33,15 @@ const ProfilePage = () => {
     setSortOrder('asc');
   }
 
-  function handleProfileSearch() {
-    const query = profileQuery.trim();
+  function handleProfileSearch(query?: string) {
+    const q = (typeof query === 'string' ? query : profileQuery).trim();
     resetSearchParams();
-    setProfileQuery(query);
+    setProfileQuery(q);
   }
+
+  const { breakpoint } = useBreakpoint();
+  const isAutoSearch = breakpoint !== 'mobile';
+  const debounceMs = 400;
 
   function handleSortUpdate(e: ChangeEvent<HTMLSelectElement>) {
     const sortValue = e.currentTarget.value.trim();
@@ -82,12 +87,13 @@ const ProfilePage = () => {
       <h1>Profiles</h1>
       <SearchForm
         query={profileQuery}
-        setQuery={setProfileQuery}
         handleSearch={handleProfileSearch}
         handleSortUpdate={handleSortUpdate}
         handleSortOrderUpdate={handleSortOrderUpdate}
         sortValue={sortValue}
         sortOrder={sortOrder}
+        autoSearch={isAutoSearch}
+        debounceDelay={debounceMs}
       />
       <ProfileList
         profiles={profiles}

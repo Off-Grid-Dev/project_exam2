@@ -6,6 +6,7 @@ import type { VenuesResponse } from '../types/api/responses.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { Wrapper } from '../components/layout/Wrapper.tsx';
 import SearchForm from '../components/forms/SearchForm.tsx';
+import { useBreakpoint } from '../context/ui/useBreakpoint';
 import { useToast } from '../context/toast/useToast.ts';
 import type { ToastProps } from '../context/toast/ToastProvider.tsx';
 
@@ -34,11 +35,16 @@ export const Home = () => {
     setSortOrder('asc');
   }
 
-  function handleVenueSearch() {
-    const query = venueQuery.trim();
+  // Accept optional query from SearchForm (debounced input) or use current state
+  function handleVenueSearch(query?: string) {
+    const q = (typeof query === 'string' ? query : venueQuery).trim();
     resetSearchParams();
-    setVenueQuery(query);
+    setVenueQuery(q);
   }
+
+  const { breakpoint } = useBreakpoint();
+  const isAutoSearch = breakpoint !== 'mobile' && breakpoint !== 'tablet';
+  const debounceMs = 900;
 
   function handleSortUpdate(e: ChangeEvent<HTMLSelectElement>) {
     const sortValue = e.currentTarget.value.trim();
@@ -102,12 +108,13 @@ export const Home = () => {
       <h1 className='text-heading text-text-dark font-bold'>Venues</h1>
       <SearchForm
         query={venueQuery}
-        setQuery={setVenueQuery}
         handleSearch={handleVenueSearch}
         handleSortUpdate={handleSortUpdate}
         handleSortOrderUpdate={handleSortOrderUpdate}
         sortValue={sortValue}
         sortOrder={sortOrder}
+        autoSearch={isAutoSearch}
+        debounceDelay={debounceMs}
       />
       <VenuesList
         venues={venues}
