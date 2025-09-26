@@ -15,15 +15,18 @@ export const Toast: FC<ToastProps> = ({ type, text, id }) => {
   let additionalClasses;
   switch (type) {
     case 'success': {
-      additionalClasses = 'bg-success-600 border-success-900';
+      additionalClasses =
+        'bg-success-600 border-success-900 hover:border-success-400';
       break;
     }
     case 'warning': {
-      additionalClasses = 'bg-warning-600 border-warning-900';
+      additionalClasses =
+        'bg-warning-600 border-warning-900 hover:border-warning-900';
       break;
     }
     case 'info': {
-      additionalClasses = 'bg-bg-dark text-text-base border-primary-800';
+      additionalClasses =
+        'bg-bg-dark text-text-base border-primary-800 hover:border-primary-400';
       break;
     }
   }
@@ -31,7 +34,7 @@ export const Toast: FC<ToastProps> = ({ type, text, id }) => {
   return (
     <button
       onClick={() => removeToast(id)}
-      className={`ml-auto max-w-64 rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
+      className={`ml-auto max-w-64 cursor-pointer rounded-md border-2 px-4 py-2 text-center hover:scale-x-105 ${additionalClasses}`}
     >
       <span>{text}</span>
     </button>

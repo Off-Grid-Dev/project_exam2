@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 // Components
 import Button from '../Button';
 
-// Local functions / hooks
-
 // Types
 import type { Venue } from '../../types/api/venue';
 
@@ -31,6 +29,8 @@ export const VenuesCard: FC<Venue> = ({
     // Reset image error state whenever url changes so we attempt to load again.
     setImageError(false);
   }, [url]);
+
+  if (name === '' || name === undefined || !name) return null;
 
   return (
     <div id={id} className='border-border-dark rounded-sm border-2 p-2'>
@@ -79,7 +79,9 @@ export const VenuesCard: FC<Venue> = ({
           );
         })()}
       </div>
-      <h2 className='font-semibold text-[var(--color-text-dark)]'>{name}</h2>
+      <h2 className='font-semibold text-[var(--color-text-dark)]'>
+        {name !== '' ? name : 'Venue has no name (must be haunted)'}
+      </h2>
       <div className='flex justify-between'>
         <div>
           <p>Price: {price}</p>

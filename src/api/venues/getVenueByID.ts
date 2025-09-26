@@ -1,5 +1,5 @@
 // Types
-import type { VenuesResponse } from '../../types/api/responses';
+import type { VenueResponse } from '../../types/api/responses';
 import type { ApiError } from '../../types/api/responses';
 
 // Constants
@@ -9,7 +9,7 @@ export const getVenueByID = async (
   id: string,
   _owner?: boolean,
   _bookings?: boolean,
-): Promise<VenuesResponse> => {
+): Promise<VenueResponse> => {
   const query = new URLSearchParams();
   if (_owner) query.append('_owner', _owner.toString());
   if (_bookings) query.append('_bookings', _bookings.toString());

@@ -74,7 +74,8 @@ export const Home = () => {
         sortOrder,
         page,
       })) as VenuesResponse;
-      setToastValues({ type: 'success', text: 'All venues loaded' });
+      if (page === 1)
+        setToastValues({ type: 'success', text: 'All venues loaded' });
     } else {
       res = (await fetchVenues(GetVenueBySearch, {
         q: venueQuery,

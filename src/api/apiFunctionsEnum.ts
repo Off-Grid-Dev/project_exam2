@@ -26,7 +26,7 @@ export enum ApiFunctions {
    * @description Retrieve a single venue based on its id.
    * @param {boolean} [_owner] - (Optional) If true, includes owner details in the response.
    * @param {boolean} [_bookings] - (Optional) If true, includes bookings for each venue in the response.
-   * @returns {Promise<VenuesResponse>} A promise that resolves to a single venue.
+   * @returns {Promise<VenueResponse>} A promise that resolves to a single venue object (wrapped in `data`).
    * @throws {Error} Throws an error if the API request fails.
    * @example
    * // Example usage:

@@ -55,7 +55,8 @@ const ProfilePage = () => {
           limit: 20,
           page,
         })) as ProfilesResponse;
-        setToastValues({ type: 'success', text: 'All profiles loaded' });
+        if (page === 1)
+          setToastValues({ type: 'success', text: 'All profiles loaded' });
         if (!res) {
           setProfiles([]);
           setToastValues({ type: 'warning', text: 'No profiles to show.' });

@@ -11,13 +11,14 @@ import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { getToken } from '../api/authToken';
 import { useToast } from '../context/toast/useToast';
 import type { BookingCreatePayload } from '../types/api/booking';
+import type { Venue as VenueType } from '../types/api/venue';
 
 // Types
-import type { VenuesResponse } from '../types/api/responses.ts';
+import type { VenueResponse } from '../types/api/responses.ts';
 
 const Venue = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [venue, setVenue] = useState<VenuesResponse | null>(null);
+  const [venue, setVenue] = useState<VenueType | null>(null);
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [guests, setGuests] = useState<number>(1);
@@ -31,11 +32,12 @@ const Venue = () => {
       setIsLoading(true);
       try {
         const res = (await fetchVenues(GetVenueById, { id })) as
-          | VenuesResponse
+          | VenueResponse
           | undefined;
-        if (res) {
-          setVenue(res);
-          setMaxGuests(res.data[0].maxGuests);
+
+        if (res && res.data) {
+          setVenue(res.data);
+          setMaxGuests(res.data.maxGuests);
         }
         return res;
       } catch (err) {
@@ -57,14 +59,6 @@ const Venue = () => {
     // basic validation
     if (!startDate || !endDate) {
       addToast({ type: 'warning', text: 'Please select start and end dates' });
-      return;
-    }
-    if (new Date(startDate) >= new Date(endDate)) {
-      addToast({ type: 'warning', text: 'Start date must be before end date' });
-      return;
-    }
-    if (guests <= 0) {
-      addToast({ type: 'warning', text: 'Guests must be at least 1' });
       return;
     }
 
@@ -97,36 +91,18 @@ const Venue = () => {
       {isLoading && <p>Loading venue...</p>}
       {!isLoading && venue && (
         <>
-          {(() => {
-            const v =
-              Array.isArray(venue.data) && venue.data.length > 0
-                ? venue.data[0]
-                : undefined;
-            return (
-              <h1 className='text-heading text-text-dark font-bold'>
-                {v?.name ?? `Venue ${id}`}
-              </h1>
-            );
-          })()}
+          <h1 className='text-heading text-text-dark font-bold'>
+            {venue?.name ?? `Venue ${id}`}
+          </h1>
           <div className='my-4'>
-            {(() => {
-              const v =
-                Array.isArray(venue.data) && venue.data.length > 0
-                  ? venue.data[0]
-                  : undefined;
-              return (
-                <>
-                  <img
-                    src={v?.media?.[0]?.url ?? ''}
-                    alt={v?.media?.[0]?.alt ?? 'Venue image'}
-                    className='max-h-96 w-full rounded object-cover'
-                  />
-                  <p className='mt-3'>{v?.description}</p>
-                  <p className='mt-2 font-semibold'>Price: {v?.price}</p>
-                  <p>Max guests: {v?.maxGuests}</p>
-                </>
-              );
-            })()}
+            <img
+              src={venue?.media?.[0]?.url ?? ''}
+              alt={venue?.media?.[0]?.alt ?? 'Venue image'}
+              className='max-h-96 w-full rounded object-cover'
+            />
+            <p className='mt-3'>{venue?.description}</p>
+            <p className='mt-2 font-semibold'>Price: {venue?.price}</p>
+            <p>Max guests: {venue?.maxGuests}</p>
 
             <form onSubmit={handleBookingSubmit} className='mt-4 grid gap-2'>
               <label>
@@ -152,7 +128,7 @@ const Venue = () => {
                 <input
                   type='number'
                   min={1}
-                  maxLength={maxGuests}
+                  max={maxGuests}
                   value={guests}
                   onChange={(e) => setGuests(Number(e.currentTarget.value))}
                 />

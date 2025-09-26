@@ -51,6 +51,12 @@ export type VenuesResponse = {
   meta: Record<string, unknown>;
 };
 
+// Single venue response (used by GET /venues/:id)
+export type VenueResponse = {
+  data: Venue;
+  meta: Record<string, unknown>;
+};
+
 export type BookingsResponse = {
   data: Booking[];
   meta: Record<string, unknown>;
