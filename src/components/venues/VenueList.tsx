@@ -1,8 +1,15 @@
-import { VenuesCard } from './VenueCard';
-import { type Venue } from '../../types/api/venue';
+// React imports
 import type { Dispatch, FC, SetStateAction } from 'react';
+
+// Components
+import { VenuesCard } from './VenueCard';
 import Button from '../Button';
+
+// Local functions / hooks
 // import { useBreakpoint } from '../../context/ui/useBreakpoint';
+
+// Types
+import { type Venue } from '../../types/api/venue';
 
 type VenuesListType = {
   venues: Venue[];

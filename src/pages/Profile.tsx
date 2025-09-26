@@ -1,11 +1,18 @@
+// React imports
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+// Components
 import { Wrapper } from '../components/layout/Wrapper';
+
+// Local functions / hooks / api
 import { fetchProfiles } from '../api/api';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
+import { getToken } from '../api/authToken';
+
+// Types
 import type { Profile } from '../types/api/profile';
 import type { ProfileResponse } from '../types/api/responses';
-import { getToken } from '../api/authToken';
 
 const ProfileSingle = () => {
   const { name } = useParams();

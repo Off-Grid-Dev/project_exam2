@@ -1,4 +1,7 @@
+// Types
 import type { ApiError } from '../../types/api/responses';
+
+// Constants
 import { API_BOOKINGS } from '../constants';
 
 export const deleteBooking = async (id: string, token: string) => {

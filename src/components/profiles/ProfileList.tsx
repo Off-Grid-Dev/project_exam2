@@ -1,7 +1,12 @@
+// React imports
 import type { Dispatch, FC, SetStateAction } from 'react';
-import type { Profile } from '../../types/api/profile';
+
+// Components
 import ProfileCard from './ProfileCard';
 import Button from '../Button';
+
+// Types
+import type { Profile } from '../../types/api/profile';
 
 type ProfileListProps = {
   profiles: Profile[];

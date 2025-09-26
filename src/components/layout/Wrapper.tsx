@@ -1,4 +1,7 @@
+// React imports
 import type { FC, ReactNode } from 'react';
+
+// Local hooks
 import { useBreakpoint } from '../../context/ui/useBreakpoint';
 
 type WrapperProps = {

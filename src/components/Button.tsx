@@ -1,3 +1,4 @@
+// React imports
 import type { FC, MouseEventHandler } from 'react';
 
 type ButtonProps = {

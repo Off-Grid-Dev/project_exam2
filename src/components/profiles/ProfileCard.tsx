@@ -1,5 +1,12 @@
+// React imports
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
+
+// Components
+
+// Local functions / hooks
+
+// Types
 import type { Profile } from '../../types/api/profile';
 
 type ProfileCardProps = {

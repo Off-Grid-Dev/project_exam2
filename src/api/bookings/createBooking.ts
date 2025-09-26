@@ -1,5 +1,8 @@
+// Types
 import type { BookingsResponse, ApiError } from '../../types/api/responses';
 import type { BookingCreatePayload } from '../../types/api/booking';
+
+// Constants
 import { API_BOOKINGS } from '../constants';
 
 export const createBooking = async (

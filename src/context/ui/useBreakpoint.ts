@@ -1,4 +1,7 @@
+// React imports
 import { useContext } from 'react';
+
+// Context
 import { BreakpointContext } from './BreakpointContext';
 
 export const useBreakpoint = () => {

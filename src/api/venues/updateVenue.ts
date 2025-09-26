@@ -1,7 +1,10 @@
+// Types
 import type { VenuesResponse } from '../../types/api/responses';
-import { API_VENUES } from '../constants';
 import type { ApiError } from '../../types/api/responses';
 import type { VenuePayload } from '../../types/api/venue';
+
+// Constants
+import { API_VENUES } from '../constants';
 
 export const updateVenue = async (
   id: string,

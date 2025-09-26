@@ -1,4 +1,7 @@
+// React imports
 import { createContext } from 'react';
+
+// Types
 import type { ToastProps } from './ToastProvider';
 
 type ToastContextProps = {

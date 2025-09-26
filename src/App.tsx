@@ -1,12 +1,19 @@
+// Routing
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Pages
 import { Home } from './pages/Home';
 import { LoginRegister } from './pages/LoginRegister';
-import { Header } from './components/layout/Header';
-import { useAuth } from './context/auth/useAuth';
-import ContextProvider from './context/ContextProvider';
 import Venue from './pages/Venue';
 import ProfilePage from './pages/Profiles';
 import ProfileSingle from './pages/Profile';
+
+// Layout/components
+import { Header } from './components/layout/Header';
+
+// Context/hooks
+import { useAuth } from './context/auth/useAuth';
+import ContextProvider from './context/ContextProvider';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();

@@ -1,3 +1,4 @@
+// React imports
 import type { ChangeEvent, FC } from 'react';
 
 type SelectProps = {

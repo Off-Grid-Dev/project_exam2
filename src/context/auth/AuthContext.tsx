@@ -1,3 +1,4 @@
+// React imports
 import { createContext } from 'react';
 
 type AuthContextProps = {

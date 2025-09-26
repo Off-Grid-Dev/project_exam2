@@ -1,5 +1,7 @@
+// Types
 import type { LoginProfileResponse } from '../types/api/responses';
 
+// Token helpers
 export function storeToken(response: LoginProfileResponse) {
   console.log('setting accessToken to localStorage');
   localStorage.setItem('accessToken', response.data.accessToken);

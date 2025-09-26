@@ -1,7 +1,14 @@
+// React imports
 import { useEffect, useState, type FC } from 'react';
-import type { Venue } from '../../types/api/venue';
-import Button from '../Button';
 import { useNavigate } from 'react-router-dom';
+
+// Components
+import Button from '../Button';
+
+// Local functions / hooks
+
+// Types
+import type { Venue } from '../../types/api/venue';
 
 export const VenuesCard: FC<Venue> = ({
   id,

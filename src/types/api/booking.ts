@@ -1,3 +1,4 @@
+// Types: imports from sibling type definitions
 import type { Venue } from './venue';
 import type { Customer } from './profile';
 

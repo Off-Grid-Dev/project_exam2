@@ -1,8 +1,19 @@
+// React imports
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+
+// Types
 import type { LoginProfilePayload } from '../types/api/profile';
+
+// API
 import { fetchProfiles } from '../api/api';
+
+// Context/hooks
 import { useAuth } from '../context/auth/useAuth';
+
+// API enums
 import { ApiFunctions } from '../api/apiFunctionsEnum';
+
+// Local hooks (commented out intentionally)
 // import { useBreakpoint } from '../context/ui/useBreakpoint';
 
 type LoginInfo = LoginProfilePayload;

@@ -1,3 +1,4 @@
+// React imports
 import { createContext } from 'react';
 
 export type Breakpoint = 'desktop' | 'tablet' | 'mobile';

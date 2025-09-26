@@ -1,4 +1,7 @@
+// Types
 import type { ApiError } from '../../types/api/responses';
+
+// Constants
 import { API_VENUES } from '../constants';
 
 export const deleteVenue = async (id: string, token: string) => {

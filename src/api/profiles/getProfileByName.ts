@@ -1,4 +1,7 @@
+// Types
 import type { ApiError, ProfileResponse } from '../../types/api/responses';
+
+// Constants
 import { API_KEY, API_PROFILES } from '../constants';
 
 export const getProfileByName = async (

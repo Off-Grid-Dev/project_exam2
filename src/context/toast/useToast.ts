@@ -1,4 +1,7 @@
+// React imports
 import { useContext } from 'react';
+
+// Context
 import { ToastContext } from './ToastContext';
 
 export const useToast = () => {

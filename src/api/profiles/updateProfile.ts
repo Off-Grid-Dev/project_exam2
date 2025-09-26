@@ -1,5 +1,8 @@
+// Types
 import type { ProfilePayload } from '../../types/api/profile';
 import type { ApiError, ProfileResponse } from '../../types/api/responses';
+
+// Constants (endpoints / keys)
 import { API_PROFILES, API_KEY } from '../constants';
 
 export const updateProfile = async (

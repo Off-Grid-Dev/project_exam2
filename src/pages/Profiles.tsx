@@ -1,13 +1,20 @@
+// React imports
 import { useCallback, useEffect, useState, type ChangeEvent } from 'react';
+
+// Components
 import { Wrapper } from '../components/layout/Wrapper';
-import { fetchProfiles } from '../api/api';
-import type { ProfilesResponse, ProfileResponse } from '../types/api/responses';
-import { getToken } from '../api/authToken';
-import type { Profile } from '../types/api/profile';
 import ProfileList from '../components/profiles/ProfileList';
-import { ApiFunctions } from '../api/apiFunctionsEnum';
 import SearchForm from '../components/forms/SearchForm';
+
+// Local functions / hooks / api
+import { fetchProfiles } from '../api/api';
+import { getToken } from '../api/authToken';
+import { ApiFunctions } from '../api/apiFunctionsEnum';
 import { useBreakpoint } from '../context/ui/useBreakpoint';
+
+// Types
+import type { ProfilesResponse, ProfileResponse } from '../types/api/responses';
+import type { Profile } from '../types/api/profile';
 
 const ProfilePage = () => {
   const token = getToken() || undefined;

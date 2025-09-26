@@ -1,7 +1,16 @@
+// API
 import { fetchProfiles } from '../api/api';
+
+// React imports
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+
+// Types
 import type { RegisterProfilePayload } from '../types/api/profile';
+
+// API enums
 import { ApiFunctions } from '../api/apiFunctionsEnum';
+
+// Local hooks (commented out)
 // import { useBreakpoint } from '../context/ui/useBreakpoint';
 
 export const RegisterForm = () => {

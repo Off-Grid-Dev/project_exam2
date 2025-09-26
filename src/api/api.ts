@@ -1,3 +1,4 @@
+// Types
 import type {
   BookingCreatePayload,
   BookingUpdatePayload,
@@ -9,6 +10,7 @@ import type {
   RegisterProfilePayload,
 } from '../types/api/profile';
 
+// API modules
 import {
   getVenues,
   getVenueByID,
@@ -32,8 +34,11 @@ import {
   getBookingsByProfile,
   updateBooking,
 } from './bookings';
+
+// Enums
 import { ApiFunctions } from './apiFunctionsEnum';
 
+// Auth helpers
 import { storeToken, clearToken, isTokenValid } from './authToken';
 
 type VenueParams = {

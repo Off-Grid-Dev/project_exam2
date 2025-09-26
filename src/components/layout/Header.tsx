@@ -1,5 +1,10 @@
+// React imports
 import { type FC } from 'react';
+
+// Routing
 import { Link } from 'react-router-dom';
+
+// Layout components
 import { Wrapper } from './Wrapper';
 import Nav from '../Nav';
 

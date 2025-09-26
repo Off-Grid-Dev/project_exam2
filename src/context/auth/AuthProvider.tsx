@@ -1,4 +1,7 @@
+// React imports
 import { type ReactNode, useState } from 'react';
+
+// Context
 import { AuthContext } from './AuthContext';
 
 type AuthProviderProps = {

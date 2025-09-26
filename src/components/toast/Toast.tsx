@@ -1,4 +1,7 @@
+// React imports
 import type { FC, ReactNode } from 'react';
+
+// Types
 import type { ToastProps } from '../../context/toast/ToastProvider';
 
 type ToastWrapperProps = {

@@ -1,5 +1,10 @@
+// React imports
 import { type ReactNode, useState, useCallback, useMemo } from 'react';
+
+// Context
 import { ToastContext } from './ToastContext';
+
+// Components
 import { Toast, ToastWrapper } from '../../components/toast/Toast';
 
 type AuthProviderProps = {

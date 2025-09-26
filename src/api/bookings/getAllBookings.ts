@@ -1,4 +1,7 @@
+// Types
 import type { BookingsResponse, ApiError } from '../../types/api/responses';
+
+// Constants
 import { API_BOOKINGS } from '../constants';
 
 export const getAllBookings = async (

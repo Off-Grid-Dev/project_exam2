@@ -1,3 +1,4 @@
+// React imports
 import {
   type ChangeEvent,
   type FC,
@@ -5,6 +6,8 @@ import {
   useEffect,
   useState,
 } from 'react';
+
+// Components
 import Button from '../Button';
 import Select from './Select';
 

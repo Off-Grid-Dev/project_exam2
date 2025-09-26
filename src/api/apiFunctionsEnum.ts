@@ -1,3 +1,4 @@
+// API function identifiers used by the api dispatcher
 export enum ApiFunctions {
   /**
    * Fetches all venues.

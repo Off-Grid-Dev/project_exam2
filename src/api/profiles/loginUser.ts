@@ -1,7 +1,10 @@
+// Types
 import { type ApiError } from '../../types/api/responses';
-import { API_LOGIN } from '../constants';
 import type { LoginProfileResponse } from '../../types/api/responses';
 import type { LoginProfilePayload } from '../../types/api/profile';
+
+// Constants
+import { API_LOGIN } from '../constants';
 
 export const loginUser = async (
   payload: LoginProfilePayload,

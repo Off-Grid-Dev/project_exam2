@@ -1,3 +1,4 @@
+// Types: imports from sibling type definitions
 import type { Profile } from './profile';
 import type { Media } from './media';
 import type { Booking } from './booking';

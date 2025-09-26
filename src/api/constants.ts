@@ -1,3 +1,4 @@
+// Environment constants and API endpoints
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_HOLIDAZE = import.meta.env.VITE_API_HOLIDAZE;
 export const API_VENUES = `${API_HOLIDAZE}venues`;

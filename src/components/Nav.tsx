@@ -1,9 +1,18 @@
+// React imports
 import { useEffect } from 'react';
+
+// Context/hooks/components
 import { useAuth } from '../context/auth/useAuth';
-import { fetchProfiles } from '../api/api';
-import { useNavigate } from 'react-router-dom';
-import { getToken, isTokenValid } from '../api/authToken';
 import NavLink from './NavLink';
+
+// API
+import { fetchProfiles } from '../api/api';
+
+// Routing
+import { useNavigate } from 'react-router-dom';
+
+// Utilities
+import { getToken, isTokenValid } from '../api/authToken';
 
 const Nav = () => {
   const { isLoggedIn, login, logout } = useAuth();

@@ -1,6 +1,11 @@
+// React imports
 import { useState } from 'react';
+
+// Components
 import { LoginForm } from '../components/Login';
 import { RegisterForm } from '../components/Register';
+
+// Local hooks (commented out)
 // import { useBreakpoint } from '../context/ui/useBreakpoint';
 
 export const LoginRegister = () => {

@@ -1,13 +1,20 @@
+// React imports
 import { useEffect, useState, useCallback, type ChangeEvent } from 'react';
-import { fetchVenues } from '../api/api.ts';
+
+// Components
 import { VenuesList } from '../components/venues/VenueList.tsx';
-import { type Venue } from '../types/api/venue.ts';
-import type { VenuesResponse } from '../types/api/responses.ts';
-import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { Wrapper } from '../components/layout/Wrapper.tsx';
 import SearchForm from '../components/forms/SearchForm.tsx';
+
+// Local functions / hooks / api
+import { fetchVenues } from '../api/api.ts';
+import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { useBreakpoint } from '../context/ui/useBreakpoint';
 import { useToast } from '../context/toast/useToast.ts';
+
+// Types
+import type { Venue } from '../types/api/venue.ts';
+import type { VenuesResponse } from '../types/api/responses.ts';
 import type { ToastProps } from '../context/toast/ToastProvider.tsx';
 
 export const Home = () => {

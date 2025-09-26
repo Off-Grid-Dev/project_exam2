@@ -1,4 +1,7 @@
+// React imports
 import type { FC } from 'react';
+
+// Routing
 import { Link } from 'react-router-dom';
 
 type NavLinkProps = {

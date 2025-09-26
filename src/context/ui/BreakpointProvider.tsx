@@ -1,4 +1,7 @@
+// React imports
 import { useEffect, useState, type ReactNode } from 'react';
+
+// Context and types
 import {
   BreakpointContext,
   type Breakpoint,

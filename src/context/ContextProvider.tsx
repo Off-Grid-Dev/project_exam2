@@ -1,7 +1,10 @@
+// React imports
+import type { FC, ReactNode } from 'react';
+
+// Context providers
 import { BreakpointProvider } from './ui/BreakpointProvider';
 import { AuthProvider } from './auth/AuthProvider';
 import { ToastProvider } from './toast/ToastProvider';
-import type { FC, ReactNode } from 'react';
 
 type ContextProviderProps = {
   children: ReactNode;

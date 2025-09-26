@@ -1,8 +1,13 @@
+// Types
 import {
   type ApiError,
   type RegisterProfileResponse,
 } from '../../types/api/responses';
+
+// Constants
 import { API_REGISTER } from '../constants';
+
+// Types (payload)
 import { type RegisterProfilePayload } from '../../types/api/profile';
 
 export const registerUser = async (

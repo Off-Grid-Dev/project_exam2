@@ -1,9 +1,16 @@
-import { useParams } from 'react-router-dom';
-import { Wrapper } from '../components/layout/Wrapper';
-import { fetchVenues } from '../api/api.ts';
-import type { VenuesResponse } from '../types/api/responses.ts';
-import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
+// React imports
 import { useCallback, useLayoutEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+// Components
+import { Wrapper } from '../components/layout/Wrapper';
+
+// Local functions / hooks / api
+import { fetchVenues } from '../api/api.ts';
+import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
+
+// Types
+import type { VenuesResponse } from '../types/api/responses.ts';
 
 const Venue = () => {
   const [isLoading, setIsLoading] = useState(false);
