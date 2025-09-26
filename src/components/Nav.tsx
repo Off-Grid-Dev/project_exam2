@@ -36,7 +36,7 @@ const Nav = () => {
       )}
       {isLoggedIn && (
         <>
-          <NavLink path='/profile' label='profile' aria='view profiles' />
+          <NavLink path='/profiles' label='profile' aria='view profiles' />
           <li>
             <button
               aria-label='log out of current profile'

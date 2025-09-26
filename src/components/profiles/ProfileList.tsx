@@ -60,8 +60,8 @@ const ProfileList: FC<ProfileListProps> = ({
         />
       </div>
       <div>
-        {profiles.map((profile, idx) => (
-          <ProfileCard key={idx} profile={profile} />
+        {profiles.map((profile) => (
+          <ProfileCard key={profile.name} profile={profile} />
         ))}
       </div>
     </>

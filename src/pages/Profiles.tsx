@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useState, type ChangeEvent } from 'react';
 import { Wrapper } from '../components/layout/Wrapper';
 import { fetchProfiles } from '../api/api';
-import type { ProfilesResponse } from '../types/api/responses';
+import type { ProfilesResponse, ProfileResponse } from '../types/api/responses';
 import { getToken } from '../api/authToken';
 import type { Profile } from '../types/api/profile';
 import ProfileList from '../components/profiles/ProfileList';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 import SearchForm from '../components/forms/SearchForm';
 import { useBreakpoint } from '../context/ui/useBreakpoint';
-import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const token = getToken() || undefined;
-  const navigate = useNavigate();
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,32 +53,43 @@ const ProfilePage = () => {
 
   const normalizeProfileReturn = useCallback(async () => {
     setIsLoading(true);
-    const res = (await fetchProfiles(GetAllProfiles, {
-      token,
-    })) as ProfilesResponse;
+    try {
+      if (!profileQuery) {
+        const res = (await fetchProfiles(GetAllProfiles, {
+          token,
+        })) as ProfilesResponse;
 
-    if (!res) {
-      setProfiles([]);
+        if (!res) {
+          setProfiles([]);
+          setIsLoading(false);
+          return;
+        }
+        const data = res.data;
+        const meta = res.meta;
+        setIsFirstPage(Boolean(meta.isFirstPage));
+        setIsLastPage(Boolean(meta.isLastPage));
+        setProfiles(Array.isArray(data) ? data : [data]);
+      } else {
+        // search by name (single result)
+        const res = (await fetchProfiles(ApiFunctions.GetProfileByName, {
+          token,
+          name: profileQuery,
+        })) as ProfileResponse;
+        const data = res?.data ?? res;
+        setIsFirstPage(true);
+        setIsLastPage(true);
+        setProfiles(data ? (Array.isArray(data) ? data : [data]) : []);
+      }
+    } finally {
       setIsLoading(false);
-      return;
     }
-    const data = res.data;
-    const meta = res.meta;
-    setIsFirstPage(Boolean(meta.isFirstPage));
-    setIsLastPage(Boolean(meta.isLastPage));
-    setProfiles(Array.isArray(data) ? data : [data]);
-    setIsLoading(false);
-  }, [GetAllProfiles, token]);
+  }, [GetAllProfiles, token, profileQuery]);
 
   useEffect(() => {
     void normalizeProfileReturn();
   }, [normalizeProfileReturn]);
 
-  useEffect(() => {
-    // TODO add toast to show that they must enter a name
-    if (profileQuery === '') return;
-    navigate(`/profile:${profileQuery}`);
-  }, [profileQuery, navigate]);
+  // Search now updates the list directly. Navigation happens by clicking a ProfileCard.
 
   return (
     <Wrapper>

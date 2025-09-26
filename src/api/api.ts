@@ -213,7 +213,7 @@ const fetchProfiles = async (fn: string, params?: ProfileParams) => {
         if (!name || name.trim() === '') {
           throw new Error('Name is required');
         }
-        return getProfileByName(token, name);
+        return getProfileByName(name, token);
       }
       case ApiFunctions.UpdateProfile: {
         const { token, name, profilePayload } = params || {};

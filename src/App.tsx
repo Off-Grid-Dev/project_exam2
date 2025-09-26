@@ -19,12 +19,12 @@ const AppRoutes = () => {
         element={!isLoggedIn ? <LoginRegister /> : <Home />}
       />
       <Route
-        path='/profile'
-        element={!isLoggedIn ? <ProfilePage /> : <Home />}
+        path='/profiles'
+        element={isLoggedIn ? <ProfilePage /> : <Home />}
       />
       <Route
-        path='/profile:id'
-        element={!isLoggedIn ? <ProfileSingle /> : <Home />}
+        path='/profiles/:name'
+        element={isLoggedIn ? <ProfileSingle /> : <Home />}
       />
       <Route path='*' element={<Home />} />
     </Routes>
