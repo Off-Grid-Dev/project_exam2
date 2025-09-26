@@ -1,5 +1,10 @@
+// Test framework
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+// Module under test
 import { registerUser } from '../../profiles/registerUser';
+
+// Test helpers / mocks
 import {
   createMockResponse,
   createMockErrorResponse,

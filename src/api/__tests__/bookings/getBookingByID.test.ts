@@ -1,5 +1,10 @@
+// Test framework
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+// Module under test
 import { getBookingByID } from '../../bookings/getBookingByID';
+
+// Test helpers / mocks
 import {
   createMockResponse,
   createMockErrorResponse,

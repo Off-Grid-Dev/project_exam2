@@ -1,3 +1,4 @@
+// Test framework
 import { vi } from 'vitest';
 
 // Mock data for testing

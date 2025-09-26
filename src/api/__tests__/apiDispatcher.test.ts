@@ -1,6 +1,11 @@
+// Test framework
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+// API dispatcher under test
 import { fetchVenues, fetchProfiles, fetchBookings } from '../api';
 import { ApiFunctions } from '../apiFunctionsEnum';
+
+// Helpers / runtime mocks
 import * as authToken from '../authToken';
 
 // Mock all the individual API functions
