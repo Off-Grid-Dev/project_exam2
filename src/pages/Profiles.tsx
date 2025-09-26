@@ -11,10 +11,12 @@ import { fetchProfiles } from '../api/api';
 import { getToken } from '../api/authToken';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 import { useBreakpoint } from '../context/ui/useBreakpoint';
+import { useToast } from '../context/toast/useToast';
 
 // Types
 import type { ProfilesResponse, ProfileResponse } from '../types/api/responses';
 import type { Profile } from '../types/api/profile';
+import type { ToastProps } from '../context/toast/ToastProvider.tsx';
 
 const ProfilePage = () => {
   const token = getToken() || undefined;
@@ -27,8 +29,13 @@ const ProfilePage = () => {
     undefined,
   );
   const [isLastPage, setIsLastPage] = useState<boolean | undefined>(undefined);
+  const [toastValues, setToastValues] = useState<Omit<ToastProps, 'id'>>({
+    text: '',
+    type: '',
+  });
 
   const { GetAllProfiles } = ApiFunctions;
+  const { addToast } = useToast();
 
   function handleProfileSearch(query?: string) {
     const q = (typeof query === 'string' ? query : profileQuery).trim();
@@ -48,9 +55,10 @@ const ProfilePage = () => {
           limit: 20,
           page,
         })) as ProfilesResponse;
-
+        setToastValues({ type: 'success', text: 'All profiles loaded' });
         if (!res) {
           setProfiles([]);
+          setToastValues({ type: 'warning', text: 'No profiles to show.' });
           setIsLoading(false);
           return;
         }
@@ -69,11 +77,19 @@ const ProfilePage = () => {
         setIsFirstPage(true);
         setIsLastPage(true);
         setProfiles(data ? (Array.isArray(data) ? data : [data]) : []);
+        setToastValues({
+          type: 'success',
+          text: `Profiles that match ${profileQuery}`,
+        });
       }
     } finally {
       setIsLoading(false);
     }
   }, [GetAllProfiles, token, profileQuery, page]);
+
+  useEffect(() => {
+    if (toastValues.type !== '') addToast(toastValues);
+  }, [toastValues, addToast]);
 
   useEffect(() => {
     void normalizeProfileReturn();
