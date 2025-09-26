@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 
 // Components
 import { Wrapper } from '../components/layout/Wrapper';
+import Calendar from '../components/Calendar';
 
 // Local functions / hooks / api
 import { fetchVenues, fetchBookings } from '../api/api.ts';
@@ -26,6 +27,7 @@ const Venue = () => {
   const { id } = useParams();
   const { GetVenueById, CreateBooking } = ApiFunctions;
   const { addToast } = useToast();
+  const [bookedIsoDates, setBookedIsoDates] = useState<string[]>([]);
 
   const fetchVenue = useCallback(
     async (id: string) => {
@@ -38,6 +40,31 @@ const Venue = () => {
         if (res && res.data) {
           setVenue(res.data);
           setMaxGuests(res.data.maxGuests);
+          // if bookings are included on the venue, expand them to disabled ISO dates
+          if (res.data.bookings && Array.isArray(res.data.bookings)) {
+            const dates: string[] = [];
+            res.data.bookings.forEach((b) => {
+              // expand inclusive range from dateFrom to dateTo
+              const from = new Date(b.dateFrom);
+              const to = new Date(b.dateTo);
+              for (
+                let d = new Date(from);
+                d <= to;
+                d.setUTCDate(d.getUTCDate() + 1)
+              ) {
+                dates.push(
+                  new Date(
+                    Date.UTC(
+                      d.getUTCFullYear(),
+                      d.getUTCMonth(),
+                      d.getUTCDate(),
+                    ),
+                  ).toISOString(),
+                );
+              }
+            });
+            setBookedIsoDates(dates);
+          }
         }
         return res;
       } catch (err) {
@@ -53,6 +80,11 @@ const Venue = () => {
   useLayoutEffect(() => {
     if (typeof id === 'string') void fetchVenue(id);
   }, [fetchVenue, id]);
+
+  const handleCalendarRange = (fromISO: string, toISO: string) => {
+    setStartDate(fromISO);
+    setEndDate(toISO);
+  };
 
   async function handleBookingSubmit(e: FormEvent) {
     e.preventDefault();
@@ -103,6 +135,13 @@ const Venue = () => {
             <p className='mt-3'>{venue?.description}</p>
             <p className='mt-2 font-semibold'>Price: {venue?.price}</p>
             <p>Max guests: {venue?.maxGuests}</p>
+
+            <Calendar
+              disabledDates={bookedIsoDates}
+              onRangeSelect={handleCalendarRange}
+              initialMonth={new Date().getMonth()}
+              initialYear={new Date().getFullYear()}
+            />
 
             <form onSubmit={handleBookingSubmit} className='mt-4 grid gap-2'>
               <label>
