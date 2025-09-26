@@ -13,12 +13,11 @@ import Select from './Select';
 
 type SearchFormProps = {
   query: string;
-  // setQuery removed: parent state will be updated only on submit or debounced search
   handleSearch: (query?: string) => void;
-  handleSortUpdate: (e: ChangeEvent<HTMLSelectElement>) => void;
-  handleSortOrderUpdate: (e: ChangeEvent<HTMLSelectElement>) => void;
-  sortValue: string;
-  sortOrder: string;
+  handleSortUpdate?: (e: ChangeEvent<HTMLSelectElement>) => void;
+  handleSortOrderUpdate?: (e: ChangeEvent<HTMLSelectElement>) => void;
+  sortValue?: string;
+  sortOrder?: string;
   autoSearch?: boolean; // when true, perform search automatically after debounce
   debounceDelay?: number; // milliseconds to wait after typing
   showSort?: boolean; // when false, hide sort controls (used by Profiles page)
@@ -29,8 +28,8 @@ const SearchForm: FC<SearchFormProps> = ({
   handleSearch,
   handleSortUpdate,
   handleSortOrderUpdate,
-  sortValue,
-  sortOrder,
+  sortValue = '',
+  sortOrder = 'asc',
   autoSearch = false,
   debounceDelay = 1200,
   showSort = true,
@@ -78,7 +77,7 @@ const SearchForm: FC<SearchFormProps> = ({
           <Select
             ariaLabel='Sort venues by attributes'
             value={sortValue}
-            onChange={(e) => handleSortUpdate(e)}
+            onChange={(e) => handleSortUpdate?.(e)}
             name='sortByVenues'
             options={[
               { value: '', label: 'Sort by' },
@@ -91,7 +90,7 @@ const SearchForm: FC<SearchFormProps> = ({
           <select
             aria-label='Define sort order'
             value={sortOrder}
-            onChange={(e) => handleSortOrderUpdate(e)}
+            onChange={(e) => handleSortOrderUpdate?.(e)}
             name='sortOrderVenues'
             className='cursor-pointer'
           >

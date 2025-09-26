@@ -1,5 +1,5 @@
 // React imports
-import { useCallback, useEffect, useState, type ChangeEvent } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // Components
 import { Wrapper } from '../components/layout/Wrapper';
@@ -22,8 +22,6 @@ const ProfilePage = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [profileQuery, setProfileQuery] = useState<string>('');
-  const [sortValue, setSortValue] = useState<string>('created');
-  const [sortOrder, setSortOrder] = useState<string>('asc');
   const [page, setPage] = useState<number>(1);
   const [isFirstPage, setIsFirstPage] = useState<boolean | undefined>(
     undefined,
@@ -41,22 +39,14 @@ const ProfilePage = () => {
   const isAutoSearch = breakpoint !== 'mobile';
   const debounceMs = 400;
 
-  function handleSortUpdate(e: ChangeEvent<HTMLSelectElement>) {
-    const sortValue = e.currentTarget.value.trim();
-    setSortValue(sortValue);
-  }
-
-  function handleSortOrderUpdate(e: ChangeEvent<HTMLSelectElement>) {
-    const sortOrderValue = e.currentTarget.value;
-    setSortOrder(sortOrderValue);
-  }
-
   const normalizeProfileReturn = useCallback(async () => {
     setIsLoading(true);
     try {
       if (!profileQuery) {
         const res = (await fetchProfiles(GetAllProfiles, {
           token,
+          limit: 20,
+          page,
         })) as ProfilesResponse;
 
         if (!res) {
@@ -83,7 +73,7 @@ const ProfilePage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [GetAllProfiles, token, profileQuery]);
+  }, [GetAllProfiles, token, profileQuery, page]);
 
   useEffect(() => {
     void normalizeProfileReturn();
@@ -97,10 +87,6 @@ const ProfilePage = () => {
       <SearchForm
         query={profileQuery}
         handleSearch={handleProfileSearch}
-        handleSortUpdate={handleSortUpdate}
-        handleSortOrderUpdate={handleSortOrderUpdate}
-        sortValue={sortValue}
-        sortOrder={sortOrder}
         autoSearch={isAutoSearch}
         debounceDelay={debounceMs}
         showSort={false}

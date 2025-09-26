@@ -39,6 +39,10 @@ export const Home = () => {
   // Accept optional query from SearchForm (debounced input) or use current state
   function handleVenueSearch(query?: string) {
     const q = (typeof query === 'string' ? query : venueQuery).trim();
+    // only reset page when the query actually changes
+    if (q !== venueQuery) {
+      setPage(1);
+    }
     setVenueQuery(q);
   }
 
@@ -48,20 +52,25 @@ export const Home = () => {
 
   function handleSortUpdate(e: ChangeEvent<HTMLSelectElement>) {
     const sortValue = e.currentTarget.value.trim();
+    // changing sort should show results from page 1
     setSortValue(sortValue);
+    setPage(1);
   }
 
   function handleSortOrderUpdate(e: ChangeEvent<HTMLSelectElement>) {
     const sortOrderValue = e.currentTarget.value;
+    // changing sort order should show results from page 1
     setSortOrder(sortOrderValue);
+    setPage(1);
   }
 
   const normalizeVenueReturn = useCallback(async () => {
     setIsLoading(true);
     let res;
     if (venueQuery === '') {
+      // use 'created' as the effective default sort key for API calls
       res = (await fetchVenues(GetVenues, {
-        sort: sortValue,
+        sort: sortValue || 'created',
         sortOrder,
         page,
       })) as VenuesResponse;
@@ -69,7 +78,7 @@ export const Home = () => {
     } else {
       res = (await fetchVenues(GetVenueBySearch, {
         q: venueQuery,
-        sort: sortValue,
+        sort: sortValue || 'created',
         sortOrder,
         page,
       })) as VenuesResponse;
