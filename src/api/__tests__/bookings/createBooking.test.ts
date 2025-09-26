@@ -38,17 +38,20 @@ describe('createBooking', () => {
 
     const result = await createBooking(payload, mockAccessToken);
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining('/holidaze/bookings'),
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${mockAccessToken}`,
-        },
-        body: JSON.stringify(payload),
-      },
-    );
+    // Inspect the actual fetch call and verify important parts of the request.
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    const [calledUrl, calledOptions] = mockFetch.mock.calls[0];
+    expect(String(calledUrl)).toContain('/holidaze/bookings');
+    expect(calledOptions).toMatchObject({
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    // headers should include Content-Type, Authorization and the API key header
+    expect(calledOptions.headers).toMatchObject({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${mockAccessToken}`,
+    });
+    expect(calledOptions.headers).toHaveProperty('X-Noroff-API-Key');
 
     expect(result).toEqual(mockBookingResponse);
   });
@@ -95,15 +98,16 @@ describe('createBooking', () => {
 
     await createBooking(payload, '');
 
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining('/holidaze/bookings'),
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      },
-    );
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    const [, calledOptions2] = mockFetch.mock.calls[0];
+    expect(calledOptions2).toMatchObject({
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    expect(calledOptions2.headers).toMatchObject({
+      'Content-Type': 'application/json',
+    });
+    // API key should still be sent even if token is empty
+    expect(calledOptions2.headers).toHaveProperty('X-Noroff-API-Key');
   });
 });
