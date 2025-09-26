@@ -64,7 +64,7 @@ const ProfileList: FC<ProfileListProps> = ({
           disabled={Boolean(pagination.isLastPage)}
         />
       </div>
-      <div>
+      <div className='my-4 grid grid-cols-2 gap-3'>
         {profiles.map((profile) => (
           <ProfileCard key={profile.name} profile={profile} />
         ))}
