@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 // Components
 import { Wrapper } from '../components/layout/Wrapper';
 import Calendar from '../components/Calendar';
+import { expandRangeToISODates } from '../utils/dates';
 
 // Local functions / hooks / api
 import { fetchVenues, fetchBookings } from '../api/api.ts';
@@ -28,6 +29,7 @@ const Venue = () => {
   const { GetVenueById, CreateBooking } = ApiFunctions;
   const { addToast } = useToast();
   const [bookedIsoDates, setBookedIsoDates] = useState<string[]>([]);
+  const [selectionConflicts, setSelectionConflicts] = useState<string[]>([]);
 
   const fetchVenue = useCallback(
     async (id: string) => {
@@ -42,27 +44,9 @@ const Venue = () => {
           setMaxGuests(res.data.maxGuests);
           // if bookings are included on the venue, expand them to disabled ISO dates
           if (res.data.bookings && Array.isArray(res.data.bookings)) {
-            const dates: string[] = [];
-            res.data.bookings.forEach((b) => {
-              // expand inclusive range from dateFrom to dateTo
-              const from = new Date(b.dateFrom);
-              const to = new Date(b.dateTo);
-              for (
-                let d = new Date(from);
-                d <= to;
-                d.setUTCDate(d.getUTCDate() + 1)
-              ) {
-                dates.push(
-                  new Date(
-                    Date.UTC(
-                      d.getUTCFullYear(),
-                      d.getUTCMonth(),
-                      d.getUTCDate(),
-                    ),
-                  ).toISOString(),
-                );
-              }
-            });
+            const dates = res.data.bookings.flatMap((b) =>
+              expandRangeToISODates(b.dateFrom, b.dateTo),
+            );
             setBookedIsoDates(dates);
           }
         }
@@ -81,9 +65,16 @@ const Venue = () => {
     if (typeof id === 'string') void fetchVenue(id);
   }, [fetchVenue, id]);
 
-  const handleCalendarRange = (fromISO: string, toISO: string) => {
+  // legacy handler removed; use handleCalendarRangeWithConflicts to receive conflict info
+
+  const handleCalendarRangeWithConflicts = (
+    fromISO: string,
+    toISO: string,
+    conflicts?: string[],
+  ) => {
     setStartDate(fromISO);
     setEndDate(toISO);
+    setSelectionConflicts(conflicts && conflicts.length ? conflicts : []);
   };
 
   async function handleBookingSubmit(e: FormEvent) {
@@ -138,30 +129,28 @@ const Venue = () => {
 
             <Calendar
               disabledDates={bookedIsoDates}
-              onRangeSelect={handleCalendarRange}
+              onRangeSelect={handleCalendarRangeWithConflicts}
               initialMonth={new Date().getMonth()}
               initialYear={new Date().getFullYear()}
             />
 
             <form onSubmit={handleBookingSubmit} className='mt-4 grid gap-2'>
-              <label>
-                Start date:
-                <input
-                  type='date'
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.currentTarget.value)}
-                  required
-                />
-              </label>
-              <label>
-                End date:
-                <input
-                  type='date'
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.currentTarget.value)}
-                  required
-                />
-              </label>
+              <div>
+                <label className='font-semibold'>Selected dates</label>
+                <div className='mt-1'>
+                  {startDate && endDate ? (
+                    <p className='text-sm'>
+                      {new Date(startDate).toLocaleDateString()} —{' '}
+                      {new Date(endDate).toLocaleDateString()}
+                    </p>
+                  ) : (
+                    <p className='text-muted text-sm'>
+                      Please select a start and end date from the calendar
+                      above.
+                    </p>
+                  )}
+                </div>
+              </div>
               <label>
                 Guests:
                 <input
@@ -174,11 +163,23 @@ const Venue = () => {
               </label>
               <button
                 type='submit'
-                className='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1'
+                disabled={
+                  !startDate ||
+                  !endDate ||
+                  (maxGuests !== undefined && guests > maxGuests) ||
+                  selectionConflicts.length > 0
+                }
+                className='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50'
               >
                 Book
               </button>
             </form>
+            {selectionConflicts.length > 0 && (
+              <p className='mt-2 text-sm text-amber-200'>
+                The selected range includes dates that are already booked.
+                Please choose a different range.
+              </p>
+            )}
           </div>
         </>
       )}

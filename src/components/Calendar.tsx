@@ -1,5 +1,14 @@
 import { startOfMonth, getDay, getDaysInMonth } from 'date-fns';
-import { useEffect, useState, type FC, type MouseEvent } from 'react';
+import {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  type FC,
+  type MouseEvent,
+} from 'react';
+import { ToastContext } from '../context/toast/ToastContext';
+import { expandRangeToISODates } from '../utils/dates';
 
 type DayProps = {
   date?: number;
@@ -7,13 +16,16 @@ type DayProps = {
   fill: boolean;
   isSelected?: boolean;
   isDisabled?: boolean;
+  isConflict?: boolean;
   onClick?: (date: number) => void;
 };
 
 type CalendarProps = {
-  // called with UTC-midnight ISO strings when both start and end are selected
-  onRangeSelect?: (dateFromISO: string, dateToISO: string) => void;
-  // array of ISO date strings (UTC or local) representing disabled/booked dates
+  onRangeSelect?: (
+    dateFromISO: string,
+    dateToISO: string,
+    conflicts?: string[],
+  ) => void;
   disabledDates?: string[];
   initialMonth?: number;
   initialYear?: number;
@@ -82,6 +94,7 @@ function Calendar({
     day,
     isSelected,
     isDisabled,
+    isConflict,
     onClick,
   }) => {
     if (fill) {
@@ -97,9 +110,11 @@ function Calendar({
         }}
         disabled={isDisabled}
         className={`group grid aspect-square cursor-pointer border-2 text-center transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 ${
-          isSelected
-            ? 'border-green-300 hover:border-green-400'
-            : 'border-slate-50/10 hover:border-slate-50/20'
+          isConflict
+            ? 'border-rose-400 bg-rose-600/30 hover:border-rose-500'
+            : isSelected
+              ? 'border-green-300 hover:border-green-400'
+              : 'border-slate-50/10 hover:border-slate-50/20'
         }`}
       >
         <span className='h-fit bg-slate-800 text-sm text-white'>{date}</span>
@@ -110,47 +125,64 @@ function Calendar({
     );
   };
 
-  // selection state: store day numbers (1-based)
-  const [selectedStart, setSelectedStart] = useState<number | null>(null);
-  const [selectedEnd, setSelectedEnd] = useState<number | null>(null);
+  const [selectedStart, setSelectedStart] = useState<Date | null>(null);
+  const [selectedEnd, setSelectedEnd] = useState<Date | null>(null);
+  const selectedStartRef = useRef<Date | null>(null);
+  const selectedEndRef = useRef<Date | null>(null);
 
-  // precompute disabled set for quick lookup (normalize to YYYY-MM-DD)
   const disabledSet = new Set(disabledDates || []);
 
-  const normalizeToUTCDateISO = (y: number, m: number, d: number) => {
-    // Date.UTC(year, monthIndex, day) returns ms at 00:00:00 UTC
-    return new Date(Date.UTC(y, m, d)).toISOString();
+  // safe toast accessor: useContext returns undefined when provider is missing
+  const toastCtx = useContext(ToastContext);
+  const addToast = toastCtx?.addToast ?? (() => {});
+
+  const normalizeToUTCDateISO = (date: Date) => {
+    // produce ISO at UTC midnight for given date
+    return new Date(
+      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+    ).toISOString();
   };
 
   const handleDayClick = (dayNum: number) => {
-    // if no start selected, set start
-    if (selectedStart === null) {
-      setSelectedStart(dayNum);
+    const clicked = new Date(Date.UTC(year, month, dayNum));
+    if (selectedStartRef.current === null) {
+      setSelectedStart(clicked);
+      selectedStartRef.current = clicked;
       setSelectedEnd(null);
+      selectedEndRef.current = null;
       return;
     }
 
-    // if start exists and no end, and clicked day >= start => set end
-    if (selectedStart !== null && selectedEnd === null) {
-      if (dayNum >= selectedStart) {
-        setSelectedEnd(dayNum);
-        // notify parent with ISO strings
+    if (selectedStartRef.current !== null && selectedEndRef.current === null) {
+      if (clicked.getTime() >= selectedStartRef.current.getTime()) {
+        setSelectedEnd(clicked);
+        selectedEndRef.current = clicked;
         if (onRangeSelect) {
-          const fromISO = normalizeToUTCDateISO(year, month, selectedStart);
-          const toISO = normalizeToUTCDateISO(year, month, dayNum);
-          onRangeSelect(fromISO, toISO);
+          const fromISO = normalizeToUTCDateISO(selectedStartRef.current);
+          const toISO = normalizeToUTCDateISO(clicked);
+          const fullRange = expandRangeToISODates(fromISO, toISO);
+          const conflicts = fullRange.filter((d) => disabledSet.has(d));
+          if (conflicts.length > 0) {
+            addToast({
+              type: 'error',
+              text: 'The dates you have chosen are not available',
+            });
+          }
+          onRangeSelect(fromISO, toISO, conflicts);
         }
         return;
       }
-      // clicked before start -> make it the new start
-      setSelectedStart(dayNum);
+      setSelectedStart(clicked);
+      selectedStartRef.current = clicked;
       setSelectedEnd(null);
+      selectedEndRef.current = null;
       return;
     }
 
-    // if both selected, start a new selection
-    setSelectedStart(dayNum);
+    setSelectedStart(clicked);
+    selectedStartRef.current = clicked;
     setSelectedEnd(null);
+    selectedEndRef.current = null;
   };
 
   const renderDays = (start: number, populated: number, end: number) => {
@@ -164,16 +196,19 @@ function Calendar({
     const populatedEls = populatedDays.map((_, idx) => {
       const weekDayIdx = (idx + start) % 7;
       const date = idx + 1;
-      const iso = normalizeToUTCDateISO(year, month, date);
+      const dayDate = new Date(Date.UTC(year, month, date));
+      const iso = normalizeToUTCDateISO(dayDate);
       const isDisabled = disabledSet.has(iso);
-      const isSelected =
-        (selectedStart !== null &&
-          selectedEnd === null &&
-          selectedStart === date) ||
-        (selectedStart !== null &&
-          selectedEnd !== null &&
-          date >= selectedStart &&
-          date <= selectedEnd);
+      let isSelected = false;
+      let isConflict = false;
+      if (selectedStart && selectedEnd) {
+        isSelected =
+          dayDate.getTime() >= selectedStart.getTime() &&
+          dayDate.getTime() <= selectedEnd.getTime();
+        if (isSelected && isDisabled) isConflict = true;
+      } else if (selectedStart && !selectedEnd) {
+        isSelected = dayDate.getTime() === selectedStart.getTime();
+      }
 
       return (
         <Day
@@ -183,6 +218,7 @@ function Calendar({
           key={`p${idx}`}
           isSelected={isSelected}
           isDisabled={isDisabled}
+          isConflict={isConflict}
           onClick={handleDayClick}
         />
       );
