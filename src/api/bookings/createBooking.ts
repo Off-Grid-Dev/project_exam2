@@ -3,7 +3,7 @@ import type { BookingsResponse, ApiError } from '../../types/api/responses';
 import type { BookingCreatePayload } from '../../types/api/booking';
 
 // Constants
-import { API_BOOKINGS } from '../constants';
+import { API_BOOKINGS, API_KEY } from '../constants';
 
 export const createBooking = async (
   payload: BookingCreatePayload,
@@ -13,6 +13,7 @@ export const createBooking = async (
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-Noroff-API-Key': `${API_KEY}`,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify(payload),
