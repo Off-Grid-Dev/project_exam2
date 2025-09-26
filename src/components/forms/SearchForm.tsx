@@ -21,6 +21,7 @@ type SearchFormProps = {
   sortOrder: string;
   autoSearch?: boolean; // when true, perform search automatically after debounce
   debounceDelay?: number; // milliseconds to wait after typing
+  showSort?: boolean; // when false, hide sort controls (used by Profiles page)
 };
 
 const SearchForm: FC<SearchFormProps> = ({
@@ -32,6 +33,7 @@ const SearchForm: FC<SearchFormProps> = ({
   sortOrder,
   autoSearch = false,
   debounceDelay = 1200,
+  showSort = true,
 }) => {
   const [localQuery, setLocalQuery] = useState<string>(query);
 
@@ -51,7 +53,6 @@ const SearchForm: FC<SearchFormProps> = ({
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // when autoSearch is disabled (mobile), the button triggers search
     handleSearch(localQuery.trim());
   }
 
@@ -72,29 +73,33 @@ const SearchForm: FC<SearchFormProps> = ({
       {!autoSearch && (
         <Button label='Search for Venues' type='submit' additionalClasses='' />
       )}
-      <Select
-        ariaLabel='Sort venues by attributes'
-        value={sortValue}
-        onChange={(e) => handleSortUpdate(e)}
-        name='sortByVenues'
-        options={[
-          { value: '', label: 'Sort by' },
-          { value: 'name', label: 'Venue name' },
-          { value: 'price', label: 'Venue price' },
-          { value: 'maxGuests', label: 'Maximum guests' },
-          { value: 'rating', label: 'Rating' },
-        ]}
-      />
-      <select
-        aria-label='Define sort order'
-        value={sortOrder}
-        onChange={(e) => handleSortOrderUpdate(e)}
-        name='sortOrderVenues'
-        className='cursor-pointer'
-      >
-        <option value='asc'>Ascending</option>
-        <option value='desc'>Descending</option>
-      </select>
+      {showSort && (
+        <>
+          <Select
+            ariaLabel='Sort venues by attributes'
+            value={sortValue}
+            onChange={(e) => handleSortUpdate(e)}
+            name='sortByVenues'
+            options={[
+              { value: '', label: 'Sort by' },
+              { value: 'name', label: 'Venue name' },
+              { value: 'price', label: 'Venue price' },
+              { value: 'maxGuests', label: 'Maximum guests' },
+              { value: 'rating', label: 'Rating' },
+            ]}
+          />
+          <select
+            aria-label='Define sort order'
+            value={sortOrder}
+            onChange={(e) => handleSortOrderUpdate(e)}
+            name='sortOrderVenues'
+            className='cursor-pointer'
+          >
+            <option value='asc'>Ascending</option>
+            <option value='desc'>Descending</option>
+          </select>
+        </>
+      )}
     </form>
   );
 };

@@ -32,15 +32,8 @@ const ProfilePage = () => {
 
   const { GetAllProfiles } = ApiFunctions;
 
-  function resetSearchParams() {
-    setPage(1);
-    setSortValue('');
-    setSortOrder('asc');
-  }
-
   function handleProfileSearch(query?: string) {
     const q = (typeof query === 'string' ? query : profileQuery).trim();
-    resetSearchParams();
     setProfileQuery(q);
   }
 
@@ -110,6 +103,7 @@ const ProfilePage = () => {
         sortOrder={sortOrder}
         autoSearch={isAutoSearch}
         debounceDelay={debounceMs}
+        showSort={false}
       />
       <ProfileList
         profiles={profiles}
