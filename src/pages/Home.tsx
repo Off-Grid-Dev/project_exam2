@@ -36,16 +36,9 @@ export const Home = () => {
   const { GetVenues, GetVenueBySearch } = ApiFunctions;
   const { addToast } = useToast();
 
-  function resetSearchParams() {
-    setPage(1);
-    setSortValue('');
-    setSortOrder('asc');
-  }
-
   // Accept optional query from SearchForm (debounced input) or use current state
   function handleVenueSearch(query?: string) {
     const q = (typeof query === 'string' ? query : venueQuery).trim();
-    resetSearchParams();
     setVenueQuery(q);
   }
 
