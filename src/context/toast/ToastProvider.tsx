@@ -52,8 +52,8 @@ export const ToastProvider = ({ children }: AuthProviderProps) => {
   );
 
   const contextValue = useMemo(
-    () => ({ toastArray, addToast }),
-    [toastArray, addToast],
+    () => ({ toastArray, addToast, removeToast }),
+    [toastArray, addToast, removeToast],
   );
 
   return (
@@ -62,7 +62,7 @@ export const ToastProvider = ({ children }: AuthProviderProps) => {
       <ToastWrapper>
         {toastArray.length > 0 &&
           toastArray.map(({ id, text, type }) => (
-            <Toast key={id} text={text} type={type} />
+            <Toast key={id} id={id} text={text} type={type} />
           ))}
       </ToastWrapper>
     </ToastContext.Provider>

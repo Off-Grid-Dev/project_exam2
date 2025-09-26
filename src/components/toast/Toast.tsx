@@ -3,14 +3,16 @@ import type { FC, ReactNode } from 'react';
 
 // Types
 import type { ToastProps } from '../../context/toast/ToastProvider';
+import { useToast } from '../../context/toast/useToast';
 
 type ToastWrapperProps = {
   children: ReactNode;
 };
 
-export const Toast: FC<Omit<ToastProps, 'id'>> = ({ type, text }) => {
-  let additionalClasses;
+export const Toast: FC<ToastProps> = ({ type, text, id }) => {
+  const { removeToast } = useToast();
 
+  let additionalClasses;
   switch (type) {
     case 'success': {
       additionalClasses = 'bg-success-600 border-success-900';
@@ -28,7 +30,8 @@ export const Toast: FC<Omit<ToastProps, 'id'>> = ({ type, text }) => {
 
   return (
     <button
-      className={`ml-auto rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
+      onClick={() => removeToast(id)}
+      className={`ml-auto max-w-64 rounded-md border-2 px-4 py-2 text-center ${additionalClasses}`}
     >
       <span>{text}</span>
     </button>
