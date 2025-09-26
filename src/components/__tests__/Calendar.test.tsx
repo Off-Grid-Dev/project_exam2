@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { waitFor } from '@testing-library/react';
 import Calendar from '../Calendar';
+import { ToastProvider } from '../../context/toast/ToastProvider';
 import { expect, test, vi } from 'vitest';
 
 // simple smoke test: ensure conflicts are reported when selecting a range that includes a disabled date
@@ -13,12 +14,14 @@ test('reports conflicts when selected range overlaps disabled dates', async () =
   const spy = vi.fn();
 
   render(
-    <Calendar
-      disabledDates={disabled}
-      initialMonth={7} // August (0-based months)
-      initialYear={2025}
-      onRangeSelect={spy}
-    />,
+    <ToastProvider>
+      <Calendar
+        disabledDates={disabled}
+        initialMonth={7} // August (0-based months)
+        initialYear={2025}
+        onRangeSelect={spy}
+      />
+    </ToastProvider>,
   );
 
   // click start date 14 and end date 16 to include disabled 15

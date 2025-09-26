@@ -1,13 +1,6 @@
 import { startOfMonth, getDay, getDaysInMonth } from 'date-fns';
-import {
-  useEffect,
-  useState,
-  useRef,
-  useContext,
-  type FC,
-  type MouseEvent,
-} from 'react';
-import { ToastContext } from '../context/toast/ToastContext';
+import { useEffect, useState, useRef, type FC, type MouseEvent } from 'react';
+import { useToast } from '../context/toast/useToast';
 import { expandRangeToISODates } from '../utils/dates';
 
 type DayProps = {
@@ -132,9 +125,8 @@ function Calendar({
 
   const disabledSet = new Set(disabledDates || []);
 
-  // safe toast accessor: useContext returns undefined when provider is missing
-  const toastCtx = useContext(ToastContext);
-  const addToast = toastCtx?.addToast ?? (() => {});
+  // toast helper — use the hook (component is wrapped by ToastProvider at app root)
+  const { addToast } = useToast();
 
   const normalizeToUTCDateISO = (date: Date) => {
     // produce ISO at UTC midnight for given date
