@@ -11,5 +11,13 @@ export default defineConfig({
         environment: 'jsdom',
         globals: true,
         setupFiles: './setupTests.ts',
+        coverage: {
+          provider: 'istanbul',
+          reporter: ['text', 'lcov', 'html'],
+          reportsDirectory: 'coverage',
+          all: true,
+          include: ['src/**/*.{ts,tsx,js,jsx}'],
+          exclude: ['**/*.test.*', 'src/**/__tests__/**', 'src/main.*', 'src/vite-env.d.ts', 'node_modules/**', 'dist/**'],
+        },
       },
 });
