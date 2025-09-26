@@ -95,8 +95,6 @@ const ProfilePage = () => {
     void normalizeProfileReturn();
   }, [normalizeProfileReturn]);
 
-  // Search now updates the list directly. Navigation happens by clicking a ProfileCard.
-
   return (
     <Wrapper>
       <h1>Profiles</h1>
