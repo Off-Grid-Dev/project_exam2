@@ -21,7 +21,7 @@ export const Home = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [venueQuery, setVenueQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sortValue, setSortValue] = useState<string>('created');
+  const [sortValue, setSortValue] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<string>('asc');
   const [page, setPage] = useState<number>(1);
   const [isFirstPage, setIsFirstPage] = useState<boolean | undefined>(
