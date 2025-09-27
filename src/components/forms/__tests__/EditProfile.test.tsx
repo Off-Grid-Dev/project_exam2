@@ -2,6 +2,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi, describe, test, beforeEach, expect } from 'vitest';
 import ContextProvider from '../../../context/ContextProvider';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 // Mock api.fetchProfiles so load and update paths are spyable
 vi.mock('../../../api/api', async () => {
@@ -33,9 +34,13 @@ describe('EditProfile form', () => {
 
   test('renders and submits update when changes present', async () => {
     render(
-      <ContextProvider>
-        <EditProfileForm />
-      </ContextProvider>,
+      <MemoryRouter initialEntries={[`/profiles/tester/edit`]}>
+        <ContextProvider>
+          <Routes>
+            <Route path='/profiles/:name/edit' element={<EditProfileForm />} />
+          </Routes>
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     // Wait for the form to appear (ownership check + profile load)

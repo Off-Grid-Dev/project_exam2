@@ -1,5 +1,6 @@
 /* eslint-env vitest */
 import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { vi, describe, test, beforeEach, expect } from 'vitest';
 import ContextProvider from '../../context/ContextProvider';
 
@@ -39,9 +40,11 @@ describe('Profiles page', () => {
 
   test('renders list of profiles', async () => {
     render(
-      <ContextProvider>
-        <ProfilesPage />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <ProfilesPage />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
