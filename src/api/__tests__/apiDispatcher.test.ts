@@ -35,6 +35,20 @@ vi.mock('../bookings', () => ({
   updateBooking: vi.fn(),
 }));
 
+// Import the mocked implementations for assertions and to set return values
+import { getVenues, createVenue } from '../venues';
+import { registerUser, getAllProfiles } from '../profiles';
+import { createBooking, getAllBookings } from '../bookings';
+import type {
+  VenuesResponse,
+  RegisterProfileResponse,
+  ProfilesResponse,
+  BookingsResponse,
+} from '../../types/api/responses';
+import type { VenuePayload } from '../../types/api/venue';
+import type { RegisterProfilePayload } from '../../types/api/profile';
+import type { BookingCreatePayload } from '../../types/api/booking';
+
 describe('API Dispatcher Functions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -85,6 +99,65 @@ describe('API Dispatcher Functions', () => {
         fetchVenues('UnknownFunction' as unknown as never),
       ).rejects.toThrow('Unknown function: UnknownFunction');
     });
+
+    it('returns data when GetVenues is successful', async () => {
+      const venue = {
+        id: 'v1',
+        name: 'V1',
+        description: '',
+        media: [],
+        price: 0,
+        maxGuests: 1,
+        rating: 0,
+        created: '',
+        updated: '',
+        meta: { wifi: false, parking: false, breakfast: false, pets: false },
+        location: {
+          address: '',
+          city: '',
+          zip: '',
+          country: '',
+          continent: '',
+          lat: 0,
+          lng: 0,
+        },
+        owner: {
+          name: '',
+          email: '',
+          bio: '',
+          avatar: { url: '', alt: '' },
+          banner: { url: '', alt: '' },
+        },
+        bookings: [],
+        _Count: undefined,
+        _count: { bookings: 0 },
+      } as unknown as import('../../types/api/venue').Venue;
+      const payload: VenuesResponse = {
+        data: [venue],
+        meta: { isFirstPage: true, isLastPage: true },
+      };
+      vi.mocked(getVenues).mockResolvedValue(payload);
+      const res = await fetchVenues(ApiFunctions.GetVenues);
+      expect(res).toEqual(payload);
+    });
+
+    it('calls createVenue and returns result for CreateVenue when token valid', async () => {
+      const venuePayload = { name: 'New Venue' } as VenuePayload;
+      const mockRes: VenuesResponse = {
+        data: [],
+        meta: { isFirstPage: true, isLastPage: true },
+      };
+      vi.mocked(createVenue).mockResolvedValue(mockRes as VenuesResponse);
+      const res = await fetchVenues(ApiFunctions.CreateVenue, {
+        venuePayload,
+        token: 'valid',
+      });
+      expect(res).toEqual(mockRes);
+      expect(vi.mocked(createVenue)).toHaveBeenCalledWith(
+        venuePayload,
+        'valid',
+      );
+    });
   });
 
   describe('fetchProfiles', () => {
@@ -113,6 +186,43 @@ describe('API Dispatcher Functions', () => {
           name: '',
         }),
       ).rejects.toThrow('Name is required');
+    });
+
+    it('registers a user when RegisterUser is called', async () => {
+      const mockRes: RegisterProfileResponse = {
+        data: {
+          name: 'u',
+          email: 'e',
+          bio: '',
+          avatar: { url: '', alt: '' },
+          banner: { url: '', alt: '' },
+          venueManager: false,
+        },
+        meta: {},
+      };
+      vi.mocked(registerUser).mockResolvedValue(mockRes);
+      const payload = {
+        name: 'n',
+        email: 'e',
+        password: 'p',
+      } as RegisterProfilePayload;
+      const res = await fetchProfiles(ApiFunctions.RegisterUser, {
+        registerProfilePayload: payload,
+      });
+      expect(res).toEqual(mockRes);
+      expect(vi.mocked(registerUser)).toHaveBeenCalledWith(payload);
+    });
+
+    it('returns profiles for GetAllProfiles when token provided', async () => {
+      const mockRes: ProfilesResponse = {
+        data: [],
+        meta: { isFirstPage: true, isLastPage: true },
+      };
+      vi.mocked(getAllProfiles).mockResolvedValue(mockRes);
+      const res = await fetchProfiles(ApiFunctions.GetAllProfiles, {
+        token: 'valid',
+      });
+      expect(res).toEqual(mockRes);
     });
   });
 
@@ -169,6 +279,35 @@ describe('API Dispatcher Functions', () => {
           bookingUpdatePayload: mockBookingUpdatePayload,
         }),
       ).rejects.toThrow('Unknown function: UnknownFunction');
+    });
+
+    it('creates a booking when CreateBooking is called with valid payload and token', async () => {
+      const mockRes: BookingsResponse = {
+        data: [],
+        meta: { isFirstPage: true, isLastPage: true },
+      };
+      vi.mocked(createBooking).mockResolvedValue(mockRes);
+      const res = await fetchBookings(ApiFunctions.CreateBooking, {
+        bookingCreatePayload: mockBookingCreatePayload as BookingCreatePayload,
+        token: 'valid',
+      });
+      expect(res).toEqual(mockRes);
+      expect(vi.mocked(createBooking)).toHaveBeenCalledWith(
+        mockBookingCreatePayload,
+        'valid',
+      );
+    });
+
+    it('returns bookings for GetAllBookings when token provided', async () => {
+      const mockRes: BookingsResponse = {
+        data: [],
+        meta: { isFirstPage: true, isLastPage: true },
+      };
+      vi.mocked(getAllBookings).mockResolvedValue(mockRes);
+      const res = await fetchBookings(ApiFunctions.GetAllBookings, {
+        token: 'valid',
+      });
+      expect(res).toEqual(mockRes);
     });
   });
 });
