@@ -225,6 +225,7 @@ export enum ApiFunctions {
    * @param {string[]} [avatar] - User avatar image
    * @param {string} [avatar.url] - {url} of avatar image
    * @param {string} [avatar.alt] - {alt} text of avatar image
+   * @param {string[]} [banner] - User banner image
    * @param {string} [banner.url] - {url} of banner image
    * @param {string} [banner.alt] - {alt} text of banner image
    * @param {boolean} [venueManager]

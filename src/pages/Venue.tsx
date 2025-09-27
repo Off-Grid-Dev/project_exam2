@@ -127,13 +127,6 @@ const Venue = () => {
             <p className='mt-2 font-semibold'>Price: {venue?.price}</p>
             <p>Max guests: {venue?.maxGuests}</p>
 
-            <Calendar
-              disabledDates={bookedIsoDates}
-              onRangeSelect={handleCalendarRangeWithConflicts}
-              initialMonth={new Date().getMonth()}
-              initialYear={new Date().getFullYear()}
-            />
-
             <form onSubmit={handleBookingSubmit} className='mt-4 grid gap-2'>
               <div>
                 <label className='font-semibold'>Selected dates</label>
@@ -180,6 +173,13 @@ const Venue = () => {
                 Please choose a different range.
               </p>
             )}
+
+            <Calendar
+              disabledDates={bookedIsoDates}
+              onRangeSelect={handleCalendarRangeWithConflicts}
+              initialMonth={new Date().getMonth()}
+              initialYear={new Date().getFullYear()}
+            />
           </div>
         </>
       )}

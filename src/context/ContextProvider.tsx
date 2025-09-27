@@ -5,6 +5,7 @@ import type { FC, ReactNode } from 'react';
 import { BreakpointProvider } from './ui/BreakpointProvider';
 import { AuthProvider } from './auth/AuthProvider';
 import { ToastProvider } from './toast/ToastProvider';
+import { ManagerProvider } from './manager/ManagerProvider';
 
 type ContextProviderProps = {
   children: ReactNode;
@@ -13,9 +14,11 @@ type ContextProviderProps = {
 const ContextProvider: FC<ContextProviderProps> = ({ children }) => {
   return (
     <AuthProvider>
-      <ToastProvider>
-        <BreakpointProvider>{children}</BreakpointProvider>
-      </ToastProvider>
+      <ManagerProvider>
+        <ToastProvider>
+          <BreakpointProvider>{children}</BreakpointProvider>
+        </ToastProvider>
+      </ManagerProvider>
     </AuthProvider>
   );
 };

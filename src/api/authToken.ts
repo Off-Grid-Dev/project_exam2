@@ -5,6 +5,13 @@ import type { LoginProfileResponse } from '../types/api/responses';
 export function storeToken(response: LoginProfileResponse) {
   console.log('setting accessToken to localStorage');
   localStorage.setItem('accessToken', response.data.accessToken);
+  // store the username so components can check ownership without extra requests
+  if (response.data.name) {
+    localStorage.setItem('accessName', response.data.name);
+  }
+  if (response.data.venueManager) {
+    localStorage.setItem('venueManager', String(response.data.venueManager));
+  }
 }
 
 export function clearToken() {
@@ -15,6 +22,16 @@ export function clearToken() {
 export function getToken() {
   const token = localStorage.getItem('accessToken');
   return token;
+}
+
+export function getStoredName() {
+  const name = localStorage.getItem('accessName');
+  return name ?? undefined;
+}
+
+export function getStoredVenueManager() {
+  const isVenueManager = localStorage.getItem('venueManager');
+  return isVenueManager === 'true' ? true : false;
 }
 
 export const isTokenValid = (token: unknown): boolean => {
