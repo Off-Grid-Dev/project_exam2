@@ -1,5 +1,5 @@
 /* eslint-env vitest */
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi, describe, test, expect, beforeEach } from 'vitest';
 import ContextProvider from '../../../context/ContextProvider';
 
@@ -43,15 +43,17 @@ describe('CreateVenue form', () => {
 
     // assert fetchVenues was called with ApiFunctions.CreateVenue and token
     const api = await import('../../../api/api');
-    expect(api.fetchVenues).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        token: 'test-token',
-        venuePayload: expect.objectContaining({
-          name: 'My Venue',
-          description: 'Nice place',
+    await waitFor(() =>
+      expect(api.fetchVenues).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          token: 'test-token',
+          venuePayload: expect.objectContaining({
+            name: 'My Venue',
+            description: 'Nice place',
+          }),
         }),
-      }),
+      ),
     );
   });
 });

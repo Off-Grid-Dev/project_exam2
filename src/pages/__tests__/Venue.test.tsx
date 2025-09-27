@@ -1,5 +1,5 @@
 /* eslint-env vitest */
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { vi, describe, test, expect } from 'vitest';
 import ContextProvider from '../../context/ContextProvider';
@@ -101,9 +101,9 @@ describe('Venue page', () => {
     const bookBtn = screen.getByRole('button', { name: /book/i });
     expect(bookBtn).toBeEnabled();
 
-    // Click book and assert fetchBookings was called
+    // Click book and assert fetchBookings was called (wait for ToastProvider updates)
     fireEvent.click(bookBtn);
     const api = await import('../../api/api');
-    expect(api.fetchBookings).toHaveBeenCalled();
+    await waitFor(() => expect(api.fetchBookings).toHaveBeenCalled());
   });
 });
