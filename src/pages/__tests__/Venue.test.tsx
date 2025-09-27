@@ -101,9 +101,14 @@ describe('Venue page', () => {
     const bookBtn = screen.getByRole('button', { name: /book/i });
     expect(bookBtn).toBeEnabled();
 
-    // Click book and assert fetchBookings was called (wait for ToastProvider updates)
+    // Click book and assert fetchBookings was called
     fireEvent.click(bookBtn);
     const api = await import('../../api/api');
     await waitFor(() => expect(api.fetchBookings).toHaveBeenCalled());
+
+    // wait for toast update to avoid act() warnings
+    await waitFor(() =>
+      expect(screen.getByText(/Booking created/i)).toBeInTheDocument(),
+    );
   });
 });

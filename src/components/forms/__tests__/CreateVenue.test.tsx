@@ -37,8 +37,9 @@ describe('CreateVenue form', () => {
     const descInput = screen.getByLabelText(/Description/i) as HTMLInputElement;
     fireEvent.change(descInput, { target: { value: 'Nice place' } });
 
-    // Submit the form
+    // Submit the form and wait for API + toast
     const submitBtn = screen.getByRole('button', { name: /Create venue/i });
+
     fireEvent.click(submitBtn);
 
     // assert fetchVenues was called with ApiFunctions.CreateVenue and token
@@ -54,6 +55,11 @@ describe('CreateVenue form', () => {
           }),
         }),
       ),
+    );
+
+    // wait for toast update caused by ToastProvider to avoid act() warnings
+    await waitFor(() =>
+      expect(screen.getByText(/Venue created/i)).toBeInTheDocument(),
     );
   });
 });

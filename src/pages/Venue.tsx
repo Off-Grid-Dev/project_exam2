@@ -118,11 +118,42 @@ const Venue = () => {
             {venue?.name ?? `Venue ${id}`}
           </h1>
           <div className='my-4'>
-            <img
-              src={venue?.media?.[0]?.url ?? ''}
-              alt={venue?.media?.[0]?.alt ?? 'Venue image'}
-              className='max-h-96 w-full rounded object-cover'
-            />
+            {/* Only render an <img> when a valid absolute URL is present; otherwise show a placeholder */}
+            {(() => {
+              const url = venue?.media?.[0]?.url ?? '';
+              const alt = venue?.media?.[0]?.alt ?? 'Venue image';
+              if (!url) {
+                return (
+                  <div className='bg-bg-dark flex h-48 w-full items-center justify-center rounded'>
+                    <span className='text-text-base'>Invalid image</span>
+                  </div>
+                );
+              }
+              try {
+                const parsed = new URL(url);
+                if (!['http:', 'https:'].includes(parsed.protocol)) {
+                  return (
+                    <div className='bg-bg-dark flex h-48 w-full items-center justify-center rounded'>
+                      <span className='text-text-base'>Invalid image</span>
+                    </div>
+                  );
+                }
+              } catch {
+                return (
+                  <div className='bg-bg-dark flex h-48 w-full items-center justify-center rounded'>
+                    <span className='text-text-base'>Invalid image</span>
+                  </div>
+                );
+              }
+
+              return (
+                <img
+                  src={url}
+                  alt={alt}
+                  className='max-h-96 w-full rounded object-cover'
+                />
+              );
+            })()}
             <p className='mt-3'>{venue?.description}</p>
             <p className='mt-2 font-semibold'>Price: {venue?.price}</p>
             <p>Max guests: {venue?.maxGuests}</p>
