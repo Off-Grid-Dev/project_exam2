@@ -63,6 +63,31 @@ export const RegisterForm = () => {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    const formEl = e.currentTarget as HTMLFormElement;
+    // Manual validation (deterministic for tests): ensure required fields meet expectations
+    const nameEl = formEl.querySelector('#name') as HTMLInputElement | null;
+    const emailEl = formEl.querySelector('#email') as HTMLInputElement | null;
+    const passEl = formEl.querySelector('#password') as HTMLInputElement | null;
+
+    const emailRe = /^[^\s@]+@stud\.noroff\.no$/;
+
+    if (!nameEl || nameEl.value.trim().length < 3) {
+      nameEl?.setCustomValidity('Name must be at least 3 characters');
+      nameEl?.reportValidity?.();
+      return;
+    }
+
+    if (!emailEl || !emailRe.test(emailEl.value.trim())) {
+      emailEl?.setCustomValidity('Email must end with "@stud.noroff.no"');
+      emailEl?.reportValidity?.();
+      return;
+    }
+
+    if (!passEl || passEl.value.length < 8) {
+      passEl?.setCustomValidity('Password must be at least 8 characters long');
+      passEl?.reportValidity?.();
+      return;
+    }
 
     const payload: RegisterProfilePayload = {
       name: userInfo.name,
