@@ -9,6 +9,15 @@ import type {
   ProfilePayload,
   RegisterProfilePayload,
 } from '../types/api/profile';
+import type {
+  VenuesResponse,
+  VenueResponse,
+  RegisterProfileResponse,
+  LoginProfileResponse,
+  ProfilesResponse,
+  ProfileResponse,
+  BookingsResponse,
+} from '../types/api/responses';
 
 // API modules
 import {
@@ -78,17 +87,22 @@ type BookingParams = {
   token?: string;
   id?: string;
   name?: string;
-  bookingCreatePayload: BookingCreatePayload;
-  bookingUpdatePayload: BookingUpdatePayload;
+  bookingCreatePayload?: BookingCreatePayload;
+  bookingUpdatePayload?: BookingUpdatePayload;
 };
 
-async function storeTokenAndReturnResponse(payload: LoginProfilePayload) {
+async function storeTokenAndReturnResponse(
+  payload: LoginProfilePayload,
+): Promise<LoginProfileResponse> {
   const res = await loginUser(payload);
   storeToken(res);
   return res;
 }
 
-const fetchVenues = async (fn: string, params?: VenueParams) => {
+const fetchVenues = async (
+  fn: string,
+  params?: VenueParams,
+): Promise<VenuesResponse | VenueResponse | boolean> => {
   try {
     switch (fn) {
       case ApiFunctions.GetVenues: {
@@ -166,7 +180,16 @@ const fetchVenues = async (fn: string, params?: VenueParams) => {
   }
 };
 
-const fetchProfiles = async (fn: string, params?: ProfileParams) => {
+const fetchProfiles = async (
+  fn: string,
+  params?: ProfileParams,
+): Promise<
+  | RegisterProfileResponse
+  | LoginProfileResponse
+  | ProfilesResponse
+  | ProfileResponse
+  | void
+> => {
   try {
     switch (fn) {
       case ApiFunctions.RegisterUser: {
@@ -240,7 +263,10 @@ const fetchProfiles = async (fn: string, params?: ProfileParams) => {
   }
 };
 
-const fetchBookings = async (fn: string, params?: BookingParams) => {
+const fetchBookings = async (
+  fn: string,
+  params?: BookingParams,
+): Promise<BookingsResponse | boolean> => {
   try {
     switch (fn) {
       case ApiFunctions.GetAllBookings: {

@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { LoginRegister } from './pages/LoginRegister';
 import Venue from './pages/Venue';
+import MyBookings from './pages/MyBookings';
 import ProfilePage from './pages/Profiles';
 import ProfileSingle from './pages/Profile';
 
@@ -32,6 +33,10 @@ const AppRoutes = () => {
       <Route
         path='/profiles/:name'
         element={isLoggedIn ? <ProfileSingle /> : <Home />}
+      />
+      <Route
+        path='/my/bookings'
+        element={isLoggedIn ? <MyBookings /> : <Home />}
       />
       <Route path='*' element={<Home />} />
     </Routes>

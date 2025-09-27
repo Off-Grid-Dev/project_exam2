@@ -46,6 +46,11 @@ const Nav = () => {
       {isLoggedIn && (
         <>
           <NavLink path='/profiles' label='profile' aria='view profiles' />
+          <NavLink
+            path='/my/bookings'
+            label='my bookings'
+            aria='view my bookings'
+          />
           <li>
             <button
               aria-label='log out of current profile'
