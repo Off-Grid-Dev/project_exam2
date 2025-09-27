@@ -39,12 +39,13 @@ describe('RegisterForm', () => {
     const email = screen.getByLabelText(/email:/i) as HTMLInputElement;
     const pass = screen.getByLabelText(/Password:/i) as HTMLInputElement;
     const submit = screen.getByRole('button', { name: /Submit/i });
+    const form = submit.closest('form') as HTMLFormElement;
 
     fireEvent.change(name, { target: { value: 'tester' } });
     fireEvent.change(email, { target: { value: 'tester@stud.noroff.no' } });
     fireEvent.change(pass, { target: { value: 'password123' } });
 
-    fireEvent.click(submit);
+    fireEvent.submit(form);
 
     await waitFor(() => expect(spy).toHaveBeenCalled());
 

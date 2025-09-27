@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { VenuesCard } from '../venues/VenueCard';
 import { BrowserRouter } from 'react-router-dom';
+
+let navigate = vi.fn();
 
 const baseVenue = {
   id: 'v1',
@@ -35,7 +36,8 @@ const baseVenue = {
 };
 
 describe('VenueCard', () => {
-  it('renders venue info and image', () => {
+  it('renders venue info and image', async () => {
+    const { VenuesCard } = await import('../venues/VenueCard');
     render(
       <BrowserRouter>
         <VenuesCard {...baseVenue} />
@@ -47,8 +49,9 @@ describe('VenueCard', () => {
     expect(screen.getByAltText(/img/i)).toBeDefined();
   });
 
-  it('shows invalid image placeholder when url is invalid', () => {
+  it('shows invalid image placeholder when url is invalid', async () => {
     const badVenue = { ...baseVenue, media: [{ url: 'not-a-url', alt: '' }] };
+    const { VenuesCard } = await import('../venues/VenueCard');
     render(
       <BrowserRouter>
         <VenuesCard {...badVenue} />
@@ -58,14 +61,16 @@ describe('VenueCard', () => {
     expect(screen.getByText(/Invalid image/i)).toBeDefined();
   });
 
-  it('navigates to venue page on book button click', () => {
-    const navigate = vi.fn();
-    // mock useNavigate
+  it('navigates to venue page on book button click', async () => {
+    navigate = vi.fn();
+    // mock useNavigate (dynamic mock uses the top-level `navigate` variable)
     vi.mock('react-router-dom', async () => ({
       ...(await vi.importActual('react-router-dom')),
       useNavigate: () => navigate,
     }));
 
+    // re-import component after mock
+    const { VenuesCard } = await import('../venues/VenueCard');
     render(
       <BrowserRouter>
         <VenuesCard {...baseVenue} />
