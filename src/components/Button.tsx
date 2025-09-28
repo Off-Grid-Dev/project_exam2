@@ -1,9 +1,10 @@
 // React imports
-import type { FC, MouseEventHandler } from 'react';
+import type { FC, MouseEventHandler, ReactNode } from 'react';
 
 type ButtonProps = {
-  label: string;
-  type: 'submit' | 'reset' | 'button' | undefined;
+  label?: string;
+  children?: ReactNode;
+  type?: 'submit' | 'reset' | 'button';
   additionalClasses?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
@@ -11,9 +12,10 @@ type ButtonProps = {
 
 const Button: FC<ButtonProps> = ({
   label,
-  type,
-  additionalClasses,
-  disabled,
+  children,
+  type = 'button',
+  additionalClasses = '',
+  disabled = false,
   onClick,
 }) => {
   const baseClasses = 'rounded-sm border-2 px-4 py-2';
@@ -29,7 +31,7 @@ const Button: FC<ButtonProps> = ({
       onClick={onClick}
       aria-disabled={disabled}
     >
-      {label}
+      {children ?? label}
     </button>
   );
 };

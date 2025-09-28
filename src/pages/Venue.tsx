@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 // Components
 import { Wrapper } from '../components/layout/Wrapper';
 import Calendar from '../components/Calendar';
+import Button from '../components/Button';
 import { expandRangeToISODates } from '../utils/dates';
 
 // Local functions / hooks / api
@@ -133,8 +134,8 @@ const Venue = () => {
                 const edit = searchParams.get('edit') === 'true';
                 return (
                   <div>
-                    <button
-                      className='btn-primary px-3 py-1'
+                    <Button
+                      additionalClasses='btn-primary px-3 py-1'
                       onClick={() => {
                         if (edit) {
                           // clear edit param
@@ -149,7 +150,7 @@ const Venue = () => {
                       }}
                     >
                       {edit ? 'Close editor' : 'Edit venue'}
-                    </button>
+                    </Button>
                   </div>
                 );
               }
@@ -244,7 +245,7 @@ const Venue = () => {
                   onChange={(e) => setGuests(Number(e.currentTarget.value))}
                 />
               </label>
-              <button
+              <Button
                 type='submit'
                 disabled={
                   !startDate ||
@@ -252,10 +253,10 @@ const Venue = () => {
                   (maxGuests !== undefined && guests > maxGuests) ||
                   selectionConflicts.length > 0
                 }
-                className='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50'
+                additionalClasses='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50'
               >
                 Book
-              </button>
+              </Button>
             </form>
             {selectionConflicts.length > 0 && (
               <p className='mt-2 text-sm text-amber-200'>

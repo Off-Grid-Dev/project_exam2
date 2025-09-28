@@ -16,6 +16,7 @@ import type { ProfileResponse } from '../types/api/responses';
 import type { Venue } from '../types/api/venue';
 import EditProfileForm from '../components/forms/EditProfile';
 import CreateVenueForm from '../components/forms/CreateVenue';
+import { VenuesList } from '../components/venues/VenueList';
 import MyBookings from './MyBookings';
 
 const ProfileSingle = () => {
@@ -24,13 +25,15 @@ const ProfileSingle = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isManager, setIsManager] = useState(false);
   const [venues, setVenues] = useState<Venue[] | null>(null);
+  const [page, setPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const tab = searchParams.get('tab');
 
   useEffect(() => {
     if (!name) return;
-    const load = async () => {
+
+    const fetchProfile = async () => {
       setIsLoading(true);
       setError(null);
       try {
@@ -82,7 +85,15 @@ const ProfileSingle = () => {
       }
     };
 
-    void load();
+    void fetchProfile();
+
+    const onCreated = () => {
+      void fetchProfile();
+    };
+
+    window.addEventListener('venue:created', onCreated as EventListener);
+    return () =>
+      window.removeEventListener('venue:created', onCreated as EventListener);
   }, [name]);
 
   if (isLoading)
@@ -114,17 +125,16 @@ const ProfileSingle = () => {
     if (!isManager) return <p>You are not a venue manager.</p>;
     if (venues === null) return <p>Loading venues...</p>;
     if (venues.length === 0) return <p>No venues yet</p>;
-
     return (
-      <ul className='mt-2 space-y-2'>
-        {venues.map((v) => (
-          <li key={v.id} className='rounded border p-2'>
-            <h4 className='font-semibold'>{v.name}</h4>
-            <p className='muted text-sm'>{v.description}</p>
-            <p className='muted text-xs'>Price: {v.price}</p>
-          </li>
-        ))}
-      </ul>
+      <div className='mt-2'>
+        <VenuesList
+          venues={venues}
+          isLoading={false}
+          page={page}
+          setPage={setPage}
+          pagination={{ isFirstPage: true, isLastPage: true }}
+        />
+      </div>
     );
   };
 

@@ -103,9 +103,9 @@ const Nav = () => {
 
           <li>
             <button
-              aria-label='log out of current profile'
-              className='header-link rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
+              type='button'
               onClick={handleLogout}
+              className='header-link rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
             >
               logout
             </button>

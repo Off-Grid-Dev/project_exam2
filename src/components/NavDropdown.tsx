@@ -63,10 +63,8 @@ const NavDropdown: FC<NavDropdownProps> = ({
     <li className='group relative'>
       <button
         type='button'
-        aria-haspopup='true'
-        aria-expanded={false}
         aria-label={ariaLabel ?? label}
-        className={`inline-flex items-center rounded-lg px-3 py-2 font-semibold transition-colors duration-200`}
+        className='inline-flex items-center rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
       >
         {label}
       </button>
@@ -104,10 +102,9 @@ const NavDropdown: FC<NavDropdownProps> = ({
             <button
               key={key}
               type='button'
-              role='menuitem'
-              aria-label={it.aria ?? it.label}
-              onClick={(e) => it.onClick?.(e)}
+              onClick={it.onClick}
               className={`${dropdownAnchorClass} block w-full text-left`}
+              aria-label={it.aria ?? it.label}
             >
               {it.label}
             </button>

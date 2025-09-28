@@ -6,6 +6,7 @@ import { fetchVenues } from '../../api/api.ts';
 import { useToast } from '../../context/toast/useToast.ts';
 import { getToken } from '../../api/authToken.ts';
 import { useManagerContext } from '../../context/manager/useManagerContext';
+import Button from '../Button';
 
 const { CreateVenue } = ApiFunctions;
 
@@ -125,6 +126,8 @@ const CreateVenueForm = () => {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // capture the form element so we don't rely on the synthetic event after await
+    const form = e.currentTarget as HTMLFormElement;
     // Validate media URLs entered in the controlled inputs before submitting
     for (let i = 0; i < mediaFields.length; i++) {
       const url = mediaFields[i].url?.trim();
@@ -155,8 +158,16 @@ const CreateVenueForm = () => {
       if (!token) throw new Error('Missing auth token');
       await fetchVenues(CreateVenue, { venuePayload: payload, token });
       addToast({ type: 'success', text: 'Venue created' });
-      // Optionally: reset form
-      e.currentTarget.reset();
+      // reset the form using the captured element (avoids accessing pooled event)
+      form.reset();
+      // signal other parts of the app (Profile page) that a venue was created so they
+      // can refresh their data / UI
+      try {
+        window.dispatchEvent(new CustomEvent('venue:created'));
+      } catch {
+        // ignore if CustomEvent not supported in some environments
+        window.dispatchEvent(new Event('venue:created'));
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       addToast({ type: 'error', text: `Create failed: ${msg}` });
@@ -198,20 +209,25 @@ const CreateVenueForm = () => {
             </label>
 
             <div>
-              <button
+              <Button
                 type='button'
                 onClick={() => removeMediaField(idx)}
                 disabled={mediaFields.length === 1}
+                additionalClasses='mt-1'
               >
                 Remove image
-              </button>
+              </Button>
             </div>
           </div>
         ))}
         <div>
-          <button type='button' onClick={addMediaField}>
+          <Button
+            type='button'
+            onClick={addMediaField}
+            additionalClasses='mt-1'
+          >
             Add image
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -282,9 +298,9 @@ const CreateVenueForm = () => {
         </label>
       </fieldset>
 
-      <button disabled={isPending} type='submit'>
+      <Button disabled={isPending} type='submit'>
         Create venue
-      </button>
+      </Button>
     </form>
   );
 };
