@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Wrapper } from '../components/layout/Wrapper';
 import Calendar from '../components/Calendar';
 import Button from '../components/Button';
+import LoadingPlaceholder from '../components/layout/LoadingPlaceholder';
 import { expandRangeToISODates } from '../utils/dates';
 
 // Local functions / hooks / api
@@ -115,7 +116,7 @@ const Venue = () => {
 
   return (
     <Wrapper>
-      {isLoading && <p>Loading venue...</p>}
+      {isLoading && <LoadingPlaceholder />}
       {!isLoading && venue && (
         <>
           <div className='flex items-center justify-between'>
@@ -135,7 +136,6 @@ const Venue = () => {
                 return (
                   <div>
                     <Button
-                      additionalClasses='btn-primary px-3 py-1'
                       onClick={() => {
                         if (edit) {
                           // clear edit param
@@ -253,7 +253,6 @@ const Venue = () => {
                   (maxGuests !== undefined && guests > maxGuests) ||
                   selectionConflicts.length > 0
                 }
-                additionalClasses='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50'
               >
                 Book
               </Button>

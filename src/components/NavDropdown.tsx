@@ -73,6 +73,7 @@ const NavDropdown: FC<NavDropdownProps> = ({
         aria-label={ariaLabel ?? label}
         aria-expanded={isDesktop ? undefined : open}
         onClick={toggleOpen}
+        data-dropdown-toggle={isDesktop ? undefined : 'true'}
         className='inline-flex items-center rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
       >
         <span className='mr-2'>{label}</span>

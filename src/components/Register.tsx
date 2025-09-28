@@ -3,14 +3,15 @@ import { fetchProfiles } from '../api/api';
 import { useNavigate } from 'react-router-dom';
 
 // React imports
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 
 // Types
 import type { RegisterProfilePayload } from '../types/api/profile';
-import type { RegisterProfileResponse } from '../types/api/responses';
 
 // API enums
 import { ApiFunctions } from '../api/apiFunctionsEnum';
+import Button from './Button';
+import { useAuth } from '../context/auth/useAuth';
 
 // Local hooks (commented out)
 // import { useBreakpoint } from '../context/ui/useBreakpoint';
@@ -31,11 +32,19 @@ export const RegisterForm = () => {
     },
     venueManager: false,
   });
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
 
   function handleUserInfo(
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     e.currentTarget.setCustomValidity('');
+    // clear inline error for this field
+    const id = e.currentTarget.id;
+    if (id) setErrors((s) => ({ ...s, [id]: undefined }));
     if (
       e.target.name === 'avatar.url' ||
       e.target.name === 'avatar.alt' ||
@@ -64,6 +73,20 @@ export const RegisterForm = () => {
   }
 
   const navigate = useNavigate();
+  const { login } = useAuth();
+
+  // form validity state
+  const [isValid, setIsValid] = useState(false);
+
+  // validate fields whenever they change
+  useEffect(() => {
+    const emailRe = /^[^\s@]+@stud\.noroff\.no$/;
+    // require at least 3 characters for the name to match submit-time validation
+    const okName = Boolean(userInfo.name && userInfo.name.trim().length >= 3);
+    const okEmail = Boolean(userInfo.email && emailRe.test(userInfo.email));
+    const okPass = Boolean(userInfo.password && userInfo.password.length >= 8);
+    setIsValid(Boolean(okName && okEmail && okPass));
+  }, [userInfo]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -122,8 +145,23 @@ export const RegisterForm = () => {
       const res = await fetchProfiles(ApiFunctions.RegisterUser, {
         registerProfilePayload: payload,
       });
-      const name = (res as RegisterProfileResponse)?.data?.name ?? payload.name;
-      if (name) navigate(`/profiles/${encodeURIComponent(name)}`);
+      // After registering, attempt to log the user in using the submitted credentials.
+      try {
+        await fetchProfiles(ApiFunctions.LoginUser, {
+          loginProfilePayload: {
+            email: payload.email,
+            password: payload.password,
+          },
+        });
+        // storeToken is handled by fetchProfiles(LoginUser), now tell context we're logged in
+        login();
+      } catch (loginErr) {
+        // Login failed after registration; log and continue to navigate to home.
+        console.error('Auto-login after registration failed', loginErr);
+      }
+
+      // After registration (and attempted login), navigate to the home page.
+      navigate('/');
       return res;
     } catch (err) {
       console.error('Registration failed', err);
@@ -132,60 +170,97 @@ export const RegisterForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='grid gap-2'>
-      <>
-        <label htmlFor='name' className='text-right outline outline-amber-400'>
-          User name:
-          <input
-            id='name'
-            type='text'
-            value={userInfo.name}
-            onChange={handleUserInfo}
-            required
-            pattern='^[a-zA-Z0-9_]+'
-            minLength={3}
-            onInvalid={(e) => {
-              e.preventDefault();
-              console.error('Name must be at least 3 characters in length');
-            }}
-          />
-        </label>
-        <label htmlFor='email' className='text-right'>
-          email:
-          <input
-            id='email'
-            type='email'
-            value={userInfo.email}
-            onChange={handleUserInfo}
-            required
-            pattern='.+@stud\\.noroff\\.no'
-            onInvalid={(e) => {
-              e.preventDefault();
-              console.error('Email must end with "@stud.noroff.no"');
-            }}
-          />
-        </label>
-        <label htmlFor='password' className='text-right'>
-          Password:
-          <input
-            id='password'
-            type='password'
-            value={userInfo.password}
-            onChange={handleUserInfo}
-            required
-            minLength={8}
-            onInvalid={(e) => {
-              e.preventDefault();
-              console.error('Password must be at least 8 characters long');
-            }}
-          />
-        </label>
-        <label htmlFor='bio' className='text-right'>
-          Bio:
-          <textarea id='bio' value={userInfo.bio} onChange={handleUserInfo} />
-        </label>
-        <label htmlFor='avatar' className='text-right'>
-          Avatar:
+    <form
+      onSubmit={handleSubmit}
+      className='mx-auto grid w-full max-w-lg gap-3 p-4'
+    >
+      <label htmlFor='name' className='flex flex-col text-sm'>
+        <span className='mb-1'>User name:</span>
+        <input
+          id='name'
+          type='text'
+          value={userInfo.name}
+          onChange={handleUserInfo}
+          required
+          pattern='^[a-zA-Z0-9_]+'
+          minLength={3}
+          onInvalid={(e) => {
+            const el = e.currentTarget as HTMLInputElement;
+            const msg = 'Name must be at least 3 characters in length';
+            el.setCustomValidity(msg);
+            setErrors((s) => ({ ...s, name: msg }));
+          }}
+          className='mt-1 w-full rounded border px-2 py-1 focus:ring focus:outline-none'
+        />
+        {errors.name ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.name}
+          </small>
+        ) : null}
+      </label>
+
+      <label htmlFor='email' className='flex flex-col text-sm'>
+        <span className='mb-1'>Email:</span>
+        <input
+          id='email'
+          type='email'
+          value={userInfo.email}
+          onChange={handleUserInfo}
+          required
+          // remove HTML pattern to avoid browser-level mismatches; validation is handled
+          // in-code (useEffect and onSubmit) where we use a deterministic regex
+          onInvalid={(e) => {
+            const el = e.currentTarget as HTMLInputElement;
+            const msg = 'Email must end with "@stud.noroff.no"';
+            el.setCustomValidity(msg);
+            setErrors((s) => ({ ...s, email: msg }));
+          }}
+          className='mt-1 w-full rounded border px-2 py-1 focus:ring focus:outline-none'
+        />
+        {errors.email ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.email}
+          </small>
+        ) : null}
+      </label>
+
+      <label htmlFor='password' className='flex flex-col text-sm'>
+        <span className='mb-1'>Password:</span>
+        <input
+          id='password'
+          type='password'
+          value={userInfo.password}
+          onChange={handleUserInfo}
+          required
+          minLength={8}
+          onInvalid={(e) => {
+            const el = e.currentTarget as HTMLInputElement;
+            const msg = 'Password must be at least 8 characters long';
+            el.setCustomValidity(msg);
+            setErrors((s) => ({ ...s, password: msg }));
+          }}
+          className='mt-1 w-full rounded border px-2 py-1 focus:ring focus:outline-none'
+        />
+        {errors.password ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.password}
+          </small>
+        ) : null}
+      </label>
+
+      <label htmlFor='bio' className='flex flex-col text-sm'>
+        <span className='mb-1'>Bio:</span>
+        <textarea
+          id='bio'
+          value={userInfo.bio}
+          onChange={handleUserInfo}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
+      </label>
+
+      <div className='grid gap-2'>
+        <label className='flex flex-col text-sm'>
+          <span className='mb-1'>Avatar URL</span>
           <input
             id='avatar'
             name='avatar.url'
@@ -193,17 +268,25 @@ export const RegisterForm = () => {
             value={userInfo.avatar?.url ?? ''}
             onChange={handleUserInfo}
             placeholder='avatar url'
+            className='mt-1 w-full rounded border px-2 py-1'
           />
+        </label>
+        <label className='flex flex-col text-sm'>
+          <span className='mb-1'>Avatar alt text</span>
           <input
             name='avatar.alt'
             type='text'
             value={userInfo.avatar?.alt ?? ''}
             onChange={handleUserInfo}
             placeholder='avatar alt text'
+            className='mt-1 w-full rounded border px-2 py-1'
           />
         </label>
-        <label htmlFor='banner' className='text-right'>
-          Banner:
+      </div>
+
+      <div className='grid gap-2'>
+        <label className='flex flex-col text-sm'>
+          <span className='mb-1'>Banner URL</span>
           <input
             id='banner'
             name='banner.url'
@@ -211,32 +294,40 @@ export const RegisterForm = () => {
             value={userInfo.banner?.url ?? ''}
             onChange={handleUserInfo}
             placeholder='banner url'
+            className='mt-1 w-full rounded border px-2 py-1'
           />
+        </label>
+        <label className='flex flex-col text-sm'>
+          <span className='mb-1'>Banner alt text</span>
           <input
             type='text'
             name='banner.alt'
             value={userInfo.banner?.alt ?? ''}
             onChange={handleUserInfo}
             placeholder='banner alt text'
+            className='mt-1 w-full rounded border px-2 py-1'
           />
         </label>
-        <label htmlFor='venueManager' className='text-right'>
-          venue manager:
-          <input
-            id='venueManager'
-            type='checkbox'
-            checked={userInfo.venueManager}
-            className='ml-2 p-1'
-            onChange={handleUserInfo}
-          />
-        </label>
-        <button
-          type='submit'
-          className='btn-primary text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1'
-        >
-          Submit
-        </button>
-      </>
+      </div>
+
+      <label htmlFor='venueManager' className='flex items-center gap-2 text-sm'>
+        <input
+          id='venueManager'
+          type='checkbox'
+          checked={userInfo.venueManager}
+          className='ml-0 p-1'
+          onChange={handleUserInfo}
+        />
+        <span>Venue manager:</span>
+      </label>
+
+      <Button
+        type='submit'
+        disabled={!isValid}
+        additionalClasses='w-full sm:w-auto'
+      >
+        Submit
+      </Button>
     </form>
   );
 };

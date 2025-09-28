@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { VenuesList } from '../components/venues/VenueList.tsx';
 import { Wrapper } from '../components/layout/Wrapper.tsx';
 import SearchForm from '../components/forms/SearchForm.tsx';
+import LoadingPlaceholder from '../components/layout/LoadingPlaceholder';
 
 // Local functions / hooks / api
 import { fetchVenues } from '../api/api.ts';
@@ -141,14 +142,17 @@ export const Home = () => {
         autoSearch={isAutoSearch}
         debounceDelay={debounceMs}
       />
-      <VenuesList
-        venues={venues}
-        isLoading={isLoading}
-        page={page}
-        setPage={setPage}
-        pagination={{ isFirstPage, isLastPage }}
-      />
-      {isLoading && <p className='text-center'>Loading venues...</p>}
+      {isLoading ? (
+        <LoadingPlaceholder />
+      ) : (
+        <VenuesList
+          venues={venues}
+          isLoading={isLoading}
+          page={page}
+          setPage={setPage}
+          pagination={{ isFirstPage, isLastPage }}
+        />
+      )}
     </Wrapper>
   );
 };

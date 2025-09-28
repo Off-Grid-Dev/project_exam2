@@ -26,7 +26,7 @@ const Select: FC<SelectProps> = ({
         value={value}
         onChange={onChange}
         name={name}
-        className='cursor-pointer'
+        className='border-border-dark cursor-pointer rounded-sm border-2 p-2'
       >
         {options.map((option, idx) => (
           <option key={idx} value={option.value}>

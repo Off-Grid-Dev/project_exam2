@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Wrapper } from '../components/layout/Wrapper';
+import LoadingPlaceholder from '../components/layout/LoadingPlaceholder';
 import { fetchBookings } from '../api/api';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 import { getStoredName, getToken } from '../api/authToken';
@@ -48,7 +49,7 @@ const MyBookings = () => {
   return (
     <Wrapper>
       <h1 className='text-heading text-text-dark font-bold'>My bookings</h1>
-      {isLoading && <p>Loading bookings...</p>}
+      {isLoading && <LoadingPlaceholder />}
       {error && <p className='text-red-600'>Error: {error}</p>}
       {!isLoading && !error && <BookingList bookings={bookings ?? []} />}
     </Wrapper>

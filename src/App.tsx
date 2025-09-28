@@ -17,6 +17,7 @@ import { useAuth } from './context/auth/useAuth';
 import { Navigate } from 'react-router-dom';
 import { getStoredName } from './api/authToken';
 import ContextProvider from './context/ContextProvider';
+import Footer from './components/layout/Footer';
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
@@ -63,6 +64,7 @@ function App() {
       <ContextProvider>
         <Header />
         <AppRoutes />
+        <Footer />
       </ContextProvider>
     </BrowserRouter>
   );

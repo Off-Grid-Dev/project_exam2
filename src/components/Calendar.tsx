@@ -229,9 +229,9 @@ function Calendar({
     <div className='flex min-h-screen bg-indigo-700'>
       <div className='mx-auto mt-8 mb-auto grid justify-center rounded-lg border-2 border-slate-200 bg-indigo-900 p-4'>
         <div className='mx-3 mb-2 flex justify-between'>
-          <h1 className='text-3xl text-slate-100 text-shadow-amber-600 text-shadow-lg'>
+          <h2 className='text-3xl text-slate-100 text-shadow-amber-600 text-shadow-lg'>
             {months[month].slice(0, 1).toUpperCase() + months[month].slice(1)}
-          </h1>
+          </h2>
           <h2 className='text-3xl text-slate-100 text-shadow-amber-600 text-shadow-lg'>
             {year}
           </h2>

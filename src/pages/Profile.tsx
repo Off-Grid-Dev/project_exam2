@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 
 // Components
 import { Wrapper } from '../components/layout/Wrapper';
+import LoadingPlaceholder from '../components/layout/LoadingPlaceholder';
 
 // Local functions / hooks / api
 import { fetchProfiles } from '../api/api';
@@ -18,6 +19,7 @@ import EditProfileForm from '../components/forms/EditProfile';
 import CreateVenueForm from '../components/forms/CreateVenue';
 import { VenuesList } from '../components/venues/VenueList';
 import MyBookings from './MyBookings';
+import Button from '../components/Button';
 
 const ProfileSingle = () => {
   const { name } = useParams();
@@ -29,6 +31,8 @@ const ProfileSingle = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const tab = searchParams.get('tab');
+  const hasQueryParams = Array.from(searchParams.keys()).length > 0;
+  const [showEdit, setShowEdit] = useState<boolean>(false);
 
   useEffect(() => {
     if (!name) return;
@@ -99,7 +103,7 @@ const ProfileSingle = () => {
   if (isLoading)
     return (
       <Wrapper>
-        <p>Loading profile...</p>
+        <LoadingPlaceholder />
       </Wrapper>
     );
 
@@ -123,7 +127,7 @@ const ProfileSingle = () => {
 
   const renderVenuesSection = () => {
     if (!isManager) return <p>You are not a venue manager.</p>;
-    if (venues === null) return <p>Loading venues...</p>;
+    if (venues === null) return <LoadingPlaceholder />;
     if (venues.length === 0) return <p>No venues yet</p>;
     return (
       <div className='mt-2'>
@@ -145,24 +149,35 @@ const ProfileSingle = () => {
   return (
     <Wrapper>
       <div className='mx-auto max-w-3xl'>
-        <h1 className='text-2xl font-bold'>{profile.name}</h1>
+        <h1 className='text-heading font-bold'>{profile.name}</h1>
 
-        {/* If no tab param, keep legacy combined UI */}
-        {!tab && (
+        {/* If no tab param (or any query params), keep legacy combined UI */}
+        {!hasQueryParams && (
           <>
-            <EditProfileForm />
-            <div className='mt-6'>
-              <h2 className='font-semibold'>Create a venue</h2>
-              <CreateVenueForm />
+            {/* Banner with avatar overlay */}
+            <div className='relative my-4'>
+              {profile.banner?.url ? (
+                <img
+                  src={profile.banner.url}
+                  alt={profile.banner.alt || `${profile.name} banner`}
+                  className='max-h-48 w-full rounded object-cover'
+                />
+              ) : (
+                <div className='bg-bg-dark flex h-48 w-full items-center justify-center rounded'>
+                  <span className='text-text-base'>No banner</span>
+                </div>
+              )}
+              {profile.avatar?.url && (
+                <img
+                  src={profile.avatar.url}
+                  alt={profile.avatar.alt || `${profile.name} avatar`}
+                  className='absolute -bottom-12 left-4 h-32 w-32 rounded-full border-4 border-white object-cover'
+                />
+              )}
             </div>
-            {profile.avatar?.url && (
-              <img
-                src={profile.avatar.url}
-                alt={profile.avatar.alt || `${profile.name} avatar`}
-                className='my-4 h-32 w-32 max-w-full rounded-full object-cover'
-              />
-            )}
-            <p className='text-muted text-sm'>{profile.email}</p>
+            <div className='mt-16'>
+              <p className='text-muted text-sm'>{profile.email}</p>
+            </div>
             {profile.bio !== '' && (
               <div className='mt-4'>
                 <h2 className='font-semibold'>About</h2>
@@ -204,9 +219,47 @@ const ProfileSingle = () => {
 
         {tab === 'account' && (
           <div className='mt-6'>
-            <h2 className='font-semibold'>Account</h2>
+            <div className='relative'>
+              {profile.banner?.url ? (
+                <img
+                  src={profile.banner.url}
+                  alt={profile.banner.alt || `${profile.name} banner`}
+                  className='max-h-48 w-full rounded object-cover'
+                />
+              ) : (
+                <div className='bg-bg-dark flex h-48 w-full items-center justify-center rounded'></div>
+              )}
+              {profile.avatar?.url && (
+                <img
+                  src={profile.avatar.url}
+                  alt={profile.avatar.alt || `${profile.name} avatar`}
+                  className='absolute -bottom-12 left-4 h-32 w-32 rounded-full border-4 border-white object-cover'
+                />
+              )}
+            </div>
+            <div className='mt-16'>
+              <p className='text-muted text-sm'>{profile.email}</p>
+            </div>
+            {profile.bio !== '' && (
+              <div className='mt-4'>
+                <h2 className='font-semibold'>About</h2>
+                <p>{profile.bio}</p>
+              </div>
+            )}
+            <div className='mt-4 mb-2'>
+              <h3 className='font-semibold'>Stats</h3>
+              {isManager && <p>Venues: {profile._count?.venues ?? 0}</p>}
+              <p>Bookings: {profile._count?.bookings ?? 0}</p>
+            </div>
             {isOwner ? (
-              <EditProfileForm />
+              !showEdit ? (
+                <Button
+                  label='Edit account'
+                  onClick={() => setShowEdit(true)}
+                />
+              ) : (
+                <EditProfileForm />
+              )
             ) : (
               <p>Not allowed to edit account.</p>
             )}

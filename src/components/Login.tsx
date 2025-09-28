@@ -1,5 +1,5 @@
 // React imports
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Types
@@ -13,6 +13,7 @@ import { useAuth } from '../context/auth/useAuth';
 
 // API enums
 import { ApiFunctions } from '../api/apiFunctionsEnum';
+import Button from './Button';
 
 // Local hooks (commented out intentionally)
 // import { useBreakpoint } from '../context/ui/useBreakpoint';
@@ -24,27 +25,34 @@ export const LoginForm = () => {
     email: '',
     password: '',
   });
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // TODO abstract to file and use in other forms
-  // TODO add toast
-  function handleInvalid(
-    e: FormEvent<HTMLInputElement>,
-    message: string,
-    type: string,
-  ) {
-    e.preventDefault();
-    let typeMessage;
-    if (type === 'warning') {
-      typeMessage = 'Warning: ';
-    }
-    console.error(typeMessage, message);
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    const emailRe = /^[^\s@]+@stud\.noroff\.no$/;
+    const okEmail = Boolean(loginInfo.email && emailRe.test(loginInfo.email));
+    const okPass = Boolean(
+      loginInfo.password && loginInfo.password.length >= 8,
+    );
+    setIsValid(okEmail && okPass);
+  }, [loginInfo]);
+
+  function setFieldInvalid(field: 'email' | 'password', message: string) {
+    setErrors((s) => ({ ...s, [field]: message }));
   }
 
   function handleFormUpdate(e: ChangeEvent<HTMLInputElement>) {
-    setLoginInfo({ ...loginInfo, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    // clear browser custom validity and inline error when user edits
+    (e.currentTarget as HTMLInputElement).setCustomValidity('');
+    setErrors((s) => ({ ...s, [id]: undefined }));
+    setLoginInfo({ ...loginInfo, [id]: value });
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -76,48 +84,67 @@ export const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='grid gap-2'>
-      <>
-        <label htmlFor='email' className='text-right outline outline-amber-400'>
-          Email:
-          <input
-            id='email'
-            name='email'
-            type='text'
-            onChange={handleFormUpdate}
-            value={loginInfo.email}
-            pattern='.+@stud\.noroff\.no'
-            required
-            onInvalid={(e) =>
-              handleInvalid(e, 'warning', 'please enter a valid email')
-            }
-          />
-        </label>
-        <label
-          htmlFor='password'
-          className='text-right outline outline-amber-400'
-        >
-          Password:
-          <input
-            id='password'
-            name='password'
-            type='password'
-            onChange={handleFormUpdate}
-            value={loginInfo.password}
-            required
-            minLength={8}
-            onInvalid={(e) => {
-              handleInvalid(e, 'warning', 'please enter a valid password');
-            }}
-          />
-        </label>
-        <button
-          type='submit'
-          className='bg-dark text-on-dark hover:bg-med focus-ring-focus rounded px-3 py-1'
-        >
-          Submit
-        </button>
-      </>
+    <form
+      onSubmit={handleSubmit}
+      className='mx-auto grid w-full max-w-md gap-3 bg-transparent p-4'
+    >
+      <label htmlFor='email' className='flex flex-col text-sm'>
+        <span className='mb-1'>Email:</span>
+        <input
+          id='email'
+          name='email'
+          type='email'
+          onChange={handleFormUpdate}
+          value={loginInfo.email}
+          required
+          onInvalid={(e) => {
+            const el = e.currentTarget as HTMLInputElement;
+            const msg =
+              'Email must end with "@stud.noroff.no" and be a valid address';
+            el.setCustomValidity(msg);
+            setFieldInvalid('email', msg);
+          }}
+          className='mt-1 w-full rounded border px-2 py-1 focus:ring focus:outline-none'
+        />
+        {errors.email ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.email}
+          </small>
+        ) : null}
+      </label>
+
+      <label htmlFor='password' className='flex flex-col text-sm'>
+        <span className='mb-1'>Password:</span>
+        <input
+          id='password'
+          name='password'
+          type='password'
+          onChange={handleFormUpdate}
+          value={loginInfo.password}
+          required
+          minLength={8}
+          onInvalid={(e) => {
+            const el = e.currentTarget as HTMLInputElement;
+            const msg = 'Password must be at least 8 characters';
+            el.setCustomValidity(msg);
+            setFieldInvalid('password', msg);
+          }}
+          className='mt-1 w-full rounded border px-2 py-1 focus:ring focus:outline-none'
+        />
+        {errors.password ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.password}
+          </small>
+        ) : null}
+      </label>
+
+      <Button
+        type='submit'
+        disabled={!isValid}
+        additionalClasses='w-full sm:w-auto'
+      >
+        Submit
+      </Button>
     </form>
   );
 };

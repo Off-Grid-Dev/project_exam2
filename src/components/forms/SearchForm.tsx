@@ -62,7 +62,10 @@ const SearchForm: FC<SearchFormProps> = ({
   if (isDesktop) {
     // Keep original inline layout for desktop
     return (
-      <form onSubmit={handleSubmit} className='mx-auto flex w-fit gap-3'>
+      <form
+        onSubmit={handleSubmit}
+        className='mx-auto flex w-fit gap-3 md:flex'
+      >
         <input
           aria-label='Enter a search query to refine the list of venues.'
           type='text'
@@ -72,16 +75,10 @@ const SearchForm: FC<SearchFormProps> = ({
             const v = e.currentTarget.value;
             setLocalQuery(v);
           }}
-          className='border-border-dark focus:outline-border-focus w-96 rounded-sm border-2 px-2 py-2'
+          className='border-border-dark focus:outline-border-focus mr-2 w-96 rounded-sm border-2 px-2 py-2'
           placeholder='Enter search...'
         />
-        {!autoSearch && (
-          <Button
-            label='Search for Venues'
-            type='submit'
-            additionalClasses=''
-          />
-        )}
+        {!autoSearch && <Button label='Search for Venues' type='submit' />}
         {showSort && (
           <>
             <Select
@@ -97,16 +94,17 @@ const SearchForm: FC<SearchFormProps> = ({
                 { value: 'rating', label: 'Rating' },
               ]}
             />
-            <select
-              aria-label='Define sort order'
+            <Select
+              ariaLabel='Define sort order'
               value={sortOrder}
               onChange={(e) => handleSortOrderUpdate?.(e)}
               name='sortOrderVenues'
-              className='cursor-pointer'
-            >
-              <option value='asc'>Ascending</option>
-              <option value='desc'>Descending</option>
-            </select>
+              options={[
+                { value: '', label: 'Sort order' },
+                { value: 'asc', label: 'Ascending' },
+                { value: 'desc', label: 'Descending' },
+              ]}
+            />
           </>
         )}
       </form>
@@ -119,7 +117,7 @@ const SearchForm: FC<SearchFormProps> = ({
       onSubmit={handleSubmit}
       className='mx-auto flex w-full flex-col gap-3'
     >
-      <div className='flex w-full gap-3'>
+      <div className='grid w-full gap-3 sm:flex'>
         <input
           aria-label='Enter a search query to refine the list of venues.'
           type='text'
@@ -132,17 +130,11 @@ const SearchForm: FC<SearchFormProps> = ({
           className='border-border-dark focus:outline-border-focus w-full rounded-sm border-2 px-2 py-2'
           placeholder='Enter search...'
         />
-        {!autoSearch && (
-          <Button
-            label='Search for Venues'
-            type='submit'
-            additionalClasses=''
-          />
-        )}
+        {!autoSearch && <Button label='Search for Venues' type='submit' />}
       </div>
 
       {showSort && (
-        <div className='flex w-full items-center gap-3'>
+        <div className='flex w-full items-center justify-end gap-3'>
           <Select
             ariaLabel='Sort venues by attributes'
             value={sortValue}
@@ -156,16 +148,17 @@ const SearchForm: FC<SearchFormProps> = ({
               { value: 'rating', label: 'Rating' },
             ]}
           />
-          <select
-            aria-label='Define sort order'
+          <Select
+            ariaLabel='Define sort order'
             value={sortOrder}
             onChange={(e) => handleSortOrderUpdate?.(e)}
             name='sortOrderVenues'
-            className='cursor-pointer'
-          >
-            <option value='asc'>Ascending</option>
-            <option value='desc'>Descending</option>
-          </select>
+            options={[
+              { value: '', label: 'Sort order' },
+              { value: 'asc', label: 'Ascending' },
+              { value: 'desc', label: 'Descending' },
+            ]}
+          />
         </div>
       )}
     </form>

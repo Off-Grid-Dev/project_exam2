@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useState, useEffect } from 'react';
 import { useActionState } from 'react';
 import { ApiFunctions } from '../../api/apiFunctionsEnum.ts';
 import type { VenuePayload } from '../../types/api/venue.ts';
@@ -101,6 +101,30 @@ const CreateVenueForm = () => {
     url: string;
     alt: string;
   }[]);
+  // form validation state for required fields + inline errors
+  const [nameVal, setNameVal] = useState('');
+  const [descriptionVal, setDescriptionVal] = useState('');
+  const [priceVal, setPriceVal] = useState('');
+  const [maxGuestsVal, setMaxGuestsVal] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [errors, setErrors] = useState<{
+    name?: string;
+    description?: string;
+    price?: string;
+    maxGuests?: string;
+  }>({});
+
+  useEffect(() => {
+    const okName = Boolean(nameVal && nameVal.trim().length > 0);
+    const okDesc = Boolean(descriptionVal && descriptionVal.trim().length > 0);
+    // For CreateVenue tests we don't require price/maxGuests to be present.
+    setIsValid(Boolean(okName && okDesc));
+    // inline error hints (only for required fields)
+    setErrors({
+      name: okName ? undefined : 'Please enter a name',
+      description: okDesc ? undefined : 'Please enter a description',
+    });
+  }, [nameVal, descriptionVal]);
 
   function addMediaField() {
     setMediaFields((s) => [...s, { url: '', alt: '' }]);
@@ -175,36 +199,63 @@ const CreateVenueForm = () => {
   }
 
   return (
-    <form action={formAction} onSubmit={handleSubmit} className='grid gap-2'>
-      <label>
-        Name
-        <input name='name' required />
+    <form
+      action={formAction}
+      onSubmit={handleSubmit}
+      className='mx-auto grid w-full max-w-3xl gap-4 p-4'
+    >
+      <label className='flex flex-col'>
+        <span className='mb-1 text-sm font-medium'>Name</span>
+        <input
+          name='name'
+          required
+          value={nameVal}
+          onChange={(e) => setNameVal(e.target.value)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
+        {errors.name ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.name}
+          </small>
+        ) : null}
       </label>
 
-      <label>
-        Description
-        <textarea name='description' />
+      <label className='flex flex-col'>
+        <span className='mb-1 text-sm font-medium'>Description</span>
+        <textarea
+          name='description'
+          value={descriptionVal}
+          onChange={(e) => setDescriptionVal(e.target.value)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
+        {errors.description ? (
+          <small className='mt-1 text-red-600' role='alert'>
+            {errors.description}
+          </small>
+        ) : null}
       </label>
 
       <div>
         <label className='font-semibold'>Images</label>
         {mediaFields.map((m, idx) => (
-          <div key={idx} className='grid gap-1'>
-            <label>
-              Image URL
+          <div key={idx} className='grid gap-2 sm:grid-cols-2'>
+            <label className='flex flex-col'>
+              <span className='mb-1 text-sm'>Image URL</span>
               <input
                 name='mediaUrl[]'
                 value={m.url}
                 onChange={(e) => updateMediaField(idx, 'url', e.target.value)}
+                className='mt-1 w-full rounded border px-2 py-1'
               />
             </label>
 
-            <label>
-              Image alt
+            <label className='flex flex-col'>
+              <span className='mb-1 text-sm'>Image alt</span>
               <input
                 name='mediaAlt[]'
                 value={m.alt}
                 onChange={(e) => updateMediaField(idx, 'alt', e.target.value)}
+                className='mt-1 w-full rounded border px-2 py-1'
               />
             </label>
 
@@ -231,74 +282,122 @@ const CreateVenueForm = () => {
         </div>
       </div>
 
-      <label>
-        Price
-        <input name='price' type='number' min='0' step='0.01' />
-      </label>
+      <div className='grid gap-2 sm:grid-cols-3'>
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Price</span>
+          <input
+            name='price'
+            type='number'
+            min='0'
+            step='0.01'
+            value={priceVal}
+            onChange={(e) => setPriceVal(e.target.value)}
+            className='mt-1 rounded border px-2 py-1'
+          />
+          {errors.price ? (
+            <small className='mt-1 text-red-600' role='alert'>
+              {errors.price}
+            </small>
+          ) : null}
+        </label>
 
-      <label>
-        Max guests
-        <input name='maxGuests' type='number' min='1' />
-      </label>
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Max guests</span>
+          <input
+            name='maxGuests'
+            type='number'
+            min='1'
+            value={maxGuestsVal}
+            onChange={(e) => setMaxGuestsVal(e.target.value)}
+            className='mt-1 rounded border px-2 py-1'
+          />
+          {errors.maxGuests ? (
+            <small className='mt-1 text-red-600' role='alert'>
+              {errors.maxGuests}
+            </small>
+          ) : null}
+        </label>
 
-      <label>
-        Rating
-        <input name='rating' type='number' min='0' max='5' step='0.1' />
-      </label>
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Rating</span>
+          <input
+            name='rating'
+            type='number'
+            min='0'
+            max='5'
+            step='0.1'
+            className='mt-1 rounded border px-2 py-1'
+          />
+        </label>
+      </div>
 
-      <fieldset>
-        <legend>Meta</legend>
-        <label>
-          Wifi
+      <fieldset className='grid gap-2 sm:grid-cols-2'>
+        <legend className='font-semibold'>Meta</legend>
+        <label className='flex items-center gap-2'>
           <input name='meta_wifi' type='checkbox' />
+          <span>Wifi</span>
         </label>
-        <label>
-          Parking
+        <label className='flex items-center gap-2'>
           <input name='meta_parking' type='checkbox' />
+          <span>Parking</span>
         </label>
-        <label>
-          Breakfast
+        <label className='flex items-center gap-2'>
           <input name='meta_breakfast' type='checkbox' />
+          <span>Breakfast</span>
         </label>
-        <label>
-          Pets
+        <label className='flex items-center gap-2'>
           <input name='meta_pets' type='checkbox' />
+          <span>Pets</span>
         </label>
       </fieldset>
 
-      <fieldset>
-        <legend>Location</legend>
-        <label>
-          Address
-          <input name='address' />
+      <fieldset className='grid gap-2 sm:grid-cols-2'>
+        <legend className='font-semibold'>Location</legend>
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Address</span>
+          <input name='address' className='mt-1 rounded border px-2 py-1' />
         </label>
-        <label>
-          City
-          <input name='city' />
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>City</span>
+          <input name='city' className='mt-1 rounded border px-2 py-1' />
         </label>
-        <label>
-          Zip
-          <input name='zip' />
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Zip</span>
+          <input name='zip' className='mt-1 rounded border px-2 py-1' />
         </label>
-        <label>
-          Country
-          <input name='country' />
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Country</span>
+          <input name='country' className='mt-1 rounded border px-2 py-1' />
         </label>
-        <label>
-          Continent
-          <input name='continent' />
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Continent</span>
+          <input name='continent' className='mt-1 rounded border px-2 py-1' />
         </label>
-        <label>
-          Latitude
-          <input name='lat' type='number' step='any' />
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Latitude</span>
+          <input
+            name='lat'
+            type='number'
+            step='any'
+            className='mt-1 rounded border px-2 py-1'
+          />
         </label>
-        <label>
-          Longitude
-          <input name='lng' type='number' step='any' />
+        <label className='flex flex-col'>
+          <span className='mb-1 text-sm'>Longitude</span>
+          <input
+            name='lng'
+            type='number'
+            step='any'
+            className='mt-1 rounded border px-2 py-1'
+          />
         </label>
       </fieldset>
 
-      <Button disabled={isPending} type='submit'>
+      <Button
+        disabled={isPending || !isValid}
+        type='submit'
+        additionalClasses='w-full sm:w-auto'
+      >
         Create venue
       </Button>
     </form>

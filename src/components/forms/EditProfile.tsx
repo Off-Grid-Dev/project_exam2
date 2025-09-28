@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import React, { useEffect, useState, type FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { useActionState } from 'react';
 import { ApiFunctions } from '../../api/apiFunctionsEnum.ts';
@@ -8,6 +8,7 @@ import { fetchProfiles } from '../../api/api.ts';
 import { useToast } from '../../context/toast/useToast.ts';
 import { getToken, getStoredName } from '../../api/authToken.ts';
 import { useManagerContext } from '../../context/manager/useManagerContext';
+import Button from '../Button';
 
 const { UpdateProfile } = ApiFunctions;
 
@@ -48,12 +49,15 @@ async function handleUpdateProfilePayload(
   return payload;
 }
 
-const EditProfileForm = () => {
+const EditProfileForm: React.FC<{
+  onSaved?: (updated?: Profile) => void;
+}> = ({ onSaved }) => {
   const { name: routeName } = useParams();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isOwner, setIsOwner] = useState(false);
   const { addToast } = useToast();
   const { isManager } = useManagerContext();
+  const [isDirty, setIsDirty] = useState(false);
 
   // useActionState will return a function suitable for the form action
   const [, formAction, isPending] = useActionState(
@@ -146,12 +150,23 @@ const EditProfileForm = () => {
     try {
       const token = getToken() || undefined;
       if (!token) throw new Error('Missing auth token');
-      await fetchProfiles(UpdateProfile, {
+      const res = (await fetchProfiles(UpdateProfile, {
         token,
         name: profile.name,
         profilePayload: changes as ProfilePayload,
-      });
+      })) as ProfileResponse | undefined;
       addToast({ type: 'success', text: 'Profile updated' });
+      // Notify parent to refresh profile and close editor if provided
+      try {
+        if (onSaved && res && (res as ProfileResponse).data) {
+          onSaved((res as ProfileResponse).data);
+        } else if (onSaved) {
+          // no returned data but signal saved
+          onSaved();
+        }
+      } catch {
+        // ignore callback errors
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       addToast({ type: 'error', text: `Update failed: ${msg}` });
@@ -159,34 +174,78 @@ const EditProfileForm = () => {
   }
 
   return (
-    <form action={formAction} onSubmit={handleSubmit} className='grid gap-2'>
-      <label>
-        Bio
-        <input name='bio' defaultValue={profile?.bio ?? ''} />
+    <form
+      action={formAction}
+      onSubmit={handleSubmit}
+      className='mx-auto grid w-full max-w-lg gap-3 p-4'
+    >
+      <label className='flex flex-col text-sm'>
+        <span className='mb-1'>Bio</span>
+        <input
+          name='bio'
+          defaultValue={profile?.bio ?? ''}
+          onChange={() => setIsDirty(true)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
       </label>
-      <label>
-        Avatar URL
-        <input name='avatarUrl' defaultValue={profile?.avatar?.url ?? ''} />
+
+      <label className='flex flex-col text-sm'>
+        <span className='mb-1'>Avatar URL</span>
+        <input
+          name='avatarUrl'
+          defaultValue={profile?.avatar?.url ?? ''}
+          onChange={() => setIsDirty(true)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
       </label>
-      <label>
-        Avatar alt
-        <input name='avatarAlt' defaultValue={profile?.avatar?.alt ?? ''} />
+
+      <label className='flex flex-col text-sm'>
+        <span className='mb-1'>Avatar alt</span>
+        <input
+          name='avatarAlt'
+          defaultValue={profile?.avatar?.alt ?? ''}
+          onChange={() => setIsDirty(true)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
       </label>
-      <label>
-        Banner URL
-        <input name='bannerUrl' defaultValue={profile?.banner?.url ?? ''} />
+
+      <label className='flex flex-col text-sm'>
+        <span className='mb-1'>Banner URL</span>
+        <input
+          name='bannerUrl'
+          defaultValue={profile?.banner?.url ?? ''}
+          onChange={() => setIsDirty(true)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
       </label>
-      <label>
-        Banner alt
-        <input name='bannerAlt' defaultValue={profile?.banner?.alt ?? ''} />
+
+      <label className='flex flex-col text-sm'>
+        <span className='mb-1'>Banner alt</span>
+        <input
+          name='bannerAlt'
+          defaultValue={profile?.banner?.alt ?? ''}
+          onChange={() => setIsDirty(true)}
+          className='mt-1 w-full rounded border px-2 py-1'
+        />
       </label>
-      <label>
-        Venue manager
-        <input name='venueManager' type='checkbox' defaultChecked={isManager} />
+
+      <label className='flex items-center gap-2 text-sm'>
+        <input
+          name='venueManager'
+          type='checkbox'
+          defaultChecked={isManager}
+          onChange={() => setIsDirty(true)}
+        />
+        <span>Venue manager</span>
       </label>
-      <button disabled={isPending} type='submit'>
+
+      <Button
+        disabled={isPending || !isDirty}
+        type='submit'
+        additionalClasses='w-full sm:w-auto'
+      >
         Save
-      </button>
+      </Button>
     </form>
   );
 };

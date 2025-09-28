@@ -18,7 +18,8 @@ const Button: FC<ButtonProps> = ({
   disabled = false,
   onClick,
 }) => {
-  const baseClasses = 'rounded-sm border-2 px-4 py-2';
+  const baseClasses =
+    'rounded-sm border-2 px-4 py-2 text-[10px] sm:text-md whitespace-nowrap';
   const classes = disabled
     ? `bg-button-disabled cursor-not-allowed text-text-disabled ${additionalClasses}`
     : `bg-button-primary hover:bg-button-primary-hover text-text-base border-button-primary hover:text-text-dark cursor-pointer ${additionalClasses}`;

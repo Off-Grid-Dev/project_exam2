@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Wrapper } from '../components/layout/Wrapper';
 import ProfileList from '../components/profiles/ProfileList';
 import SearchForm from '../components/forms/SearchForm';
+import LoadingPlaceholder from '../components/layout/LoadingPlaceholder';
 
 // Local functions / hooks / api
 import { fetchProfiles } from '../api/api';
@@ -47,22 +48,20 @@ const ProfilePage = () => {
   const isAutoSearch = breakpoint === 'desktop';
   const debounceMs = 400;
   const location = useLocation();
+  const resetFlag =
+    (location.state as { reset?: unknown } | null)?.reset ?? null;
 
   // If navigated with a reset token in location.state, clear search state
   // and reset pagination so the page shows the default list.
   useEffect(() => {
-    // location.state may be undefined or an object containing { reset }
-    // when NavLink navigate() was called with { state: { reset: <ts> } }
-    // We only act when reset is present.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore-next-line
-    if (location?.state?.reset) {
+    // If a navigation carried a reset token, clear the search and reset
+    // pagination. We depend on location.key (new navigation) and the simple
+    // resetFlag value to avoid complex expressions in the dependency array.
+    if (resetFlag) {
       setProfileQuery('');
       setPage(1);
     }
-    // We intentionally only want to run when location.key/state changes
-    // so include location.key to react on new navigations.
-  }, [location.key]);
+  }, [location.key, resetFlag]);
 
   const normalizeProfileReturn = useCallback(async () => {
     setIsLoading(true);
@@ -116,7 +115,7 @@ const ProfilePage = () => {
 
   return (
     <Wrapper>
-      <h1>Profiles</h1>
+      <h1 className='text-heading'>Profiles</h1>
       <SearchForm
         query={profileQuery}
         handleSearch={handleProfileSearch}
@@ -124,13 +123,17 @@ const ProfilePage = () => {
         debounceDelay={debounceMs}
         showSort={false}
       />
-      <ProfileList
-        profiles={profiles}
-        isLoading={isLoading}
-        page={page}
-        setPage={setPage}
-        pagination={{ isFirstPage, isLastPage }}
-      />
+      {isLoading ? (
+        <LoadingPlaceholder />
+      ) : (
+        <ProfileList
+          profiles={profiles}
+          isLoading={isLoading}
+          page={page}
+          setPage={setPage}
+          pagination={{ isFirstPage, isLastPage }}
+        />
+      )}
     </Wrapper>
   );
 };

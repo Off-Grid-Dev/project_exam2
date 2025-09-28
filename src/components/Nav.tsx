@@ -128,6 +128,13 @@ const Nav = () => {
       const panel = panelRef.current;
       const btn = openButtonRef.current;
       if (!panel) return;
+      // Allow clicks inside the panel to proceed (they may trigger nav link
+      // behavior which we still want to close the panel). However, if the
+      // click originated specifically on a dropdown toggle button inside the
+      // panel (used to open/close NavDropdown on mobile), we should ignore it
+      // so the dropdown can toggle without closing the entire mobile nav.
+      const element = target as HTMLElement | null;
+      if (element?.closest('[data-dropdown-toggle="true"]')) return;
       if (panel.contains(target)) return; // click inside panel -> ignore
       if (btn && btn.contains(target)) return; // click on open button -> ignore
       // otherwise request close
@@ -195,6 +202,11 @@ const Nav = () => {
                 if (!target) return;
                 const actionable = target.closest('a,button');
                 if (actionable) {
+                  // If the click originated from a dropdown toggle button,
+                  // allow the dropdown to toggle without closing the mobile nav.
+                  if (actionable.closest('[data-dropdown-toggle="true"]')) {
+                    return;
+                  }
                   // if the click is on the close button inside panel, it already
                   // calls handleCloseRequest; still safe to call again
                   handleCloseRequest();
@@ -202,52 +214,44 @@ const Nav = () => {
               }}
             >
               <ul className='flex flex-col gap-3'>
-                <li>
-                  <NavLink path='/' label='home' aria='return to home page' />
-                </li>
+                <NavLink path='/' label='home' aria='return to home page' />
 
                 {!isLoggedIn && (
-                  <li>
-                    <NavDropdown
-                      label='welcome'
-                      ariaLabel='welcome menu'
-                      items={[
-                        {
-                          label: 'log in',
-                          path: '/login',
-                          aria: 'go to login page',
-                        },
-                        {
-                          label: 'register',
-                          path: '/register',
-                          aria: 'go to register page',
-                        },
-                      ]}
-                    />
-                  </li>
+                  <NavDropdown
+                    label='welcome'
+                    ariaLabel='welcome menu'
+                    items={[
+                      {
+                        label: 'log in',
+                        path: '/login',
+                        aria: 'go to login page',
+                      },
+                      {
+                        label: 'register',
+                        path: '/register',
+                        aria: 'go to register page',
+                      },
+                    ]}
+                  />
                 )}
 
                 {isLoggedIn && (
                   <>
-                    <li>
-                      <NavLink
-                        path='/profiles'
-                        label='profiles'
-                        aria='view profiles'
-                      />
-                    </li>
-                    <li>
-                      <NavDropdown
-                        label='account'
-                        ariaLabel='account menu'
-                        items={accountItems}
-                      />
-                    </li>
+                    <NavLink
+                      path='/profiles'
+                      label='profiles'
+                      aria='view profiles'
+                    />
+                    <NavDropdown
+                      label='account'
+                      ariaLabel='account menu'
+                      items={accountItems}
+                    />
                     <li>
                       <button
                         type='button'
                         onClick={handleLogout}
-                        className='header-link rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
+                        className='cursor-pointer rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
                       >
                         logout
                       </button>
@@ -300,7 +304,7 @@ const Nav = () => {
             <button
               type='button'
               onClick={handleLogout}
-              className='header-link rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
+              className='cursor-pointer rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
             >
               logout
             </button>

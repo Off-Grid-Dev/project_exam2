@@ -29,7 +29,9 @@ export const LoginRegister = ({ initialView }: LoginRegisterProps) => {
     <div>
       {isLoginOrRegister === undefined && (
         <>
-          <h1 className='text-text-dark font-semibold'>LOGIN OR REGISTER</h1>
+          <h1 className='text-text-dark text-heading font-semibold'>
+            LOGIN OR REGISTER
+          </h1>
           <div className='my-4 flex justify-center gap-4'>
             <button
               onClick={() => setIsLoginOrRegister('login')}
