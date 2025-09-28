@@ -43,7 +43,7 @@ export const Toast: FC<ToastProps> = ({ type, text, id }) => {
 
 export const ToastWrapper: FC<ToastWrapperProps> = ({ children }) => {
   return (
-    <div className='absolute inset-[4rem_1rem_auto_auto] flex flex-col gap-1'>
+    <div className='absolute inset-[auto_1rem_4rem_auto] flex flex-col gap-1'>
       {children}
     </div>
   );

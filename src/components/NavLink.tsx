@@ -1,8 +1,9 @@
 // React imports
 import type { FC } from 'react';
+import type { MouseEvent } from 'react';
 
 // Routing
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 type NavLinkProps = {
   path: string;
@@ -11,6 +12,20 @@ type NavLinkProps = {
 };
 
 const NavLink: FC<NavLinkProps> = ({ path, label, aria }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  function handleClick(e: MouseEvent<HTMLAnchorElement>) {
+    // If clicking a link to the current pathname, force a navigation with
+    // a reset token in location.state so route components (like Home)
+    // can respond and reset their internal UI state.
+    if (location.pathname === path) {
+      e.preventDefault();
+      navigate(path, { state: { reset: Date.now() } });
+    }
+    // otherwise let the Link handle normal navigation
+  }
+
   return (
     <li>
       <Link
@@ -18,6 +33,7 @@ const NavLink: FC<NavLinkProps> = ({ path, label, aria }) => {
         to={path}
         aria-label={aria}
         title={aria}
+        onClick={handleClick}
       >
         {label}
       </Link>

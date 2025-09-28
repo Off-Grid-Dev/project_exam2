@@ -1,7 +1,8 @@
 // React imports
 import type { FC } from 'react';
 import type { MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import { useContext } from 'react';
 import { BreakpointContext } from '../context/ui/BreakpointContext';
 
@@ -48,6 +49,16 @@ const NavDropdown: FC<NavDropdownProps> = ({
 
   const hiddenOnNonDesktop = isDesktop ? desktopVisibilityClasses : 'hidden';
 
+  const navigate = useNavigate();
+
+  const handleSpecialNav = (e: ReactMouseEvent, path: string) => {
+    // If the link points to the login/register routes and we're already on
+    // the LoginRegister page, force navigation via the router so the
+    // `initialView` prop is updated and the form toggles immediately.
+    e.preventDefault();
+    navigate(path);
+  };
+
   return (
     <li className='group relative'>
       <button
@@ -71,6 +82,7 @@ const NavDropdown: FC<NavDropdownProps> = ({
           const key = `${label}-item-${idx}`;
 
           if (it.path) {
+            const isSpecial = it.path === '/login' || it.path === '/register';
             return (
               <Link
                 key={key}
@@ -78,6 +90,9 @@ const NavDropdown: FC<NavDropdownProps> = ({
                 role='menuitem'
                 aria-label={it.aria ?? it.label}
                 className={dropdownAnchorClass}
+                onClick={
+                  isSpecial ? (e) => handleSpecialNav(e, it.path!) : undefined
+                }
               >
                 {it.label}
               </Link>

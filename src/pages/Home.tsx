@@ -1,5 +1,6 @@
 // React imports
 import { useEffect, useState, useCallback, type ChangeEvent } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // Components
 import { VenuesList } from '../components/venues/VenueList.tsx';
@@ -108,6 +109,20 @@ export const Home = () => {
   useEffect(() => {
     void normalizeVenueReturn();
   }, [normalizeVenueReturn]);
+
+  // Reset search/sort/pagination when a navigation to the same route is
+  // triggered intentionally (Logo or Home link click). We use a small
+  // timestamp token in location.state.reset to detect that action.
+  const location = useLocation();
+  useEffect(() => {
+    const state = location.state as { reset?: number } | null;
+    if (state && state.reset) {
+      setVenueQuery('');
+      setSortValue('');
+      setSortOrder('asc');
+      setPage(1);
+    }
+  }, [location.key, location.state]);
 
   useEffect(() => {
     if (toastValues.type !== '') addToast(toastValues);

@@ -14,6 +14,8 @@ import { Header } from './components/layout/Header';
 
 // Context/hooks
 import { useAuth } from './context/auth/useAuth';
+import { Navigate } from 'react-router-dom';
+import { getStoredName } from './api/authToken';
 import ContextProvider from './context/ContextProvider';
 
 const AppRoutes = () => {
@@ -22,9 +24,10 @@ const AppRoutes = () => {
     <Routes>
       <Route path='/' element={<Home />} />
       <Route path='/venues/:id' element={<Venue />} />
+      <Route path='/login' element={<LoginRegister initialView={'login'} />} />
       <Route
-        path='/welcome'
-        element={!isLoggedIn ? <LoginRegister /> : <Home />}
+        path='/register'
+        element={<LoginRegister initialView={'register'} />}
       />
       <Route
         path='/profiles'
@@ -38,9 +41,20 @@ const AppRoutes = () => {
         path='/my/bookings'
         element={isLoggedIn ? <MyBookings /> : <Home />}
       />
+      {/* helper redirects for venue-related nav links that point to the current user's profile */}
+      <Route path='/venues/mine' element={<NavigateToProfile />} />
+      <Route path='/venues/mine/bookings' element={<NavigateToProfile />} />
+      <Route path='/venues/new' element={<NavigateToProfile />} />
       <Route path='*' element={<Home />} />
     </Routes>
   );
+};
+
+const NavigateToProfile = () => {
+  const name = getStoredName();
+  if (!name) return <Navigate to='/' replace />;
+  const encoded = encodeURIComponent(name);
+  return <Navigate to={`/profiles/${encoded}`} replace />;
 };
 
 function App() {
