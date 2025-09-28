@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import type { MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { MouseEvent as ReactMouseEvent } from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { BreakpointContext } from '../context/ui/BreakpointContext';
 
 // Reuse the NavLink visual style for dropdown anchor items. NavLink component
@@ -40,6 +40,8 @@ const NavDropdown: FC<NavDropdownProps> = ({
   const breakpoint = ctx?.breakpoint ?? 'mobile';
   const isDesktop = breakpoint === 'desktop';
 
+  const [open, setOpen] = useState<boolean>(false);
+
   const menuAlignClass = align === 'left' ? 'left-0' : 'right-0';
 
   const desktopVisibilityClasses =
@@ -59,58 +61,125 @@ const NavDropdown: FC<NavDropdownProps> = ({
     navigate(path);
   };
 
+  function toggleOpen() {
+    if (isDesktop) return; // desktop uses hover, don't toggle state
+    setOpen((p) => !p);
+  }
+
   return (
     <li className='group relative'>
       <button
         type='button'
         aria-label={ariaLabel ?? label}
+        aria-expanded={isDesktop ? undefined : open}
+        onClick={toggleOpen}
         className='inline-flex items-center rounded-lg px-3 py-2 font-semibold transition-colors duration-200'
       >
-        {label}
+        <span className='mr-2'>{label}</span>
+        {/* caret: point right when closed, down when open (rotates 90deg) */}
+        {!isDesktop && (
+          <svg
+            className={`h-4 w-4 transform transition-transform duration-200 ${open ? 'rotate-90' : 'rotate-0'}`}
+            viewBox='0 0 20 20'
+            fill='none'
+            aria-hidden
+          >
+            <path d='M6 4l8 6-8 6V4z' fill='currentColor' />
+          </svg>
+        )}
       </button>
 
-      <div
-        className={hiddenOnNonDesktop}
-        role='menu'
-        aria-label={ariaLabel ?? `${label} menu`}
-      >
-        {items.map((it, idx) => {
-          if (it.condition === false) return null;
+      {/* desktop: absolute hover menu; mobile/tablet: inline collapsible list */}
+      {isDesktop ? (
+        <div
+          className={hiddenOnNonDesktop}
+          role='menu'
+          aria-label={ariaLabel ?? `${label} menu`}
+        >
+          {items.map((it, idx) => {
+            if (it.condition === false) return null;
 
-          const key = `${label}-item-${idx}`;
+            const key = `${label}-item-${idx}`;
 
-          if (it.path) {
-            const isSpecial = it.path === '/login' || it.path === '/register';
+            if (it.path) {
+              const isSpecial = it.path === '/login' || it.path === '/register';
+              return (
+                <Link
+                  key={key}
+                  to={it.path}
+                  role='menuitem'
+                  aria-label={it.aria ?? it.label}
+                  className={dropdownAnchorClass}
+                  onClick={
+                    isSpecial ? (e) => handleSpecialNav(e, it.path!) : undefined
+                  }
+                >
+                  {it.label}
+                </Link>
+              );
+            }
+
             return (
-              <Link
+              <button
                 key={key}
-                to={it.path}
-                role='menuitem'
+                type='button'
+                onClick={it.onClick}
+                className={`${dropdownAnchorClass} block w-full text-left`}
                 aria-label={it.aria ?? it.label}
-                className={dropdownAnchorClass}
-                onClick={
-                  isSpecial ? (e) => handleSpecialNav(e, it.path!) : undefined
-                }
               >
                 {it.label}
-              </Link>
+              </button>
             );
-          }
+          })}
+        </div>
+      ) : (
+        open && (
+          <div
+            className='mt-2 grid gap-1'
+            role='menu'
+            aria-label={ariaLabel ?? `${label} menu`}
+          >
+            {items.map((it, idx) => {
+              if (it.condition === false) return null;
 
-          // if onClick is provided, render a button
-          return (
-            <button
-              key={key}
-              type='button'
-              onClick={it.onClick}
-              className={`${dropdownAnchorClass} block w-full text-left`}
-              aria-label={it.aria ?? it.label}
-            >
-              {it.label}
-            </button>
-          );
-        })}
-      </div>
+              const key = `${label}-item-${idx}`;
+
+              if (it.path) {
+                const isSpecial =
+                  it.path === '/login' || it.path === '/register';
+                return (
+                  <Link
+                    key={key}
+                    to={it.path}
+                    role='menuitem'
+                    aria-label={it.aria ?? it.label}
+                    className={dropdownAnchorClass}
+                    onClick={
+                      isSpecial
+                        ? (e) => handleSpecialNav(e, it.path!)
+                        : undefined
+                    }
+                  >
+                    {it.label}
+                  </Link>
+                );
+              }
+
+              return (
+                <button
+                  key={key}
+                  type='button'
+                  onClick={it.onClick}
+                  className={`${dropdownAnchorClass} block w-full text-left`}
+                  aria-label={it.aria ?? it.label}
+                >
+                  {it.label}
+                </button>
+              );
+            })}
+          </div>
+        )
+      )}
     </li>
   );
 };

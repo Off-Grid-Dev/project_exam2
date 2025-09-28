@@ -43,7 +43,7 @@ const ProfilePage = () => {
   }
 
   const { breakpoint } = useBreakpoint();
-  const isAutoSearch = breakpoint !== 'mobile';
+  const isAutoSearch = breakpoint === 'desktop';
   const debounceMs = 400;
 
   const normalizeProfileReturn = useCallback(async () => {

@@ -15,9 +15,11 @@ describe('Nav component', () => {
   it('renders public links when logged out', () => {
     render(
       <BrowserRouter>
-        <AuthProvider>
-          <Nav />
-        </AuthProvider>
+        <ContextProvider>
+          <AuthProvider>
+            <Nav />
+          </AuthProvider>
+        </ContextProvider>
       </BrowserRouter>,
     );
 
@@ -50,15 +52,17 @@ describe('Nav component', () => {
 
     render(
       <BrowserRouter>
-        <AuthProvider>
-          <AutoLogin />
-          <Nav />
-        </AuthProvider>
+        <ContextProvider>
+          <AuthProvider>
+            <AutoLogin />
+            <Nav />
+          </AuthProvider>
+        </ContextProvider>
       </BrowserRouter>,
     );
 
     await waitFor(() => expect(screen.getByText(/profile/i)).toBeDefined());
-    expect(screen.getByText(/my bookings/i)).toBeDefined();
+    await waitFor(() => expect(screen.getByText(/my bookings/i)).toBeDefined());
     expect(screen.getByText(/logout/i)).toBeDefined();
   });
 

@@ -66,15 +66,18 @@ describe('ProfileList', () => {
       </MemoryRouter>,
     );
 
-    // current page displayed
-    expect(screen.getByText('2')).toBeInTheDocument();
+    // current page displayed (may appear twice: top and bottom pagination)
+    const pageEls = screen.getAllByText('2');
+    expect(pageEls.length).toBeGreaterThan(0);
 
-    // previous should call setPage to decrement
-    fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+    // previous should call setPage to decrement (click the first matching button)
+    const prevBtns = screen.getAllByRole('button', { name: /previous page/i });
+    fireEvent.click(prevBtns[0]);
     expect(setPage).toHaveBeenCalled();
 
     // next should call setPage to increment
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    const nextBtns = screen.getAllByRole('button', { name: /next page/i });
+    fireEvent.click(nextBtns[0]);
     expect(setPage).toHaveBeenCalled();
 
     // ProfileCards should render by name

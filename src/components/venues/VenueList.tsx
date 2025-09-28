@@ -1,6 +1,9 @@
 // React imports
 import type { Dispatch, FC, SetStateAction } from 'react';
 
+// Context
+import { useBreakpoint } from '../../context/ui/useBreakpoint';
+
 // Components
 import { VenuesCard } from './VenueCard';
 import Button from '../Button';
@@ -29,6 +32,8 @@ export const VenuesList: FC<VenuesListType> = ({
   setPage,
   pagination,
 }) => {
+  const { breakpoint } = useBreakpoint();
+  const isMobile = breakpoint === 'mobile';
   if ((!venues || venues.length === 0) && !isLoading) {
     return <p className='text-center'>No venues to show</p>;
   }
@@ -48,30 +53,37 @@ export const VenuesList: FC<VenuesListType> = ({
     setPage((prev) => prev + 1);
   }
 
+  const paginationControls = (
+    <div className='mx-auto mt-3 grid grid-cols-[1fr_auto_1fr] gap-3'>
+      <Button
+        label='previous page'
+        type='button'
+        onClick={handlePreviousPage}
+        disabled={Boolean(pagination.isFirstPage)}
+      />
+      <span className='bg-bg-med grid aspect-square place-content-center rounded-full'>
+        {page}
+      </span>
+      <Button
+        label='next page'
+        type='button'
+        onClick={handleNextPage}
+        disabled={Boolean(pagination.isLastPage)}
+      />
+    </div>
+  );
+
   return (
     <>
-      <div className='mx-auto mt-3 grid grid-cols-[1fr_auto_1fr] gap-3'>
-        <Button
-          label='previous page'
-          type='button'
-          onClick={handlePreviousPage}
-          disabled={Boolean(pagination.isFirstPage)}
-        />
-        <span className='bg-bg-med grid aspect-square place-content-center rounded-full'>
-          {page}
-        </span>
-        <Button
-          label='next page'
-          type='button'
-          onClick={handleNextPage}
-          disabled={Boolean(pagination.isLastPage)}
-        />
-      </div>
-      <div className='my-4 grid grid-cols-2 gap-3'>
+      {paginationControls}
+      <div
+        className={`my-4 grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-3`}
+      >
         {venues.map((venue) => (
           <VenuesCard key={venue.id} {...venue} />
         ))}
       </div>
+      {paginationControls}
     </>
   );
 };

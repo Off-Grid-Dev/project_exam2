@@ -81,11 +81,11 @@ export const VenuesCard: FC<Venue> = ({
           );
         })()}
       </div>
-      <h2 className='font-semibold text-[var(--color-text-dark)]'>
-        {name !== '' ? name : 'Venue has no name (must be haunted)'}
-      </h2>
-      <div className='flex justify-between'>
+      <div className='flex justify-between align-top'>
         <div>
+          <h2 className='font-semibold text-[var(--color-text-dark)]'>
+            {name !== '' ? name : 'Venue has no name (must be haunted)'}
+          </h2>
           <p>Price: {price}</p>
           <p>Rating: {rating}</p>
         </div>

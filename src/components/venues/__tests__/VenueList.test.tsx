@@ -61,10 +61,12 @@ describe('VenuesList', () => {
       </MemoryRouter>,
     );
 
-    // page number is shown
-    expect(screen.getByText('1')).toBeInTheDocument();
+    // page number is shown (can appear in pagination twice: top and bottom)
+    const pageEls = screen.getAllByText('1');
+    expect(pageEls.length).toBeGreaterThan(0);
 
-    const next = screen.getByRole('button', { name: /next page/i });
+    const nextBtns = screen.getAllByRole('button', { name: /next page/i });
+    const next = nextBtns[0];
     fireEvent.click(next);
     // clicking next should update page to 2 via setPage
     expect(page).toBe(2);
@@ -83,7 +85,10 @@ describe('VenuesList', () => {
       </MemoryRouter>,
     );
 
-    const previous = screen.getByRole('button', { name: /previous page/i });
+    const previousBtns = screen.getAllByRole('button', {
+      name: /previous page/i,
+    });
+    const previous = previousBtns[0];
     fireEvent.click(previous);
     // clicking previous should decrement back to 1
     expect(page).toBe(1);

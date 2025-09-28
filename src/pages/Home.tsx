@@ -48,7 +48,7 @@ export const Home = () => {
   }
 
   const { breakpoint } = useBreakpoint();
-  const isAutoSearch = breakpoint !== 'mobile' && breakpoint !== 'tablet';
+  const isAutoSearch = breakpoint === 'desktop';
   const debounceMs = 900;
 
   function handleSortUpdate(e: ChangeEvent<HTMLSelectElement>) {

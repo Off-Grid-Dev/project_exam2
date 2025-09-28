@@ -64,12 +64,19 @@ describe('EditVenueForm', () => {
       </ContextProvider>,
     );
 
+    // submit the form directly to bypass browser HTML5 validation (click may be
+    // blocked by the required attribute in the test DOM). Find the save button
+    // then submit its closest form element.
     const saveBtn = screen.getByRole('button', { name: /save changes/i });
-    fireEvent.click(saveBtn);
+    const form = saveBtn.closest('form') as HTMLFormElement | null;
+    if (!form) throw new Error('Could not find form element to submit in test');
+    fireEvent.submit(form);
 
     // findByText will wait for the toast to be scheduled and rendered
-    const toast = await screen.findByText(/Please provide at least a name/i);
-    expect(toast).toBeInTheDocument();
+    const toasts = await screen.findAllByText(
+      /Please provide at least a name/i,
+    );
+    expect(toasts.length).toBeGreaterThan(0);
   });
 
   test('submits payload when token present and calls API', async () => {
