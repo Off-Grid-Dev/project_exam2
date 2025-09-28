@@ -2,7 +2,8 @@
 
 [![Deployed to GitHub Pages](https://github.com/Off-Grid-Dev/project_exam2/actions/workflows/deploy.yml/badge.svg?branch=main)](https://off-grid-dev.github.io/project_exam2/)
 
-Single-page React application built with Vite and TypeScript, deployed to GitHub Pages.
+Single-page React application built with Vite and TypeScript, deployed to GitHub
+Pages.
 
 ---
 
@@ -72,13 +73,15 @@ Production files are generated in the `dist/` folder.
 
 ## Deployment
 
-A GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on every push to `main` and:
+A GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on every push to
+`main` and:
 
 1. Installs dependencies
 2. Builds the app into `dist/`
 3. Deploys `dist/` to the `gh-pages` branch
 
-GitHub Pages is configured to serve from that branch and folder, so every successful push to `main` automatically updates the live site.
+GitHub Pages is configured to serve from that branch and folder, so every
+successful push to `main` automatically updates the live site.
 
 ---
 
@@ -102,7 +105,8 @@ Ensure that `.env` is listed in `.gitignore`.
 
 ## Contributing
 
-Contributions are welcome. Open issues or pull requests, and CI will validate changes with:
+Contributions are welcome. Open issues or pull requests, and CI will validate
+changes with:
 
 - linting
 - type checking

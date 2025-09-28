@@ -1,6 +1,7 @@
 # API Tests
 
-This directory contains comprehensive tests for all API functions in the Holidaze application.
+This directory contains comprehensive tests for all API functions in the
+Holidaze application.
 
 ## Test Structure
 

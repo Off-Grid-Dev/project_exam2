@@ -8,6 +8,7 @@
   "htmlWhitespaceSensitivity": "css",
   "jsxSingleQuote": true,
   "printWidth": 80,
+  "proseWrap": "always",
   "quoteProps": "consistent",
   "semi": true,
   "trailingComma": "all",
