@@ -67,7 +67,7 @@ const SearchForm: FC<SearchFormProps> = ({
         className='mx-auto flex w-fit gap-3 md:flex'
       >
         <input
-          aria-label='Enter a search query to refine the list of venues.'
+          aria-label='Enter a search query.'
           type='text'
           name='query'
           value={localQuery}
@@ -78,7 +78,7 @@ const SearchForm: FC<SearchFormProps> = ({
           className='border-border-dark focus:outline-border-focus mr-2 w-96 rounded-sm border-2 px-2 py-2'
           placeholder='Enter search...'
         />
-        {!autoSearch && <Button label='Search for Venues' type='submit' />}
+        {!autoSearch && <Button label='Search' type='submit' />}
         {showSort && (
           <>
             <Select
@@ -119,7 +119,7 @@ const SearchForm: FC<SearchFormProps> = ({
     >
       <div className='grid w-full gap-3 sm:flex'>
         <input
-          aria-label='Enter a search query to refine the list of venues.'
+          aria-label='Enter a search query.'
           type='text'
           name='query'
           value={localQuery}
@@ -130,7 +130,7 @@ const SearchForm: FC<SearchFormProps> = ({
           className='border-border-dark focus:outline-border-focus w-full rounded-sm border-2 px-2 py-2'
           placeholder='Enter search...'
         />
-        {!autoSearch && <Button label='Search for Venues' type='submit' />}
+        {!autoSearch && <Button label='Search' type='submit' />}
       </div>
 
       {showSort && (

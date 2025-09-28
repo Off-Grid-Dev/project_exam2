@@ -8,7 +8,7 @@ describe('SearchForm', () => {
     render(<SearchForm query={'  hello  '} handleSearch={handleSearch} />);
 
     const input = screen.getByRole('textbox') as HTMLInputElement;
-    const button = screen.getByRole('button', { name: /Search for Venues/i });
+    const button = screen.getByRole('button', { name: /Search/i });
 
     expect(input.value).toBe('  hello  ');
     fireEvent.change(input, { target: { value: '  abc  ' } });
