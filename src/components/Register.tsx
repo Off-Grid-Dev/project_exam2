@@ -140,33 +140,22 @@ export const RegisterForm = () => {
       }),
     };
 
-    try {
-      console.log('Submitting registration payload:', payload);
-      const res = await fetchProfiles(ApiFunctions.RegisterUser, {
-        registerProfilePayload: payload,
-      });
-      // After registering, attempt to log the user in using the submitted credentials.
-      try {
-        await fetchProfiles(ApiFunctions.LoginUser, {
-          loginProfilePayload: {
-            email: payload.email,
-            password: payload.password,
-          },
-        });
-        // storeToken is handled by fetchProfiles(LoginUser), now tell context we're logged in
-        login();
-      } catch (loginErr) {
-        // Login failed after registration; log and continue to navigate to home.
-        console.error('Auto-login after registration failed', loginErr);
-      }
+    const res = await fetchProfiles(ApiFunctions.RegisterUser, {
+      registerProfilePayload: payload,
+    });
+    // After registering, attempt to log the user in using the submitted credentials.
+    await fetchProfiles(ApiFunctions.LoginUser, {
+      loginProfilePayload: {
+        email: payload.email,
+        password: payload.password,
+      },
+    });
+    // storeToken is handled by fetchProfiles(LoginUser), now tell context we're logged in
+    login();
 
-      // After registration (and attempted login), navigate to the home page.
-      navigate('/');
-      return res;
-    } catch (err) {
-      console.error('Registration failed', err);
-      throw err;
-    }
+    // After registration (and attempted login), navigate to the home page.
+    navigate('/');
+    return res;
   }
 
   return (

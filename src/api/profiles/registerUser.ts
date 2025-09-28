@@ -32,7 +32,5 @@ export const registerUser = async (
     );
   }
 
-  console.log('Sending payload to API:', payload);
-
   return response.json();
 };

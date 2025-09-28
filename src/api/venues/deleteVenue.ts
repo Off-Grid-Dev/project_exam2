@@ -13,10 +13,6 @@ export const deleteVenue = async (id: string, token: string) => {
     },
   });
 
-  if (response.status === 204) {
-    // TODO add toast
-    console.log(`Deleted venue ${id} successfully.`);
-  }
   if (!response.ok) {
     const errorBody: ApiError = await response.json();
     const message =

@@ -30,9 +30,6 @@ describe('loginUser', () => {
       password: 'password123',
     };
 
-    // Mock console.log to avoid output during tests
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-
     mockFetch.mockReturnValueOnce(createMockResponse(mockLoginResponse));
 
     const result = await loginUser(payload);
@@ -49,12 +46,6 @@ describe('loginUser', () => {
     );
 
     expect(result).toEqual(mockLoginResponse);
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Sending login payload to API:',
-      payload,
-    );
-
-    consoleSpy.mockRestore();
   });
 
   it('should handle login errors correctly', async () => {

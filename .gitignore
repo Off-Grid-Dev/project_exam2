@@ -27,13 +27,3 @@ dist-ssr
 # Private files
 .env
 !.example.env
-tasks.md
-user-stories.md
-api-ref.md
-temporary.json
-temporary.js
-thursday.md
-userInfo.json
-bookings_functions.md
-API_TESTS_SUMMARY.md
-PROJECT_FIGMA_LISTS.md

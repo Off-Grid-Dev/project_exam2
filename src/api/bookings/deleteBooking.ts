@@ -13,9 +13,7 @@ export const deleteBooking = async (id: string, token: string) => {
     },
   });
 
-  if (response.status === 204) {
-    console.log(`Deleted booking ${id} successfully.`);
-  } else if (!response.ok) {
+  if (!response.ok) {
     const errorBody: ApiError = await response.json();
     const message =
       errorBody.errors?.map((e) => e.message).join(', ') || response.statusText;

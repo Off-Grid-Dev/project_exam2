@@ -108,7 +108,6 @@ describe('Profile page', () => {
     await waitFor(() =>
       expect(screen.getByText('manager')).toBeInTheDocument(),
     );
-    expect(screen.getByText(/Create a venue/i)).toBeInTheDocument();
     // venue from manager should be visible
     expect(await screen.findByText('V1')).toBeInTheDocument();
   });

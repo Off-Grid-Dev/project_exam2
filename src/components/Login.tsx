@@ -15,9 +15,6 @@ import { useAuth } from '../context/auth/useAuth';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 import Button from './Button';
 
-// Local hooks (commented out intentionally)
-// import { useBreakpoint } from '../context/ui/useBreakpoint';
-
 type LoginInfo = LoginProfilePayload;
 
 export const LoginForm = () => {
@@ -63,24 +60,18 @@ export const LoginForm = () => {
       password: loginInfo.password,
     };
 
-    try {
-      console.log('Submitting login payload:', payload);
-      const res = await fetchProfiles(ApiFunctions.LoginUser, {
-        loginProfilePayload: payload,
-      });
+    const res = await fetchProfiles(ApiFunctions.LoginUser, {
+      loginProfilePayload: payload,
+    });
 
-      // if the API stored the token, call login() and navigate to profile
-      const accessToken = localStorage.getItem('accessToken');
-      const name = localStorage.getItem('accessName');
-      if (accessToken && accessToken !== '') {
-        login();
-        if (name) navigate(`/profiles/${encodeURIComponent(name)}`);
-      }
-      return res;
-    } catch (err) {
-      console.error('Login failed', err);
-      throw err;
+    // if the API stored the token, call login() and navigate to profile
+    const accessToken = localStorage.getItem('accessToken');
+    const name = localStorage.getItem('accessName');
+    if (accessToken && accessToken !== '') {
+      login();
+      if (name) navigate(`/profiles/${encodeURIComponent(name)}`);
     }
+    return res;
   }
 
   return (

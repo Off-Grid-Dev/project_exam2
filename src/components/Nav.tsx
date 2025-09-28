@@ -128,11 +128,6 @@ const Nav = () => {
       const panel = panelRef.current;
       const btn = openButtonRef.current;
       if (!panel) return;
-      // Allow clicks inside the panel to proceed (they may trigger nav link
-      // behavior which we still want to close the panel). However, if the
-      // click originated specifically on a dropdown toggle button inside the
-      // panel (used to open/close NavDropdown on mobile), we should ignore it
-      // so the dropdown can toggle without closing the entire mobile nav.
       const element = target as HTMLElement | null;
       if (element?.closest('[data-dropdown-toggle="true"]')) return;
       if (panel.contains(target)) return; // click inside panel -> ignore

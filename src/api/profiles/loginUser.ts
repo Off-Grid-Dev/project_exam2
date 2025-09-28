@@ -26,7 +26,5 @@ export const loginUser = async (
     throw new Error(`Could not log you in: ${response.status} - ${message}`);
   }
 
-  console.log('Sending login payload to API:', payload);
-
   return response.json();
 };

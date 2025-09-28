@@ -23,10 +23,8 @@ describe('App top-level smoke', () => {
     window.history.pushState({}, 'Test', '/project_exam2/');
     render(<App />);
 
-    // Header brand should be present
     expect(screen.getByText(/HOLIDAZE/i)).toBeInTheDocument();
 
-    // Home page has a Venues heading
     expect(
       await screen.findByRole('heading', { name: /Venues/i }),
     ).toBeInTheDocument();
