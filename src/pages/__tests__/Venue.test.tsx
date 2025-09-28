@@ -2,6 +2,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { vi, describe, test, expect } from 'vitest';
+import { act } from 'react';
 import ContextProvider from '../../context/ContextProvider';
 
 // Mock the api module used by Venue
@@ -92,7 +93,9 @@ describe('Venue page', () => {
 
     // click the stubbed calendar button to select dates
     const selectBtn = screen.getByText('Select range');
-    fireEvent.click(selectBtn);
+    await act(async () => {
+      fireEvent.click(selectBtn);
+    });
 
     // After selecting a range the selected dates text should be present
     expect(screen.getByText(/2025/)).toBeInTheDocument();
@@ -102,11 +105,14 @@ describe('Venue page', () => {
     expect(bookBtn).toBeEnabled();
 
     // Click book and assert fetchBookings was called
-    fireEvent.click(bookBtn);
+    await act(async () => {
+      fireEvent.click(bookBtn);
+    });
+
     const api = await import('../../api/api');
     await waitFor(() => expect(api.fetchBookings).toHaveBeenCalled());
 
-    // wait for toast update to avoid act() warnings
+    // wait for toast update
     await waitFor(() =>
       expect(screen.getByText(/Booking created/i)).toBeInTheDocument(),
     );

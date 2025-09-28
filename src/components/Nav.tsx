@@ -15,6 +15,7 @@ import {
   isTokenValid,
   getStoredVenueManager,
   getStoredName,
+  clearToken,
 } from '../api/authToken';
 
 const Nav = () => {
@@ -26,9 +27,14 @@ const Nav = () => {
     return isTokenValid(token);
   }
 
-  async function handleLogout() {
+  function handleLogout() {
+    // update auth state and clear stored token synchronously
     logout();
-    navigate('/');
+    clearToken();
+
+    // ensure React state updates have been flushed before navigating
+    // (navigation can cause unmounts that may interfere with pending state updates)
+    Promise.resolve().then(() => navigate('/'));
   }
 
   useEffect(() => {
@@ -87,7 +93,7 @@ const Nav = () => {
 
       {isLoggedIn && (
         <>
-          <NavLink path='/profiles' label='profile' aria='view profiles' />
+          <NavLink path='/profiles' label='profiles' aria='view profiles' />
 
           <NavDropdown
             label='account'

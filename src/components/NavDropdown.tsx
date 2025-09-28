@@ -45,7 +45,7 @@ const NavDropdown: FC<NavDropdownProps> = ({
   const desktopVisibilityClasses =
     'absolute top-full grid ' +
     menuAlignClass +
-    ' bg-bg-dark text-text-base rounded-md shadow-lg px-3 py-1 ring-1 ring-black ring-opacity-5 transition-opacity duration-200 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto';
+    ' bg-bg-dark w-36 text-text-base rounded-md shadow-lg px-3 py-1 ring-1 ring-black ring-opacity-5 transition-opacity duration-200 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-within:opacity-100 focus-within:pointer-events-auto';
 
   const hiddenOnNonDesktop = isDesktop ? desktopVisibilityClasses : 'hidden';
 
@@ -66,7 +66,7 @@ const NavDropdown: FC<NavDropdownProps> = ({
         aria-haspopup='true'
         aria-expanded={false}
         aria-label={ariaLabel ?? label}
-        className={`header-link inline-flex items-center rounded-lg px-3 py-2 font-semibold transition-colors duration-200`}
+        className={`inline-flex items-center rounded-lg px-3 py-2 font-semibold transition-colors duration-200`}
       >
         {label}
       </button>
