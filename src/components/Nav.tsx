@@ -283,7 +283,12 @@ const Nav = () => {
 
       {isLoggedIn && (
         <>
-          <NavLink path='/profiles' label='profiles' aria='view profiles' />
+          <NavLink
+            path='/profiles'
+            label='profiles'
+            aria='view profiles'
+            resetOnClick
+          />
 
           <NavDropdown
             label='account'

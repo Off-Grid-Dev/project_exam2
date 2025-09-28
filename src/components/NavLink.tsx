@@ -9,21 +9,36 @@ type NavLinkProps = {
   path: string;
   label: string;
   aria: string;
+  resetOnClick?: boolean;
 };
 
-const NavLink: FC<NavLinkProps> = ({ path, label, aria }) => {
+const NavLink: FC<NavLinkProps> = ({
+  path,
+  label,
+  aria,
+  resetOnClick = false,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   function handleClick(e: MouseEvent<HTMLAnchorElement>) {
-    // If clicking a link to the current pathname, force a navigation with
-    // a reset token in location.state so route components (like Home)
-    // can respond and reset their internal UI state.
+    // If caller requests a reset when clicking this link, always perform a
+    // programmatic navigation with a reset token in location.state so the
+    // destination route can clear internal UI state (for example SearchForm).
+    if (resetOnClick) {
+      e.preventDefault();
+      navigate(path, { state: { reset: Date.now() } });
+      return;
+    }
+
+    // Fallback behavior: if clicking the current pathname, force a navigation
+    // with reset token so route components can respond and reset their
+    // internal UI state.
     if (location.pathname === path) {
       e.preventDefault();
       navigate(path, { state: { reset: Date.now() } });
     }
-    // otherwise let the Link handle normal navigation
+    // otherwise allow the Link's normal navigation
   }
 
   return (

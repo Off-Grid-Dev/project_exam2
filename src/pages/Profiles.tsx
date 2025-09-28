@@ -11,6 +11,7 @@ import { fetchProfiles } from '../api/api';
 import { getToken } from '../api/authToken';
 import { ApiFunctions } from '../api/apiFunctionsEnum';
 import { useBreakpoint } from '../context/ui/useBreakpoint';
+import { useLocation } from 'react-router-dom';
 import { useToast } from '../context/toast/useToast';
 
 // Types
@@ -45,6 +46,23 @@ const ProfilePage = () => {
   const { breakpoint } = useBreakpoint();
   const isAutoSearch = breakpoint === 'desktop';
   const debounceMs = 400;
+  const location = useLocation();
+
+  // If navigated with a reset token in location.state, clear search state
+  // and reset pagination so the page shows the default list.
+  useEffect(() => {
+    // location.state may be undefined or an object containing { reset }
+    // when NavLink navigate() was called with { state: { reset: <ts> } }
+    // We only act when reset is present.
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore-next-line
+    if (location?.state?.reset) {
+      setProfileQuery('');
+      setPage(1);
+    }
+    // We intentionally only want to run when location.key/state changes
+    // so include location.key to react on new navigations.
+  }, [location.key]);
 
   const normalizeProfileReturn = useCallback(async () => {
     setIsLoading(true);
