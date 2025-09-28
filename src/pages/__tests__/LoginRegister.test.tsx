@@ -1,14 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import ContextProvider from '../../context/ContextProvider';
+import { MemoryRouter } from 'react-router-dom';
 import { LoginRegister } from '../LoginRegister';
 import { describe, test, expect } from 'vitest';
 
 describe('LoginRegister page', () => {
   test('shows the initial buttons and toggles to Login and Register forms', () => {
     render(
-      <ContextProvider>
-        <LoginRegister />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <LoginRegister />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     // initial state shows both buttons
@@ -24,9 +27,11 @@ describe('LoginRegister page', () => {
 
     // rerender page to reset and click register
     render(
-      <ContextProvider>
-        <LoginRegister />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <LoginRegister />
+        </ContextProvider>
+      </MemoryRouter>,
     );
     const regBtn2 = screen.getByRole('button', { name: /Register/i });
     fireEvent.click(regBtn2);

@@ -15,6 +15,37 @@ vi.mock('../../api/api', async () => {
         bio: 'bio',
         venueManager: true,
         _count: { venues: 1, bookings: 2 },
+        venues: [
+          {
+            id: 'v1',
+            name: 'V1',
+            description: 'd',
+            price: 10,
+            maxGuests: 1,
+            rating: 0,
+            media: [],
+            created: '',
+            updated: '',
+            meta: {
+              wifi: false,
+              parking: false,
+              breakfast: false,
+              pets: false,
+            },
+            location: {
+              address: '',
+              city: '',
+              zip: '',
+              country: '',
+              continent: '',
+              lat: 0,
+              lng: 0,
+            },
+            owner: { name: '', email: '', bio: '', avatar: null, banner: null },
+            bookings: [],
+            _count: { bookings: 0 },
+          },
+        ],
       },
     }),
     fetchVenues: vi.fn().mockResolvedValue({
@@ -59,6 +90,7 @@ import ProfileSingle from '../Profile';
 describe('Profile page', () => {
   beforeEach(() => {
     localStorage.setItem('accessToken', 't');
+    localStorage.setItem('accessName', 'manager');
     vi.clearAllMocks();
   });
 

@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { LoginForm } from '../Login';
 import ContextProvider from '../../context/ContextProvider';
@@ -13,9 +14,11 @@ describe('LoginForm', () => {
 
   it('renders inputs and submit button', () => {
     render(
-      <ContextProvider>
-        <LoginForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <LoginForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     expect(screen.getByLabelText(/Email:/i)).toBeDefined();
@@ -41,9 +44,11 @@ describe('LoginForm', () => {
       .mockResolvedValue(mockLoginResponse);
 
     render(
-      <ContextProvider>
-        <LoginForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <LoginForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     const emailInput = screen.getByLabelText(/Email:/i) as HTMLInputElement;
@@ -82,9 +87,11 @@ describe('LoginForm', () => {
       .mockResolvedValue(mockLoginResponse);
 
     render(
-      <ContextProvider>
-        <LoginForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <LoginForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     const emailInput = screen.getByLabelText(/Email:/i) as HTMLInputElement;

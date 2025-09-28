@@ -1,11 +1,13 @@
 // API
 import { fetchProfiles } from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 // React imports
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 
 // Types
 import type { RegisterProfilePayload } from '../types/api/profile';
+import type { RegisterProfileResponse } from '../types/api/responses';
 
 // API enums
 import { ApiFunctions } from '../api/apiFunctionsEnum';
@@ -61,7 +63,9 @@ export const RegisterForm = () => {
     setUserInfo({ ...userInfo, [e.target.id]: e.target.value });
   }
 
-  function handleSubmit(e: FormEvent) {
+  const navigate = useNavigate();
+
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const formEl = e.currentTarget as HTMLFormElement;
     // Manual validation (deterministic for tests): ensure required fields meet expectations
@@ -113,11 +117,18 @@ export const RegisterForm = () => {
       }),
     };
 
-    console.log('Submitting registration payload:', payload);
-
-    fetchProfiles(ApiFunctions.RegisterUser, {
-      registerProfilePayload: payload,
-    });
+    try {
+      console.log('Submitting registration payload:', payload);
+      const res = await fetchProfiles(ApiFunctions.RegisterUser, {
+        registerProfilePayload: payload,
+      });
+      const name = (res as RegisterProfileResponse)?.data?.name ?? payload.name;
+      if (name) navigate(`/profiles/${encodeURIComponent(name)}`);
+      return res;
+    } catch (err) {
+      console.error('Registration failed', err);
+      throw err;
+    }
   }
 
   return (

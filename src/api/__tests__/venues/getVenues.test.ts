@@ -31,11 +31,12 @@ describe('getVenues', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringMatching(/\/holidaze\/venues\?.*limit=20.*page=1/),
-      {
-        headers: {
+      expect.objectContaining({
+        headers: expect.objectContaining({
           'Content-Type': 'application/json',
-        },
-      },
+          'X-Noroff-API-Key': expect.any(String),
+        }),
+      }),
     );
 
     expect(result).toEqual(mockVenuesResponse);
@@ -50,11 +51,15 @@ describe('getVenues', () => {
       /\/holidaze\/venues\?.*sort=name.*sortOrder=asc.*limit=10.*page=2.*_owner=true.*_bookings=true/,
     );
 
-    expect(mockFetch).toHaveBeenCalledWith(expectedUrl, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      expectedUrl,
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'X-Noroff-API-Key': expect.any(String),
+        }),
+      }),
+    );
   });
 
   it('should handle API errors correctly', async () => {
@@ -80,11 +85,12 @@ describe('getVenues', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringMatching(/\/holidaze\/venues\?.*limit=20.*page=1/),
-      {
-        headers: {
+      expect.objectContaining({
+        headers: expect.objectContaining({
           'Content-Type': 'application/json',
-        },
-      },
+          'X-Noroff-API-Key': expect.any(String),
+        }),
+      }),
     );
   });
 });

@@ -1,6 +1,6 @@
 // React imports
 import { useCallback, useLayoutEffect, useState, type FormEvent } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 // Components
 import { Wrapper } from '../components/layout/Wrapper';
@@ -12,6 +12,8 @@ import { fetchVenues, fetchBookings } from '../api/api.ts';
 import { ApiFunctions } from '../api/apiFunctionsEnum.ts';
 import { getToken } from '../api/authToken';
 import { useToast } from '../context/toast/useToast';
+import EditVenueForm from '../components/forms/EditVenue';
+import { getStoredName } from '../api/authToken';
 import type { BookingCreatePayload } from '../types/api/booking';
 import type { Venue as VenueType } from '../types/api/venue';
 
@@ -26,6 +28,7 @@ const Venue = () => {
   const [guests, setGuests] = useState<number>(1);
   const [maxGuests, setMaxGuests] = useState<number | undefined>(undefined);
   const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { GetVenueById, CreateBooking } = ApiFunctions;
   const { addToast } = useToast();
   const [bookedIsoDates, setBookedIsoDates] = useState<string[]>([]);
@@ -114,9 +117,65 @@ const Venue = () => {
       {isLoading && <p>Loading venue...</p>}
       {!isLoading && venue && (
         <>
-          <h1 className='text-heading text-text-dark font-bold'>
-            {venue?.name ?? `Venue ${id}`}
-          </h1>
+          <div className='flex items-center justify-between'>
+            <h1 className='text-heading text-text-dark font-bold'>
+              {venue?.name ?? `Venue ${id}`}
+            </h1>
+            {/* show edit button if current user is the owner */}
+            {(() => {
+              const ownerName = venue.owner?.name ?? '';
+              const stored = getStoredName();
+              if (
+                stored &&
+                ownerName &&
+                ownerName.toLowerCase() === stored.toLowerCase()
+              ) {
+                const edit = searchParams.get('edit') === 'true';
+                return (
+                  <div>
+                    <button
+                      className='btn-primary px-3 py-1'
+                      onClick={() => {
+                        if (edit) {
+                          // clear edit param
+                          const next = new URLSearchParams(searchParams);
+                          next.delete('edit');
+                          setSearchParams(next);
+                        } else {
+                          const next = new URLSearchParams(searchParams);
+                          next.set('edit', 'true');
+                          setSearchParams(next);
+                        }
+                      }}
+                    >
+                      {edit ? 'Close editor' : 'Edit venue'}
+                    </button>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+          </div>
+          {/* Render edit form when requested and user is owner */}
+          {venue.owner?.name &&
+            getStoredName() &&
+            venue.owner.name.toLowerCase() === getStoredName()!.toLowerCase() &&
+            searchParams.get('edit') === 'true' && (
+              <div className='mt-4'>
+                <h2 className='font-semibold'>Edit venue</h2>
+                <EditVenueForm
+                  venue={venue}
+                  onSaved={(v) => {
+                    // update local state after save
+                    setVenue(v);
+                    // clear edit param
+                    const next = new URLSearchParams(searchParams);
+                    next.delete('edit');
+                    setSearchParams(next);
+                  }}
+                />
+              </div>
+            )}
           <div className='my-4'>
             {/* Only render an <img> when a valid absolute URL is present; otherwise show a placeholder */}
             {(() => {

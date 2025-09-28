@@ -106,9 +106,17 @@ const fetchVenues = async (
   try {
     switch (fn) {
       case ApiFunctions.GetVenues: {
-        const { sort, sortOrder, limit, page, _owner, _bookings } =
+        const { sort, sortOrder, limit, page, _owner, _bookings, token } =
           params || {};
-        return getVenues(sort, sortOrder, limit, page, _owner, _bookings);
+        return getVenues(
+          sort,
+          sortOrder,
+          limit,
+          page,
+          _owner,
+          _bookings,
+          token,
+        );
       }
       case ApiFunctions.GetVenueById: {
         const { id, _owner, _bookings } = params || {};
@@ -118,10 +126,18 @@ const fetchVenues = async (
         return getVenueByID(id, _owner, _bookings);
       }
       case ApiFunctions.GetVenueBySearch: {
-        const { q, sort, sortOrder, limit, page, _owner, _bookings } =
+        const { q, sort, sortOrder, limit, page, _owner, _bookings, token } =
           params || {};
         if (!q || q === '') {
-          return getVenues(sort, sortOrder, limit, page, _owner, _bookings);
+          return getVenues(
+            sort,
+            sortOrder,
+            limit,
+            page,
+            _owner,
+            _bookings,
+            token,
+          );
         }
         if (typeof q !== 'string') {
           throw new Error('You must enter a valid search query');
@@ -234,14 +250,14 @@ const fetchProfiles = async (
         );
       }
       case ApiFunctions.GetProfileByName: {
-        const { token, name } = params || {};
+        const { token, name, _venues, _bookings } = params || {};
         if (!token || !isTokenValid(token)) {
           throw new Error('Request is missing token!');
         }
         if (!name || name.trim() === '') {
           throw new Error('Name is required');
         }
-        return getProfileByName(name, token);
+        return getProfileByName(name, token, _venues, _bookings);
       }
       case ApiFunctions.UpdateProfile: {
         const { token, name, profilePayload } = params || {};

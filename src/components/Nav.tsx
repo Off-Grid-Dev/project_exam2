@@ -6,9 +6,6 @@ import { useAuth } from '../context/auth/useAuth';
 import NavLink from './NavLink';
 import NavDropdown from './NavDropdown';
 
-// API
-import { fetchProfiles } from '../api/api';
-
 // Routing
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +14,7 @@ import {
   getToken,
   isTokenValid,
   getStoredVenueManager,
+  getStoredName,
 } from '../api/authToken';
 
 const Nav = () => {
@@ -29,7 +27,6 @@ const Nav = () => {
   }
 
   async function handleLogout() {
-    await fetchProfiles('logout user');
     logout();
     navigate('/');
   }
@@ -39,6 +36,35 @@ const Nav = () => {
   }, [login]);
 
   const isVenueManager = getStoredVenueManager();
+  const storedName = getStoredName();
+  const profilePath = storedName
+    ? `/profiles/${encodeURIComponent(storedName)}`
+    : '/profiles';
+
+  const accountItems = [
+    {
+      label: 'my venues',
+      path: `${profilePath}?tab=venues`,
+      aria: 'view my venues',
+      condition: isVenueManager,
+    },
+    {
+      label: 'my bookings',
+      path: `${profilePath}?tab=bookings`,
+      aria: 'view my bookings',
+    },
+    {
+      label: 'my account',
+      path: `${profilePath}?tab=account`,
+      aria: 'view my account',
+    },
+    {
+      label: 'create venue',
+      path: `${profilePath}?tab=create`,
+      aria: 'create a new venue',
+      condition: isVenueManager,
+    },
+  ];
 
   return (
     <ul className='text-text-base flex gap-3 align-middle' role='navigation'>
@@ -63,35 +89,10 @@ const Nav = () => {
         <>
           <NavLink path='/profiles' label='profile' aria='view profiles' />
 
-          <NavLink
-            path='/my/bookings'
-            label='my bookings'
-            aria='view my bookings'
-          />
-
           <NavDropdown
             label='account'
             ariaLabel='account menu'
-            items={[
-              {
-                label: 'my venues',
-                path: '/venues/mine',
-                aria: 'view my venues',
-                condition: isVenueManager,
-              },
-              {
-                label: 'venue bookings',
-                path: '/venues/mine/bookings',
-                aria: 'view venue bookings',
-                condition: isVenueManager,
-              },
-              {
-                label: 'create venue',
-                path: '/venues/new',
-                aria: 'create a new venue',
-                condition: isVenueManager,
-              },
-            ]}
+            items={accountItems}
           />
 
           <li>

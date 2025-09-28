@@ -1,5 +1,6 @@
 // React imports
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Types
 import type { LoginProfilePayload } from '../types/api/profile';
@@ -25,6 +26,7 @@ export const LoginForm = () => {
   });
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   // TODO abstract to file and use in other forms
   // TODO add toast
@@ -45,7 +47,7 @@ export const LoginForm = () => {
     setLoginInfo({ ...loginInfo, [e.target.id]: e.target.value });
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     const payload: LoginProfilePayload = {
@@ -53,12 +55,24 @@ export const LoginForm = () => {
       password: loginInfo.password,
     };
 
-    console.log('Submitting login payload:', payload);
+    try {
+      console.log('Submitting login payload:', payload);
+      const res = await fetchProfiles(ApiFunctions.LoginUser, {
+        loginProfilePayload: payload,
+      });
 
-    fetchProfiles(ApiFunctions.LoginUser, { loginProfilePayload: payload });
-
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken && accessToken !== undefined && accessToken !== '') login();
+      // if the API stored the token, call login() and navigate to profile
+      const accessToken = localStorage.getItem('accessToken');
+      const name = localStorage.getItem('accessName');
+      if (accessToken && accessToken !== '') {
+        login();
+        if (name) navigate(`/profiles/${encodeURIComponent(name)}`);
+      }
+      return res;
+    } catch (err) {
+      console.error('Login failed', err);
+      throw err;
+    }
   }
 
   return (

@@ -7,6 +7,7 @@ import Button from '../Button';
 
 // Types
 import type { Venue } from '../../types/api/venue';
+import { getStoredName } from '../../api/authToken';
 
 export const VenuesCard: FC<Venue> = ({
   id,
@@ -15,6 +16,7 @@ export const VenuesCard: FC<Venue> = ({
   price,
   rating,
   meta,
+  owner,
 }) => {
   const [imageError, setImageError] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -100,6 +102,20 @@ export const VenuesCard: FC<Venue> = ({
         onClick={() => handleBookVenue(id)}
         additionalClasses='ml-auto'
       />
+      {/* Edit button for owners */}
+      {(() => {
+        const stored = getStoredName();
+        if (!stored || !owner || !owner.name) return null;
+        if (stored.toLowerCase() !== owner.name.toLowerCase()) return null;
+        return (
+          <Button
+            label='Edit'
+            type='button'
+            onClick={() => navigate(`/venues/${id}?edit=true`)}
+            additionalClasses='ml-2'
+          />
+        );
+      })()}
     </div>
   );
 };

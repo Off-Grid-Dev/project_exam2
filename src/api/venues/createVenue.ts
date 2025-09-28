@@ -4,7 +4,7 @@ import type { ApiError } from '../../types/api/responses';
 import type { VenuePayload } from '../../types/api/venue';
 
 // Constants
-import { API_VENUES } from '../constants';
+import { API_VENUES, API_KEY } from '../constants';
 
 export const createVenue = async (
   payload: VenuePayload,
@@ -15,6 +15,7 @@ export const createVenue = async (
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
+      'X-Noroff-API-Key': `${API_KEY}`,
     },
     body: JSON.stringify(payload),
   });

@@ -61,14 +61,15 @@ describe('createVenue', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('/holidaze/venues'),
-      {
+      expect.objectContaining({
         method: 'POST',
-        headers: {
+        headers: expect.objectContaining({
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${mockAccessToken}`,
-        },
+          'X-Noroff-API-Key': expect.any(String),
+        }),
         body: JSON.stringify(payload),
-      },
+      }),
     );
 
     expect(result).toEqual(mockVenueResponse);
@@ -137,14 +138,15 @@ describe('createVenue', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('/holidaze/venues'),
-      {
+      expect.objectContaining({
         method: 'POST',
-        headers: {
+        headers: expect.objectContaining({
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ',
-        },
+          'X-Noroff-API-Key': expect.any(String),
+        }),
         body: JSON.stringify(payload),
-      },
+      }),
     );
   });
 });

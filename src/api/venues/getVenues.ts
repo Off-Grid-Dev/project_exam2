@@ -3,7 +3,7 @@ import type { VenuesResponse } from '../../types/api/responses';
 import type { ApiError } from '../../types/api/responses';
 
 // Constants
-import { API_VENUES } from '../constants';
+import { API_VENUES, API_KEY } from '../constants';
 
 export const getVenues = async (
   sort: string | undefined,
@@ -12,6 +12,7 @@ export const getVenues = async (
   page: number = 1,
   _owner?: boolean,
   _bookings?: boolean,
+  token?: string,
 ): Promise<VenuesResponse> => {
   const query = new URLSearchParams();
   if (sort) query.append('sort', sort);
@@ -28,6 +29,8 @@ export const getVenues = async (
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'X-Noroff-API-Key': `${API_KEY}`,
     },
   });
 

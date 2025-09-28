@@ -2,7 +2,7 @@
 import type { BookingsResponse, ApiError } from '../../types/api/responses';
 
 // Constants
-import { API_PROFILES } from '../constants';
+import { API_PROFILES, API_KEY } from '../constants';
 
 export const getBookingsByProfile = async (
   name: string,
@@ -28,6 +28,7 @@ export const getBookingsByProfile = async (
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'X-Noroff-API-Key': `${API_KEY}`,
     },
   });
 

@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RegisterForm } from '../Register';
 import ContextProvider from '../../context/ContextProvider';
@@ -13,9 +14,11 @@ describe('RegisterForm', () => {
 
   it('renders fields and submit button', () => {
     render(
-      <ContextProvider>
-        <RegisterForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <RegisterForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     expect(screen.getByLabelText(/User name:/i)).toBeDefined();
@@ -30,9 +33,11 @@ describe('RegisterForm', () => {
       .mockResolvedValue(undefined as never);
 
     render(
-      <ContextProvider>
-        <RegisterForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <RegisterForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     const name = screen.getByLabelText(/User name:/i) as HTMLInputElement;
@@ -71,9 +76,11 @@ describe('RegisterForm', () => {
       .mockResolvedValue(undefined as never);
 
     render(
-      <ContextProvider>
-        <RegisterForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <RegisterForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     const name = screen.getByLabelText(/User name:/i) as HTMLInputElement;
@@ -133,9 +140,11 @@ describe('RegisterForm', () => {
       .mockResolvedValue(undefined as never);
 
     render(
-      <ContextProvider>
-        <RegisterForm />
-      </ContextProvider>,
+      <MemoryRouter>
+        <ContextProvider>
+          <RegisterForm />
+        </ContextProvider>
+      </MemoryRouter>,
     );
 
     const email = screen.getByLabelText(/email:/i) as HTMLInputElement;
